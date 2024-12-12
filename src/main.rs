@@ -21,7 +21,7 @@ lazy_static! {
         Mutex::new(std::collections::HashSet::new());
 }
 
-const TEA_WAIT_TIME_SECONDS: u64 = 15;
+const TEA_WAIT_TIME_SECONDS: u64 = 30;
 const TEA_TIMER_DURATION_MINUTES: u64 = 5;
 
 #[derive(Deserialize, Debug)]
@@ -83,15 +83,6 @@ async fn handle_slack_event(Json(payload): Json<SlackEvent>) -> (StatusCode, Jso
             (StatusCode::OK, Json(SlackResponse { challenge }))
         }
         SlackEvent::EventCallback(callback) => {
-            if callback.event.user == "U083U2GMPSN" {
-                return (
-                    StatusCode::OK,
-                    Json(SlackResponse {
-                        challenge: String::new(),
-                    }),
-                );
-            }
-
             if let Ok(ts) = callback.event.event_ts.parse::<f64>() {
             
                 let current_time = std::time::SystemTime::now()
@@ -122,18 +113,34 @@ async fn handle_slack_event(Json(payload): Json<SlackEvent>) -> (StatusCode, Jso
     }
 }
 
-async fn send_slack_message(message: &str) -> Result<(), BoxError> {
+async fn send_slack_message(message: &str) -> Result<(String, String), BoxError> {
     let slack_token = env::var("SLACK_BOT_TOKEN")
         .expect("SLACK_BOT_TOKEN must be set");
         
     let client = reqwest::Client::new();
-    client
+    let response = client
         .post("https://slack.com/api/chat.postMessage")
         .header(
             "Authorization",
             format!("Bearer {}", slack_token)
         )
         .json(&json!({ "channel": "t", "text": message }))
+        .send()
+        .await?;
+    let response_json: serde_json::Value = response.json().await?;
+    let timestamp = response_json["ts"].as_str().unwrap_or("").to_string();
+    let channel_id = response_json["channel"].as_str().unwrap_or("").to_string();
+    Ok((timestamp, channel_id))
+}
+
+async fn update_slack_message(message: &str, timestamp: &str, channel_id: &str) -> Result<(), BoxError> {
+    let slack_token = env::var("SLACK_BOT_TOKEN")
+        .expect("SLACK_BOT_TOKEN must be set");
+    let client = reqwest::Client::new();
+    client
+        .post("https://slack.com/api/chat.update")
+        .header("Authorization", format!("Bearer {}", slack_token))
+        .json(&json!({ "channel": channel_id, "text": message, "ts": timestamp.to_string() }))
         .send()
         .await?;
     Ok(())
@@ -244,7 +251,7 @@ async fn request_tea(username: &str) -> Result<(), BoxError> {
         };
 
         if responses.len() == 1 {
-            send_slack_message(&format!("No one accepted the tea request 😢. {}, looks like you'll have to go and treat yourself to a selfish tea. I'll start a 5 minute timer for the perfect brew. Type 'c' to cancel.", username)).await?;
+            send_slack_message(&format!("No one accepted the tea request 😢. {}, looks like you'll have to go and treat yourself to a selfish tea. I'll start a {} minute timer for the perfect brew. Type 'c' to cancel.", username, TEA_TIMER_DURATION_MINUTES)).await?;
             tea_timer(1).await?;
             return Ok(());
         } else {
@@ -257,19 +264,27 @@ async fn request_tea(username: &str) -> Result<(), BoxError> {
         let message = {
             let mut rng: rand::prelude::ThreadRng = rand::thread_rng();
             let mut rolls: Vec<(String, u32)> =
-                    responses.iter().map(|name| (name.clone(), rng.gen_range(1..=24))).collect();
+                    responses.iter().map(|name| (name.clone(), (0..3).map(|_| rng.gen_range(1..=6)).sum())).collect();
 
-                rolls.sort_by(|a, b| b.1.cmp(&a.1));
+            rolls.sort_by(|a, b| b.1.cmp(&a.1));
+
+                let tea_maker = rolls.last().unwrap().0.clone();
+
+                let mut suffix = "";
+                if tea_maker == "m" {
+                    suffix = "\nha, go make tea baldy";
+                }
 
                 format!(
-                    "Dice roll results: \n\n{}\n\n{} rolled the lowest number and will make the tea! I'll start a {} minute timer for the perfect brew. Type 'c' to cancel.",
+                    "Dice roll results: \n\n{}\n\n{} rolled the lowest number and will make the tea! I'll start a {} minute timer for the perfect brew. Type 'c' to cancel. {}",
                     rolls
                         .iter()
                         .map(|(name, num)| format!("{}: {}", name, num))
                         .collect::<Vec<_>>()
                         .join("\n"),
-                    rolls.last().unwrap().0,
-                    TEA_TIMER_DURATION_MINUTES
+                    tea_maker,
+                    TEA_TIMER_DURATION_MINUTES,
+                    suffix
                 )
             };
 
@@ -285,10 +300,29 @@ async fn request_tea(username: &str) -> Result<(), BoxError> {
 }
 
 async fn tea_timer(num_tea: usize) -> Result<(), BoxError> {
-    tokio::time::sleep(tokio::time::Duration::from_secs(
-        TEA_TIMER_DURATION_MINUTES * 60,
-    ))
-    .await;
+    let (timestamp, channel_id) = send_slack_message(&format!("Tea timer started: {} minutes left to brew.", TEA_TIMER_DURATION_MINUTES)).await?; 
+
+    let total_seconds = TEA_TIMER_DURATION_MINUTES * 60;
+    for seconds_left in (0..total_seconds).rev() {
+        tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+        
+        if ACTIVE_TEA_OFFER.lock().unwrap().is_none() {
+            break;
+        }
+
+        let minutes = seconds_left / 60;
+        let secs = seconds_left % 60;
+        update_slack_message(
+            &format!(
+                "Tea timer started: {}:{:02} left to brew.", 
+                minutes,
+                secs
+            ),
+            &timestamp,
+            &channel_id
+        ).await?;
+    }
+
     if ACTIVE_TEA_OFFER.lock().unwrap().is_some() {
         send_slack_message(&format!("Tea is ready! {}", "☕".repeat(num_tea))).await?;
     }
@@ -310,6 +344,6 @@ async fn cancel_timer() -> Result<(), BoxError> {
         let mut responses = TEA_RESPONSES.lock().unwrap();
         responses.clear();
     }
-    send_slack_message(&format!("Tea timer cancelled!")).await?;
+    send_slack_message(&format!("Tea timer cancelled")).await?;
     Ok(())
 }
