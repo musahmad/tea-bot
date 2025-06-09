@@ -4,7 +4,6 @@ use axum::{
     Json, Router,
 };
 use lazy_static::lazy_static;
-use rand::Rng;
 use reqwest;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -14,15 +13,30 @@ use tower_http::trace::TraceLayer;
 use tracing_subscriber;
 use dotenv::dotenv;
 use std::env;
+use std::fs;
+use std::path::Path;
+
+#[derive(Serialize, Deserialize, Clone, Default)]
+struct UserStats {
+    username: String,
+    rounds_participated: u32,
+    times_requested: u32,
+    times_offered: u32,
+    times_lost: u32,
+    times_king: u32,
+    times_bitch: u32,
+}
+
 lazy_static! {
     static ref USERNAME_CACHE: Mutex<HashMap<String, String>> = Mutex::new(HashMap::new());
     static ref ACTIVE_TEA_OFFER: Mutex<Option<String>> = Mutex::new(None);
     static ref TEA_RESPONSES: Mutex<std::collections::HashSet<String>> =
         Mutex::new(std::collections::HashSet::new());
+    static ref USER_STATS: Mutex<HashMap<String, UserStats>> = Mutex::new(HashMap::new());
 }
 
-const TEA_WAIT_TIME_SECONDS: u64 = 30;
-const TEA_TIMER_DURATION_MINUTES: u64 = 5;
+const TEA_WAIT_TIME_SECONDS: u64 = 10;
+const TEA_TIMER_DURATION_MINUTES: u64 = 1;
 
 #[derive(Deserialize, Debug)]
 struct SlackEventCallback {
@@ -65,6 +79,9 @@ type BoxError = Box<dyn std::error::Error + Send + Sync>;
 async fn main() {
     dotenv().ok();
     tracing_subscriber::fmt::init();
+    
+    // Load existing stats from file
+    load_stats_from_file().await;
     
     let app = Router::new()
         .route("/slack/events", post(handle_slack_event))
@@ -209,6 +226,7 @@ async fn message_matcher(message: &str, username: &str) -> Result<(), BoxError> 
 
 async fn offer_tea(username: &str) -> Result<(), BoxError> {
     let username = username.to_string();
+    update_request_or_offer_stats(&username, false).await?;
     let result = tokio::spawn(async move {
         {
 
@@ -228,11 +246,13 @@ async fn offer_tea(username: &str) -> Result<(), BoxError> {
             responses
         };
         if responses.len() == 1 {
-            send_slack_message(&format!("No one accepted the tea offer 😢. {}, go and treat yourself to a selfish tea. I'll start a 5 minute timer for the perfect brew. Type 'c' to cancel.", username)).await?;
+            send_slack_message(&format!("No one accepted the tea offer 😢. {}, go and treat yourself to a lonely tea. I'll start a 5 minute timer for the perfect brew. Type 'c' to cancel.", username)).await?;
+            update_participation_stats(&responses, &username, None, None).await?;
             tea_timer(1).await?;
             return Ok(());
         } else {
             send_slack_message(&format!("This tea round: {}. {} kindly go and make {} cups of tea. I'll start a {} minute timer for the perfect brew. Type 'c' to cancel.", responses.join(", "), username, responses.len(), TEA_TIMER_DURATION_MINUTES)).await?;
+            update_participation_stats(&responses, &username, None, None).await?;
             tea_timer(responses.len()).await?;
         }
         Ok(())
@@ -243,6 +263,7 @@ async fn offer_tea(username: &str) -> Result<(), BoxError> {
 
 async fn request_tea(username: &str) -> Result<(), BoxError> {
     let username = username.to_string();
+    update_request_or_offer_stats(&username, true).await?;
     let result = tokio::spawn(async move {
         {
             let mut active_offer = ACTIVE_TEA_OFFER.lock().unwrap();
@@ -263,6 +284,7 @@ async fn request_tea(username: &str) -> Result<(), BoxError> {
 
         if responses.len() == 1 {
             send_slack_message(&format!("No one accepted the tea request 😢. {}, looks like you'll have to go and treat yourself to a selfish tea. I'll start a {} minute timer for the perfect brew. Type 'c' to cancel.", username, TEA_TIMER_DURATION_MINUTES)).await?;
+            update_participation_stats(&responses, &username, None, None).await?;
             tea_timer(1).await?;
             return Ok(());
         } else {
@@ -273,36 +295,122 @@ async fn request_tea(username: &str) -> Result<(), BoxError> {
             .await?;
         tokio::time::sleep(tokio::time::Duration::from_secs(2)).await;
         let message = {
-            let mut rng: rand::prelude::ThreadRng = rand::thread_rng();
-            let mut rolls: Vec<(String, u32)> =
-                    responses.iter().map(|name| (name.clone(), (0..3).map(|_| rng.gen_range(1..=6)).sum())).collect();
+            let mut current_players = responses.clone();
+            let mut all_roll_results = Vec::new();
+            let mut round = 1;
+            
+            let (tea_maker, king_player, bitch_player) = loop {
+                let mut rolls: Vec<(String, u32)> = current_players
+                    .iter()
+                    .map(|name| {
+                        (name.clone(), (0..3).map(|_| rand::random::<u32>() % 6 + 1).sum())
+                    })
+                    .collect();
 
-            rolls.sort_by(|a, b| b.1.cmp(&a.1));
+                rolls.sort_by(|a, b| b.1.cmp(&a.1));
+                
+                let round_results = if round == 1 {
+                    format!("Dice roll results:\n\n{}", 
+                        rolls.iter()
+                            .map(|(name, num)| format!("{}: {}", name, num))
+                            .collect::<Vec<_>>()
+                            .join("\n"))
+                } else {
+                    format!("Re-roll round {} results:\n\n{}", 
+                        round,
+                        rolls.iter()
+                            .map(|(name, num)| format!("{}: {}", name, num))
+                            .collect::<Vec<_>>()
+                            .join("\n"))
+                };
+                
+                all_roll_results.push(round_results);
 
-                let tea_maker = rolls.last().unwrap().0.clone();
+                // Check if anyone rolled a 3 (minimum possible score)
+                let bitch_candidates: Vec<String> = rolls
+                    .iter()
+                    .filter(|(_, score)| *score == 3)
+                    .map(|(name, _)| name.clone())
+                    .collect();
 
-                let mut suffix = "";
-                if tea_maker == "m" {
-                    suffix = "\nha, go make tea baldy";
+                if !bitch_candidates.is_empty() {
+                    let bitch = &bitch_candidates[0]; // Take the first one if multiple people rolled 3
+                    all_roll_results.push(format!("🎯 {} rolled a 3! You are the bitch for the day and must make ALL the teas! 🫖", bitch));
+                    break (bitch.clone(), None, Some(bitch.clone()));
                 }
 
-                format!(
-                    "Dice roll results: \n\n{}\n\n{} rolled the lowest number and will make the tea! I'll start a {} minute timer for the perfect brew. Type 'c' to cancel. {}",
-                    rolls
-                        .iter()
-                        .map(|(name, num)| format!("{}: {}", name, num))
-                        .collect::<Vec<_>>()
-                        .join("\n"),
-                    tea_maker,
-                    TEA_TIMER_DURATION_MINUTES,
-                    suffix
-                )
+                // Check if anyone rolled an 18 (maximum possible score)
+                let king_candidates: Vec<String> = rolls
+                    .iter()
+                    .filter(|(_, score)| *score == 18)
+                    .map(|(name, _)| name.clone())
+                    .collect();
+
+                if !king_candidates.is_empty() {
+                    let king = &king_candidates[0]; // Take the first one if multiple people rolled 18
+                    all_roll_results.push(format!("👑 {} rolled an 18! You are the king for the day and are exempt from making tea! 🏆", king));
+                    // Remove the king from current players and continue with remaining players
+                    current_players.retain(|player| player != king);
+                    if current_players.len() == 1 {
+                        break (current_players[0].clone(), Some(king.clone()), None);
+                    }
+                    // Continue rolling with remaining players
+                    round += 1;
+                    if round > 1 {
+                        send_slack_message(&all_roll_results.join("\n\n")).await?;
+                        all_roll_results.clear();
+                        tokio::time::sleep(tokio::time::Duration::from_secs(2)).await;
+                    }
+                    continue;
+                }
+
+                let lowest_score = rolls.last().unwrap().1;
+                let lowest_rollers: Vec<String> = rolls
+                    .iter()
+                    .filter(|(_, score)| *score == lowest_score)
+                    .map(|(name, _)| name.clone())
+                    .collect();
+
+                if lowest_rollers.len() == 1 {
+                    break (lowest_rollers[0].clone(), None, None);
+                } else {
+                    all_roll_results.push(format!("Tie between: {}! Rolling again...", lowest_rollers.join(", ")));
+                    current_players = lowest_rollers;
+                    round += 1;
+                    
+                    if round > 1 {
+                        send_slack_message(&all_roll_results.join("\n\n")).await?;
+                        all_roll_results.clear();
+                        tokio::time::sleep(tokio::time::Duration::from_secs(2)).await;
+                    }
+                }
             };
+
+            let mut suffix = "";
+            if tea_maker == "m" {
+                suffix = "\nha, go make tea baldy";
+            }
+
+            // Track participation stats  
+            update_participation_stats(&responses, &tea_maker, king_player.as_deref(), bitch_player.as_deref()).await?;
+            
+            format!(
+                "{}\n\n{} rolled the lowest number and will make the tea! I'll start a {} minute timer for the perfect brew. Type 'c' to cancel. {}",
+                all_roll_results.join("\n\n"),
+                tea_maker,
+                TEA_TIMER_DURATION_MINUTES,
+                suffix
+            )
+        };
 
             send_slack_message(&message.to_owned()).await?;
         
-        
-            tea_timer(responses.len()).await?;
+            
+            // Show leaderboard after tea round
+            if let Ok(leaderboard) = generate_leaderboard().await {
+                send_slack_message(&leaderboard).await?;
+            }
+            
         }
         Ok(())
     }).await??;
@@ -357,4 +465,125 @@ async fn cancel_timer() -> Result<(), BoxError> {
     }
     send_slack_message(&format!("Tea timer cancelled")).await?;
     Ok(())
+}
+
+const STATS_FILE: &str = "/data/tea_stats.json";
+
+async fn load_stats_from_file() {
+    if Path::new(STATS_FILE).exists() {
+        match fs::read_to_string(STATS_FILE) {
+            Ok(content) => {
+                if let Ok(stats_map) = serde_json::from_str::<HashMap<String, UserStats>>(&content) {
+                    *USER_STATS.lock().unwrap() = stats_map;
+                    println!("Loaded tea statistics from file");
+                } else {
+                    eprintln!("Failed to parse stats file");
+                }
+            }
+            Err(e) => eprintln!("Failed to read stats file: {}", e),
+        }
+    }
+}
+
+async fn save_stats_to_file() -> Result<(), BoxError> {
+    let stats = USER_STATS.lock().unwrap().clone();
+    let json_content = serde_json::to_string_pretty(&stats)?;
+    fs::write(STATS_FILE, json_content)?;
+    Ok(())
+}
+
+fn get_user_stats(username: &str) -> UserStats {
+    USER_STATS
+        .lock()
+        .unwrap()
+        .get(username)
+        .cloned()
+        .unwrap_or_else(|| UserStats {
+            username: username.to_string(),
+            ..Default::default()
+        })
+}
+
+async fn update_user_stats(stats: UserStats) -> Result<(), BoxError> {
+    {
+        let mut stats_map = USER_STATS.lock().unwrap();
+        stats_map.insert(stats.username.clone(), stats);
+    }
+    save_stats_to_file().await?;
+    Ok(())
+}
+
+async fn update_participation_stats(participants: &[String], tea_maker: &str, king: Option<&str>, bitch: Option<&str>) -> Result<(), BoxError> {
+    for participant in participants {
+        let mut stats = get_user_stats(participant);
+        stats.rounds_participated += 1;
+        
+        if participant == tea_maker {
+            stats.times_lost += 1;
+        }
+        
+        if let Some(king_name) = king {
+            if participant == king_name {
+                stats.times_king += 1;
+            }
+        }
+        
+        if let Some(bitch_name) = bitch {
+            if participant == bitch_name {
+                stats.times_bitch += 1;
+            }
+        }
+        
+        update_user_stats(stats).await?;
+    }
+    Ok(())
+}
+
+async fn update_request_or_offer_stats(username: &str, is_request: bool) -> Result<(), BoxError> {
+    let mut stats = get_user_stats(username);
+    if is_request {
+        stats.times_requested += 1;
+    } else {
+        stats.times_offered += 1;
+    }
+    update_user_stats(stats).await?;
+    Ok(())
+}
+
+async fn generate_leaderboard() -> Result<String, BoxError> {
+    let stats_map = USER_STATS.lock().unwrap().clone();
+    
+    if stats_map.is_empty() {
+        return Ok("📊 *Tea Leaderboard*\n\nNo tea statistics yet! Start a tea round to begin tracking stats.".to_string());
+    }
+    
+    let mut stats_vec: Vec<UserStats> = stats_map.into_values().collect();
+    
+    // Sort by participation
+    stats_vec.sort_by(|a, b| b.rounds_participated.cmp(&a.rounds_participated));
+    
+    let mut leaderboard = String::from("📊 *Tea Leaderboard*\n\n");
+    
+    for (i, stats) in stats_vec.iter().enumerate() {
+        let medal = match i {
+            0 => "🥇",
+            1 => "🥈", 
+            2 => "🥉",
+            _ => "  ",
+        };
+        
+        leaderboard.push_str(&format!(
+            "{} *{}*\n   Rounds: {} | Requests: {} | Offers: {} | Lost: {} | King: {} | Bitch: {}\n\n",
+            medal,
+            stats.username,
+            stats.rounds_participated,
+            stats.times_requested,
+            stats.times_offered,
+            stats.times_lost,
+            stats.times_king,
+            stats.times_bitch
+        ));
+    }
+    
+    Ok(leaderboard)
 }
