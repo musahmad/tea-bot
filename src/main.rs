@@ -186,12 +186,23 @@ async fn message_matcher(message: &str, username: &str) -> Result<(), BoxError> 
         "rt" => request_tea(username).await,
         "ot" => offer_tea(username).await,
         "t" => {
+            if username == "alexander.stepanov" {
+                send_slack_message("Sorry Sasha, only standard tea is available. Please type 'promise' to promise that you will accept standard tea.").await?;
+                return Ok(());
+            }
             if let Some(_offerer) = ACTIVE_TEA_OFFER.lock().unwrap().as_ref() {
+                TEA_RESPONSES.lock().unwrap().insert(username.to_string());
+            }           
+            Ok(())
+        }
+        "c" => cancel_timer().await,
+        "promise" => {
+            if username == "alexander.stepanov" {
+                send_slack_message("Thanks for being reasonable Sasha! I'm glad you saw sense. I'll add you to the tea round.").await?;
                 TEA_RESPONSES.lock().unwrap().insert(username.to_string());
             }
             Ok(())
         }
-        "c" => cancel_timer().await,
         _ => Ok(()),
     }
 }
@@ -303,8 +314,8 @@ async fn tea_timer(num_tea: usize) -> Result<(), BoxError> {
     let (timestamp, channel_id) = send_slack_message(&format!("Tea timer started: {} minutes left to brew.", TEA_TIMER_DURATION_MINUTES)).await?; 
 
     let total_seconds = TEA_TIMER_DURATION_MINUTES * 60;
-    for seconds_left in (0..total_seconds).rev() {
-        tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+    for seconds_left in (0..total_seconds).rev().step_by(15) {
+        tokio::time::sleep(tokio::time::Duration::from_secs(15)).await;
         
         if ACTIVE_TEA_OFFER.lock().unwrap().is_none() {
             break;
