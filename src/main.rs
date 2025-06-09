@@ -35,8 +35,8 @@ lazy_static! {
     static ref USER_STATS: Mutex<HashMap<String, UserStats>> = Mutex::new(HashMap::new());
 }
 
-const TEA_WAIT_TIME_SECONDS: u64 = 10;
-const TEA_TIMER_DURATION_MINUTES: u64 = 1;
+const TEA_WAIT_TIME_SECONDS: u64 = 30;
+const TEA_TIMER_DURATION_MINUTES: u64 = 5;
 
 #[derive(Deserialize, Debug)]
 struct SlackEventCallback {
@@ -226,7 +226,6 @@ async fn message_matcher(message: &str, username: &str) -> Result<(), BoxError> 
 
 async fn offer_tea(username: &str) -> Result<(), BoxError> {
     let username = username.to_string();
-    update_request_or_offer_stats(&username, false).await?;
     let result = tokio::spawn(async move {
         {
 
@@ -237,6 +236,8 @@ async fn offer_tea(username: &str) -> Result<(), BoxError> {
             *active_offer = Some(username.clone());
 
         }
+        
+        update_request_or_offer_stats(&username, false).await?;
 
         send_slack_message(&format!("{} has generously offered tea! Type 't' within the next {} seconds to accept", username, TEA_WAIT_TIME_SECONDS)).await?;
         tokio::time::sleep(tokio::time::Duration::from_secs(TEA_WAIT_TIME_SECONDS)).await;
@@ -263,7 +264,6 @@ async fn offer_tea(username: &str) -> Result<(), BoxError> {
 
 async fn request_tea(username: &str) -> Result<(), BoxError> {
     let username = username.to_string();
-    update_request_or_offer_stats(&username, true).await?;
     let result = tokio::spawn(async move {
         {
             let mut active_offer = ACTIVE_TEA_OFFER.lock().unwrap();
@@ -272,6 +272,8 @@ async fn request_tea(username: &str) -> Result<(), BoxError> {
             }
             *active_offer = Some(username.clone());
         }
+        
+        update_request_or_offer_stats(&username, true).await?;
         send_slack_message(&format!("{} is requesting tea! Type 't' within the next {} seconds to join the tea round. You will be entered into a draw to make this round of tea!", username, TEA_WAIT_TIME_SECONDS)).await?;
 
         tokio::time::sleep(tokio::time::Duration::from_secs(TEA_WAIT_TIME_SECONDS)).await;
@@ -404,12 +406,11 @@ async fn request_tea(username: &str) -> Result<(), BoxError> {
         };
 
             send_slack_message(&message.to_owned()).await?;
-        
-            
             // Show leaderboard after tea round
             if let Ok(leaderboard) = generate_leaderboard().await {
                 send_slack_message(&leaderboard).await?;
             }
+            tea_timer(responses.len()).await?;
             
         }
         Ok(())
