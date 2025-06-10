@@ -25,6 +25,7 @@ struct UserStats {
     times_lost: u32,
     times_king: u32,
     times_bitch: u32,
+    teas_made: u32,
 }
 
 lazy_static! {
@@ -203,23 +204,12 @@ async fn message_matcher(message: &str, username: &str) -> Result<(), BoxError> 
         "rt" => request_tea(username).await,
         "ot" => offer_tea(username).await,
         "t" => {
-            if username == "alexander.stepanov" {
-                send_slack_message("Sorry Sasha, only standard tea is available. Please type 'promise' to promise that you will accept standard tea.").await?;
-                return Ok(());
-            }
             if let Some(_offerer) = ACTIVE_TEA_OFFER.lock().unwrap().as_ref() {
                 TEA_RESPONSES.lock().unwrap().insert(username.to_string());
             }           
             Ok(())
         }
         "c" => cancel_timer().await,
-        "promise" => {
-            if username == "alexander.stepanov" {
-                send_slack_message("Thanks for being reasonable Sasha! I'm glad you saw sense. I'll add you to the tea round.").await?;
-                TEA_RESPONSES.lock().unwrap().insert(username.to_string());
-            }
-            Ok(())
-        }
         _ => Ok(()),
     }
 }
@@ -388,20 +378,15 @@ async fn request_tea(username: &str) -> Result<(), BoxError> {
                 }
             };
 
-            let mut suffix = "";
-            if tea_maker == "m" {
-                suffix = "\nha, go make tea baldy";
-            }
 
             // Track participation stats  
             update_participation_stats(&responses, &tea_maker, king_player.as_deref(), bitch_player.as_deref()).await?;
             
             format!(
-                "{}\n\n{} rolled the lowest number and will make the tea! I'll start a {} minute timer for the perfect brew. Type 'c' to cancel. {}",
+                "{}\n\n{} rolled the lowest number and will make the tea! I'll start a {} minute timer for the perfect brew. Type 'c' to cancel.",  
                 all_roll_results.join("\n\n"),
                 tea_maker,
                 TEA_TIMER_DURATION_MINUTES,
-                suffix
             )
         };
 
@@ -521,6 +506,7 @@ async fn update_participation_stats(participants: &[String], tea_maker: &str, ki
         
         if participant == tea_maker {
             stats.times_lost += 1;
+            stats.teas_made += participants.len() as u32;
         }
         
         if let Some(king_name) = king {
@@ -560,8 +546,7 @@ async fn generate_leaderboard() -> Result<String, BoxError> {
     
     let mut stats_vec: Vec<UserStats> = stats_map.into_values().collect();
     
-    // Sort by participation
-    stats_vec.sort_by(|a, b| b.rounds_participated.cmp(&a.rounds_participated));
+    stats_vec.sort_by(|a, b| b.teas_made.cmp(&a.teas_made));
     
     let mut leaderboard = String::from("📊 *Tea Leaderboard*\n\n");
     
@@ -574,15 +559,16 @@ async fn generate_leaderboard() -> Result<String, BoxError> {
         };
         
         leaderboard.push_str(&format!(
-            "{} *{}*\n   Rounds: {} | Requests: {} | Offers: {} | Lost: {} | King: {} | Bitch: {}\n\n",
+            "{} *{}*\n   teas made: {} | rounds: {} | rt: {} | ot: {} | lost: {} | king: {} | bitch: {}\n\n",
             medal,
             stats.username,
+            stats.teas_made,
             stats.rounds_participated,
             stats.times_requested,
             stats.times_offered,
-            stats.times_lost,
+            stats.times_lost - stats.times_offered,
             stats.times_king,
-            stats.times_bitch
+            stats.times_bitch,
         ));
     }
     

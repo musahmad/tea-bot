@@ -15,4 +15,3 @@ reqwest = { version = "0.12.9", features = ["json"] }
 lazy_static = "1.4.0"
 rand = "0.8.5"
 dotenv = "0.15.0"
-google-cloud-storage = "0.24.0"
