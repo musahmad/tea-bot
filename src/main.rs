@@ -187,7 +187,7 @@ async fn get_username(user_id: &str) -> Result<String, Box<dyn std::error::Error
 }
 
 async fn message_matcher(message: &str, username: &str) -> Result<(), BoxError> {
-    match message {
+    match message.trim().to_ascii_lowercase().as_str() {
         "rt" => request_tea(username).await,
         "ot" => offer_tea(username).await,
         "t" => {
@@ -555,7 +555,11 @@ async fn generate_leaderboard() -> Result<String, BoxError> {
     stats_vec.sort_by(|a, b| b.teas_made.cmp(&a.teas_made));
 
     let mut leaderboard = String::from("📊 *Tea Leaderboard*\n\n");
-
+    
+    leaderboard.push_str("```\n");
+    leaderboard.push_str("    User              | Made | Rounds | RT | OT | Lost | King | Bitch\n");
+    leaderboard.push_str("    ------------------|------|--------|----|----|------|------|------\n");
+    
     for (i, stats) in stats_vec.iter().enumerate() {
         let medal = match i {
             0 => "🥇",
@@ -565,7 +569,7 @@ async fn generate_leaderboard() -> Result<String, BoxError> {
         };
 
         leaderboard.push_str(&format!(
-            "{} *{}*\n   teas made: {} | rounds: {} | rt: {} | ot: {} | lost: {} | king: {} | bitch: {}\n\n",
+            " {} {:<16} | {:>4} | {:>6} | {:>2} | {:>2} | {:>4} | {:>4} | {:>5}\n",
             medal,
             stats.username,
             stats.teas_made,
@@ -577,6 +581,8 @@ async fn generate_leaderboard() -> Result<String, BoxError> {
             stats.times_bitch,
         ));
     }
-
+    
+    leaderboard.push_str("```");
+    
     Ok(leaderboard)
 }
