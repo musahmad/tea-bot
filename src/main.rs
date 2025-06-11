@@ -1,20 +1,16 @@
-use axum::{
-    http::StatusCode,
-    routing::post,
-    Json, Router,
-};
+use axum::{http::StatusCode, routing::post, Json, Router};
+use dotenv::dotenv;
 use lazy_static::lazy_static;
 use reqwest;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::collections::HashMap;
-use std::sync::Mutex;
-use tower_http::trace::TraceLayer;
-use tracing_subscriber;
-use dotenv::dotenv;
 use std::env;
 use std::fs;
 use std::path::Path;
+use std::sync::Mutex;
+use tower_http::trace::TraceLayer;
+use tracing_subscriber;
 
 #[derive(Serialize, Deserialize, Clone, Default)]
 struct UserStats {
@@ -80,10 +76,10 @@ type BoxError = Box<dyn std::error::Error + Send + Sync>;
 async fn main() {
     dotenv().ok();
     tracing_subscriber::fmt::init();
-    
+
     // Load existing stats from file
     load_stats_from_file().await;
-    
+
     let app = Router::new()
         .route("/slack/events", post(handle_slack_event))
         .layer(TraceLayer::new_for_http());
@@ -91,8 +87,6 @@ async fn main() {
     let listener = tokio::net::TcpListener::bind("0.0.0.0:6969").await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }
-
-
 
 #[axum::debug_handler]
 async fn handle_slack_event(Json(payload): Json<SlackEvent>) -> (StatusCode, Json<SlackResponse>) {
@@ -102,7 +96,6 @@ async fn handle_slack_event(Json(payload): Json<SlackEvent>) -> (StatusCode, Jso
         }
         SlackEvent::EventCallback(callback) => {
             if let Ok(ts) = callback.event.event_ts.parse::<f64>() {
-            
                 let current_time = std::time::SystemTime::now()
                     .duration_since(std::time::UNIX_EPOCH)
                     .unwrap()
@@ -132,16 +125,12 @@ async fn handle_slack_event(Json(payload): Json<SlackEvent>) -> (StatusCode, Jso
 }
 
 async fn send_slack_message(message: &str) -> Result<(String, String), BoxError> {
-    let slack_token = env::var("SLACK_BOT_TOKEN")
-        .expect("SLACK_BOT_TOKEN must be set");
-        
+    let slack_token = env::var("SLACK_BOT_TOKEN").expect("SLACK_BOT_TOKEN must be set");
+
     let client = reqwest::Client::new();
     let response = client
         .post("https://slack.com/api/chat.postMessage")
-        .header(
-            "Authorization",
-            format!("Bearer {}", slack_token)
-        )
+        .header("Authorization", format!("Bearer {}", slack_token))
         .json(&json!({ "channel": "t", "text": message }))
         .send()
         .await?;
@@ -151,9 +140,12 @@ async fn send_slack_message(message: &str) -> Result<(String, String), BoxError>
     Ok((timestamp, channel_id))
 }
 
-async fn update_slack_message(message: &str, timestamp: &str, channel_id: &str) -> Result<(), BoxError> {
-    let slack_token = env::var("SLACK_BOT_TOKEN")
-        .expect("SLACK_BOT_TOKEN must be set");
+async fn update_slack_message(
+    message: &str,
+    timestamp: &str,
+    channel_id: &str,
+) -> Result<(), BoxError> {
+    let slack_token = env::var("SLACK_BOT_TOKEN").expect("SLACK_BOT_TOKEN must be set");
     let client = reqwest::Client::new();
     client
         .post("https://slack.com/api/chat.update")
@@ -169,16 +161,12 @@ async fn get_username(user_id: &str) -> Result<String, Box<dyn std::error::Error
         return Ok(cached_name.clone());
     }
 
-    let slack_token = env::var("SLACK_BOT_TOKEN")
-        .expect("SLACK_BOT_TOKEN must be set");
+    let slack_token = env::var("SLACK_BOT_TOKEN").expect("SLACK_BOT_TOKEN must be set");
 
     let client = reqwest::Client::new();
     let response = client
         .get("https://slack.com/api/users.info")
-        .header(
-            "Authorization",
-            format!("Bearer {}", slack_token)
-        )
+        .header("Authorization", format!("Bearer {}", slack_token))
         .query(&[("user", user_id)])
         .send()
         .await?
@@ -189,7 +177,6 @@ async fn get_username(user_id: &str) -> Result<String, Box<dyn std::error::Error
         .as_str()
         .unwrap_or("unknown")
         .to_string();
-
 
     USERNAME_CACHE
         .lock()
@@ -206,7 +193,7 @@ async fn message_matcher(message: &str, username: &str) -> Result<(), BoxError> 
         "t" => {
             if let Some(_offerer) = ACTIVE_TEA_OFFER.lock().unwrap().as_ref() {
                 TEA_RESPONSES.lock().unwrap().insert(username.to_string());
-            }           
+            }
             Ok(())
         }
         "c" => cancel_timer().await,
@@ -233,7 +220,9 @@ async fn offer_tea(username: &str) -> Result<(), BoxError> {
         tokio::time::sleep(tokio::time::Duration::from_secs(TEA_WAIT_TIME_SECONDS)).await;
         let responses = {
             let mut responses = TEA_RESPONSES.lock().unwrap().clone().iter().cloned().collect::<Vec<_>>();
-            responses.push(username.clone());
+            if !responses.contains(&username) {
+                responses.push(username.clone());
+            }
             responses
         };
         if responses.len() == 1 {
@@ -242,7 +231,12 @@ async fn offer_tea(username: &str) -> Result<(), BoxError> {
             tea_timer(1).await?;
             return Ok(());
         } else {
-            send_slack_message(&format!("This tea round: {}. {} kindly go and make {} cups of tea. I'll start a {} minute timer for the perfect brew. Type 'c' to cancel.", responses.join(", "), username, responses.len(), TEA_TIMER_DURATION_MINUTES)).await?;
+            let lemon_special_msg = if responses.contains(&"alexander.stepanov".to_string()) {
+                "Please make sure that one tea is a lemon special 🍋."
+            } else {
+                ""
+            };
+            send_slack_message(&format!("This tea round: {}. {} kindly go and make {} cups of tea. {lemon_special_msg} I'll start a {} minute timer for the perfect brew. Type 'c' to cancel.", responses.join(", "), username, responses.len(), TEA_TIMER_DURATION_MINUTES)).await?;
             update_participation_stats(&responses, &username, None, None).await?;
             tea_timer(responses.len()).await?;
         }
@@ -379,11 +373,16 @@ async fn request_tea(username: &str) -> Result<(), BoxError> {
             };
 
 
+            let lemon_special_msg = if responses.contains(&"alexander.stepanov".to_owned()) {
+                "Please make sure that one tea is a lemon special 🍋."
+            } else {
+                ""
+            };
             // Track participation stats  
             update_participation_stats(&responses, &tea_maker, king_player.as_deref(), bitch_player.as_deref()).await?;
             
             format!(
-                "{}\n\n{} rolled the lowest number and will make the tea! I'll start a {} minute timer for the perfect brew. Type 'c' to cancel.",  
+                "{}\n\n{} rolled the lowest number and will make the tea! I'll start a {} minute timer for the perfect brew.{lemon_special_msg} Type 'c' to cancel.",  
                 all_roll_results.join("\n\n"),
                 tea_maker,
                 TEA_TIMER_DURATION_MINUTES,
@@ -405,12 +404,16 @@ async fn request_tea(username: &str) -> Result<(), BoxError> {
 }
 
 async fn tea_timer(num_tea: usize) -> Result<(), BoxError> {
-    let (timestamp, channel_id) = send_slack_message(&format!("Tea timer started: {} minutes left to brew.", TEA_TIMER_DURATION_MINUTES)).await?; 
+    let (timestamp, channel_id) = send_slack_message(&format!(
+        "Tea timer started: {} minutes left to brew.",
+        TEA_TIMER_DURATION_MINUTES
+    ))
+    .await?;
 
     let total_seconds = TEA_TIMER_DURATION_MINUTES * 60;
     for seconds_left in (0..total_seconds).rev().step_by(15) {
         tokio::time::sleep(tokio::time::Duration::from_secs(15)).await;
-        
+
         if ACTIVE_TEA_OFFER.lock().unwrap().is_none() {
             break;
         }
@@ -418,14 +421,11 @@ async fn tea_timer(num_tea: usize) -> Result<(), BoxError> {
         let minutes = seconds_left / 60;
         let secs = seconds_left % 60;
         update_slack_message(
-            &format!(
-                "Tea timer started: {}:{:02} left to brew.", 
-                minutes,
-                secs
-            ),
+            &format!("Tea timer started: {}:{:02} left to brew.", minutes, secs),
             &timestamp,
-            &channel_id
-        ).await?;
+            &channel_id,
+        )
+        .await?;
     }
 
     if ACTIVE_TEA_OFFER.lock().unwrap().is_some() {
@@ -459,7 +459,8 @@ async fn load_stats_from_file() {
     if Path::new(STATS_FILE).exists() {
         match fs::read_to_string(STATS_FILE) {
             Ok(content) => {
-                if let Ok(stats_map) = serde_json::from_str::<HashMap<String, UserStats>>(&content) {
+                if let Ok(stats_map) = serde_json::from_str::<HashMap<String, UserStats>>(&content)
+                {
                     *USER_STATS.lock().unwrap() = stats_map;
                     println!("Loaded tea statistics from file");
                 } else {
@@ -499,28 +500,33 @@ async fn update_user_stats(stats: UserStats) -> Result<(), BoxError> {
     Ok(())
 }
 
-async fn update_participation_stats(participants: &[String], tea_maker: &str, king: Option<&str>, bitch: Option<&str>) -> Result<(), BoxError> {
+async fn update_participation_stats(
+    participants: &[String],
+    tea_maker: &str,
+    king: Option<&str>,
+    bitch: Option<&str>,
+) -> Result<(), BoxError> {
     for participant in participants {
         let mut stats = get_user_stats(participant);
         stats.rounds_participated += 1;
-        
+
         if participant == tea_maker {
             stats.times_lost += 1;
             stats.teas_made += participants.len() as u32;
         }
-        
+
         if let Some(king_name) = king {
             if participant == king_name {
                 stats.times_king += 1;
             }
         }
-        
+
         if let Some(bitch_name) = bitch {
             if participant == bitch_name {
                 stats.times_bitch += 1;
             }
         }
-        
+
         update_user_stats(stats).await?;
     }
     Ok(())
@@ -539,15 +545,15 @@ async fn update_request_or_offer_stats(username: &str, is_request: bool) -> Resu
 
 async fn generate_leaderboard() -> Result<String, BoxError> {
     let stats_map = USER_STATS.lock().unwrap().clone();
-    
+
     if stats_map.is_empty() {
         return Ok("📊 *Tea Leaderboard*\n\nNo tea statistics yet! Start a tea round to begin tracking stats.".to_string());
     }
-    
+
     let mut stats_vec: Vec<UserStats> = stats_map.into_values().collect();
-    
+
     stats_vec.sort_by(|a, b| b.teas_made.cmp(&a.teas_made));
-    
+
     let mut leaderboard = String::from("📊 *Tea Leaderboard*\n\n");
     
     leaderboard.push_str("```\n");
@@ -557,11 +563,11 @@ async fn generate_leaderboard() -> Result<String, BoxError> {
     for (i, stats) in stats_vec.iter().enumerate() {
         let medal = match i {
             0 => "🥇",
-            1 => "🥈", 
+            1 => "🥈",
             2 => "🥉",
             _ => "  ",
         };
-        
+
         leaderboard.push_str(&format!(
             " {} {:<16} | {:>4} | {:>6} | {:>2} | {:>2} | {:>4} | {:>4} | {:>5}\n",
             medal,
