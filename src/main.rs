@@ -197,6 +197,12 @@ async fn message_matcher(message: &str, username: &str) -> Result<(), BoxError> 
             Ok(())
         }
         "c" => cancel_timer().await,
+        "stats" => {
+            if let Ok(leaderboard) = generate_leaderboard().await {
+                send_slack_message(&leaderboard).await?;
+            }
+            Ok(())
+        }
         _ => Ok(()),
     }
 }
@@ -231,13 +237,11 @@ async fn offer_tea(username: &str) -> Result<(), BoxError> {
             tea_timer(1).await?;
             return Ok(());
         } else {
-            let lemon_special_msg = if responses.contains(&"alexander.stepanov".to_string()) {
-                "Please make sure that one tea is a lemon special 🍋."
-            } else {
-                ""
-            };
-            send_slack_message(&format!("This tea round: {}. {} kindly go and make {} cups of tea. {lemon_special_msg} I'll start a {} minute timer for the perfect brew. Type 'c' to cancel.", responses.join(", "), username, responses.len(), TEA_TIMER_DURATION_MINUTES)).await?;
+            send_slack_message(&format!("This tea round: {}. {} I'll start a {} minute timer for the perfect brew. Type 'c' to cancel.", responses.join(", "), get_helper_message(&responses), TEA_TIMER_DURATION_MINUTES)).await?;
             update_participation_stats(&responses, &username, None, None).await?;
+            if let Ok(leaderboard) = generate_leaderboard().await {
+                send_slack_message(&leaderboard).await?;
+            }
             tea_timer(responses.len()).await?;
         }
         Ok(())
@@ -372,21 +376,10 @@ async fn request_tea(username: &str) -> Result<(), BoxError> {
                 }
             };
 
-
-            let lemon_special_msg = if responses.contains(&"alexander.stepanov".to_owned()) {
-                "Please make sure that one tea is a lemon special 🍋."
-            } else {
-                ""
-            };
             // Track participation stats  
             update_participation_stats(&responses, &tea_maker, king_player.as_deref(), bitch_player.as_deref()).await?;
             
-            format!(
-                "{}\n\n{} rolled the lowest number and will make the tea! I'll start a {} minute timer for the perfect brew.{lemon_special_msg} Type 'c' to cancel.",  
-                all_roll_results.join("\n\n"),
-                tea_maker,
-                TEA_TIMER_DURATION_MINUTES,
-            )
+            format!("{}\n\n{} rolled the lowest number and will make the tea! I'll start a {} minute timer for the perfect brew. {} Type 'c' to cancel.", all_roll_results.join("\n\n"), tea_maker, TEA_TIMER_DURATION_MINUTES, get_helper_message(&responses))
         };
 
             send_slack_message(&message.to_owned()).await?;
@@ -401,6 +394,18 @@ async fn request_tea(username: &str) -> Result<(), BoxError> {
     }).await??;
 
     Ok(result)
+}
+
+fn get_helper_message(responses: &[String]) -> String {
+    format!(
+        "Kindly go and make *{}* cups of tea. {}",
+        responses.len(),
+        if responses.contains(&"alexander.stepanov".to_owned()) {
+            "\n\nPlease make sure that one tea is a lemon special! 🍋 \n\n"
+        } else {
+            ""
+        }
+    )
 }
 
 async fn tea_timer(num_tea: usize) -> Result<(), BoxError> {
@@ -556,10 +561,6 @@ async fn generate_leaderboard() -> Result<String, BoxError> {
 
     let mut leaderboard = String::from("📊 *Tea Leaderboard*\n\n");
     
-    leaderboard.push_str("```\n");
-    leaderboard.push_str("    User              | Made | Rounds | RT | OT | Lost | King | Bitch\n");
-    leaderboard.push_str("    ------------------|------|--------|----|----|------|------|------\n");
-    
     for (i, stats) in stats_vec.iter().enumerate() {
         let medal = match i {
             0 => "🥇",
@@ -568,8 +569,8 @@ async fn generate_leaderboard() -> Result<String, BoxError> {
             _ => "  ",
         };
 
-        leaderboard.push_str(&format!(
-            " {} {:<16} | {:>4} | {:>6} | {:>2} | {:>2} | {:>4} | {:>4} | {:>5}\n",
+      leaderboard.push_str(&format!(
+            "{} *{}*\n   teas made: {} | rounds: {} | rt: {} | ot: {} | lost: {} | king: {} | bitch: {}\n\n",
             medal,
             stats.username,
             stats.teas_made,
@@ -581,8 +582,6 @@ async fn generate_leaderboard() -> Result<String, BoxError> {
             stats.times_bitch,
         ));
     }
-    
-    leaderboard.push_str("```");
     
     Ok(leaderboard)
 }
