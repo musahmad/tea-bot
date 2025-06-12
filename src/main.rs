@@ -326,6 +326,13 @@ async fn request_tea(username: &str) -> Result<(), BoxError> {
                 if !bitch_candidates.is_empty() {
                     let bitch = &bitch_candidates[0]; // Take the first one if multiple people rolled 3
                     all_roll_results.push(format!("🎯 {} rolled a 3! You are the bitch for the day and must make ALL the teas! 🫖", bitch));
+                    
+                    // Send the results with text
+                    send_slack_message(&all_roll_results.join("\n\n")).await?;
+                    
+                    // Send just the image
+                    send_slack_image("https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdGUwZGN6dDEwYzZ5dTNuNHN6b3FkbHEyanoxdmk1eW1lNWl0enoyeCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/SiBRuDZmgmBHNo0SOY/giphy.gif").await?;
+                    
                     break (bitch.clone(), None, Some(bitch.clone()));
                 }
 
@@ -339,18 +346,23 @@ async fn request_tea(username: &str) -> Result<(), BoxError> {
                 if !king_candidates.is_empty() {
                     let king = &king_candidates[0]; // Take the first one if multiple people rolled 18
                     all_roll_results.push(format!("👑 {} rolled an 18! You are the king for the day and are exempt from making tea! 🏆", king));
+                    
+                    // Send the results with text
+                    send_slack_message(&all_roll_results.join("\n\n")).await?;
+                    
+                    // Send just the image
+                    send_slack_image("https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExa2pkc2RzZTd2bWc1OXlzejFqaXVqbzgxMnNudmVlem44YWNsemZjYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7btXkbsV26U95Uly/giphy.gif").await?;
+                    
                     // Remove the king from current players and continue with remaining players
                     current_players.retain(|player| player != king);
                     if current_players.len() == 1 {
                         break (current_players[0].clone(), Some(king.clone()), None);
                     }
+                    
                     // Continue rolling with remaining players
+                    all_roll_results.clear(); // Clear since we already sent the message
                     round += 1;
-                    if round > 1 {
-                        send_slack_message(&all_roll_results.join("\n\n")).await?;
-                        all_roll_results.clear();
-                        tokio::time::sleep(tokio::time::Duration::from_secs(2)).await;
-                    }
+                    tokio::time::sleep(tokio::time::Duration::from_secs(2)).await;
                     continue;
                 }
 
@@ -584,4 +596,29 @@ async fn generate_leaderboard() -> Result<String, BoxError> {
     }
     
     Ok(leaderboard)
+}
+
+async fn send_slack_image(image_url: &str) -> Result<(), BoxError> {
+    let slack_token = env::var("SLACK_BOT_TOKEN").expect("SLACK_BOT_TOKEN must be set");
+    let client = reqwest::Client::new();
+    
+    let payload = json!({
+        "channel": "t",
+        "blocks": [
+            {
+                "type": "image",
+                "image_url": image_url,
+                "alt_text": "Special tea event image"
+            }
+        ]
+    });
+    
+    client
+        .post("https://slack.com/api/chat.postMessage")
+        .header("Authorization", format!("Bearer {}", slack_token))
+        .json(&payload)
+        .send()
+        .await?;
+    
+    Ok(())
 }
