@@ -37,20 +37,13 @@ const TEA_TIMER_DURATION_MINUTES: u64 = 5;
 
 #[derive(Deserialize, Debug)]
 struct SlackEventCallback {
-    token: String,
-    team_id: String,
     event: SlackEventData,
-    #[serde(rename = "type")]
-    event_type: String,
 }
 
 #[derive(Deserialize, Debug)]
 struct SlackEventData {
-    #[serde(rename = "type")]
-    event_type: String,
     user: String,
     text: String,
-    channel: String,
     event_ts: String,
 }
 
@@ -58,8 +51,6 @@ struct SlackEventData {
 #[serde(untagged)]
 enum SlackEvent {
     UrlVerification {
-        #[serde(rename = "type")]
-        event_type: String,
         challenge: String,
     },
     EventCallback(SlackEventCallback),
@@ -278,44 +269,14 @@ async fn request_tea(username: &str) -> Result<(), BoxError> {
             tea_timer(1).await?;
             return Ok(());
         } else {
-            send_slack_message(&format!(
-                "This tea round: {}. Rolling dice... 🎲🎲🎲",
-                responses.join(", ")
-            ))
-            .await?;
-        tokio::time::sleep(tokio::time::Duration::from_secs(2)).await;
         let message = {
             let mut current_players = responses.clone();
             let mut all_roll_results = Vec::new();
             let mut round = 1;
             
             let (tea_maker, king_player, bitch_player) = loop {
-                let mut rolls: Vec<(String, u32)> = current_players
-                    .iter()
-                    .map(|name| {
-                        (name.clone(), (0..3).map(|_| rand::random::<u32>() % 6 + 1).sum())
-                    })
-                    .collect();
-
-                rolls.sort_by(|a, b| b.1.cmp(&a.1));
+                let rolls = roll_dice(&current_players).await?;
                 
-                let round_results = if round == 1 {
-                    format!("Dice roll results:\n\n{}", 
-                        rolls.iter()
-                            .map(|(name, num)| format!("{}: {}", name, num))
-                            .collect::<Vec<_>>()
-                            .join("\n"))
-                } else {
-                    format!("Re-roll round {} results:\n\n{}", 
-                        round,
-                        rolls.iter()
-                            .map(|(name, num)| format!("{}: {}", name, num))
-                            .collect::<Vec<_>>()
-                            .join("\n"))
-                };
-                
-                all_roll_results.push(round_results);
-
                 // Check if anyone rolled a 3 (minimum possible score)
                 let bitch_candidates: Vec<String> = rolls
                     .iter()
@@ -352,18 +313,8 @@ async fn request_tea(username: &str) -> Result<(), BoxError> {
                     
                     // Send just the image
                     send_slack_image("https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExa2pkc2RzZTd2bWc1OXlzejFqaXVqbzgxMnNudmVlem44YWNsemZjYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7btXkbsV26U95Uly/giphy.gif").await?;
-                    
-                    // Remove the king from current players and continue with remaining players
-                    current_players.retain(|player| player != king);
-                    if current_players.len() == 1 {
-                        break (current_players[0].clone(), Some(king.clone()), None);
-                    }
-                    
-                    // Continue rolling with remaining players
-                    all_roll_results.clear(); // Clear since we already sent the message
-                    round += 1;
-                    tokio::time::sleep(tokio::time::Duration::from_secs(2)).await;
-                    continue;
+
+                    break (rolls.last().unwrap().0.clone(), Some(king.clone()), None);
                 }
 
                 let lowest_score = rolls.last().unwrap().1;
@@ -391,7 +342,7 @@ async fn request_tea(username: &str) -> Result<(), BoxError> {
             // Track participation stats  
             update_participation_stats(&responses, &tea_maker, king_player.as_deref(), bitch_player.as_deref()).await?;
             
-            format!("{}\n\n{} rolled the lowest number and will make the tea! I'll start a {} minute timer for the perfect brew. {} Type 'c' to cancel.", all_roll_results.join("\n\n"), tea_maker, TEA_TIMER_DURATION_MINUTES, get_helper_message(&responses))
+            format!("{}\n\n*{}* rolled the lowest number and will make the tea! I'll start a {} minute timer for the perfect brew. {} Type 'c' to cancel.", all_roll_results.join("\n\n"), tea_maker, TEA_TIMER_DURATION_MINUTES, get_helper_message(&responses))
         };
 
             send_slack_message(&message.to_owned()).await?;
@@ -406,6 +357,44 @@ async fn request_tea(username: &str) -> Result<(), BoxError> {
     }).await??;
 
     Ok(result)
+}
+
+
+
+async fn roll_dice(current_players: &[String]) -> Result<Vec<(String, u32)>, BoxError> {
+    let mut throws: HashMap<String, Vec<u32>> = HashMap::new();
+    let mut timestamp = String::new();
+    let mut channel_id = String::new();
+
+    for roll in 1..=3 {
+        let mut roll_message = String::new();
+        for name in current_players {
+            let dice_roll = rand::random::<u32>() % 6 + 1;
+            throws.entry(name.clone()).or_insert(Vec::new()).push(dice_roll);
+            let dice_display = throws.get(name).unwrap().iter().map(|x| format!(":dice-{}:", x)).collect::<Vec<_>>().join("  ");
+            if roll == 3 {
+                let sum = throws.get(name).unwrap().iter().sum::<u32>();
+                roll_message.push_str(&format!("{}: {} = {}\n\n", name, dice_display, sum));
+            } else {
+                roll_message.push_str(&format!("{}: {}\n\n", name, dice_display));
+            }
+        }
+        
+        if roll == 1 {
+            tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+            (timestamp, channel_id) = send_slack_message(&roll_message).await?;
+        } else {
+            tokio::time::sleep(tokio::time::Duration::from_secs(3)).await;
+            update_slack_message(&roll_message, &timestamp, &channel_id).await?;
+        }
+    }
+    send_slack_message("\n").await?;
+
+    let mut rolls: Vec<(String, u32)> = throws.into_iter().map(|(name, rolls)| (name, rolls.iter().sum::<u32>())).collect();
+
+    rolls.sort_by(|a, b| b.1.cmp(&a.1));
+
+    Ok(rolls)
 }
 
 fn get_helper_message(responses: &[String]) -> String {
@@ -589,7 +578,7 @@ async fn generate_leaderboard() -> Result<String, BoxError> {
             stats.rounds_participated,
             stats.times_requested,
             stats.times_offered,
-            stats.times_lost - stats.times_offered,
+            if stats.times_lost >= stats.times_offered { stats.times_lost - stats.times_offered } else { 0 },
             stats.times_king,
             stats.times_bitch,
         ));
