@@ -1,4 +1,4 @@
-use axum::{Json, Router, http::StatusCode, routing::post};
+use axum::{http::StatusCode, routing::post, Json, Router};
 use dotenv::dotenv;
 use lazy_static::lazy_static;
 use reqwest;
@@ -50,7 +50,9 @@ struct SlackEventData {
 #[derive(Deserialize, Debug)]
 #[serde(untagged)]
 enum SlackEvent {
-    UrlVerification { challenge: String },
+    UrlVerification {
+        challenge: String,
+    },
     EventCallback(SlackEventCallback),
 }
 
@@ -208,6 +210,7 @@ async fn offer_tea(username: &str) -> Result<(), BoxError> {
             *active_offer = Some(username.clone());
 
         }
+        
         update_request_or_offer_stats(&username, false).await?;
 
         send_slack_message(&format!("{} has generously offered tea! Type 't' within the next {} seconds to accept", username, TEA_WAIT_TIME_SECONDS)).await?;
@@ -362,48 +365,34 @@ async fn request_tea(username: &str) -> Result<(), BoxError> {
     Ok(result)
 }
 
+
+
 async fn roll_dice(current_players: &[String]) -> Result<Vec<(String, u32)>, BoxError> {
     let mut throws: HashMap<String, Vec<u32>> = HashMap::new();
-    let mut timestamp = String::new();
-    let mut channel_id = String::new();
 
-    for roll in 1..=3 {
-        let mut roll_message = String::new();
-        for name in current_players {
+    for name in current_players {
+        let (timestamp, ch_id) = send_slack_message(&format!("{}: :dice-rolling:\n\n", name)).await?;
+
+        for roll in 1..=3 {
+            tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+
             let dice_roll = rand::random::<u32>() % 6 + 1;
-            throws
-                .entry(name.clone())
-                .or_insert(Vec::new())
-                .push(dice_roll);
-            let dice_display = throws
-                .get(name)
-                .unwrap()
-                .iter()
-                .map(|x| format!(":dice-{}:", x))
-                .collect::<Vec<_>>()
-                .join("  ");
+            throws.entry(name.clone()).or_insert(Vec::new()).push(dice_roll);
+
+            let dice_display = throws.get(name).unwrap().iter().map(|x| format!(":dice-{}:", x)).collect::<Vec<_>>().join("  ");
+
             if roll == 3 {
                 let sum = throws.get(name).unwrap().iter().sum::<u32>();
-                roll_message.push_str(&format!("{}: {} = {}\n\n", name, dice_display, sum));
+                update_slack_message(&format!("{}: {} = {}\n\n", name, dice_display, sum), &timestamp, &ch_id).await?;
             } else {
-                roll_message.push_str(&format!("{}: {}\n\n", name, dice_display));
+                update_slack_message(&format!("{}: {} :dice-rolling:\n\n", name, dice_display), &timestamp, &ch_id).await?;
             }
         }
 
-        if roll == 1 {
-            tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
-            (timestamp, channel_id) = send_slack_message(&roll_message).await?;
-        } else {
-            tokio::time::sleep(tokio::time::Duration::from_secs(3)).await;
-            update_slack_message(&roll_message, &timestamp, &channel_id).await?;
-        }
     }
     send_slack_message("\n").await?;
 
-    let mut rolls: Vec<(String, u32)> = throws
-        .into_iter()
-        .map(|(name, rolls)| (name, rolls.iter().sum::<u32>()))
-        .collect();
+    let mut rolls: Vec<(String, u32)> = throws.into_iter().map(|(name, rolls)| (name, rolls.iter().sum::<u32>())).collect();
 
     rolls.sort_by(|a, b| b.1.cmp(&a.1));
 
@@ -574,7 +563,7 @@ async fn generate_leaderboard() -> Result<String, BoxError> {
     stats_vec.sort_by(|a, b| b.teas_made.cmp(&a.teas_made));
 
     let mut leaderboard = String::from("📊 *Tea Leaderboard*\n\n");
-
+    
     for (i, stats) in stats_vec.iter().enumerate() {
         let medal = match i {
             0 => "🥇",
@@ -583,7 +572,7 @@ async fn generate_leaderboard() -> Result<String, BoxError> {
             _ => "  ",
         };
 
-        leaderboard.push_str(&format!(
+      leaderboard.push_str(&format!(
             "{} *{}*\n   teas made: {} | rounds: {} | rt: {} | ot: {} | lost: {} | king: {} | bitch: {}\n\n",
             medal,
             stats.username,
@@ -596,14 +585,14 @@ async fn generate_leaderboard() -> Result<String, BoxError> {
             stats.times_bitch,
         ));
     }
-
+    
     Ok(leaderboard)
 }
 
 async fn send_slack_image(image_url: &str) -> Result<(), BoxError> {
     let slack_token = env::var("SLACK_BOT_TOKEN").expect("SLACK_BOT_TOKEN must be set");
     let client = reqwest::Client::new();
-
+    
     let payload = json!({
         "channel": "t",
         "blocks": [
@@ -614,13 +603,13 @@ async fn send_slack_image(image_url: &str) -> Result<(), BoxError> {
             }
         ]
     });
-
+    
     client
         .post("https://slack.com/api/chat.postMessage")
         .header("Authorization", format!("Bearer {}", slack_token))
         .json(&payload)
         .send()
         .await?;
-
+    
     Ok(())
 }

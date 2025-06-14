@@ -1,11 +1,32 @@
 {
+  "alexander.stepanov": {
+    "username": "alexander.stepanov",
+    "rounds_participated": 18,
+    "times_requested": 0,
+    "times_offered": 0,
+    "times_lost": 5,
+    "times_king": 0,
+    "times_bitch": 0,
+    "teas_made": 15
+  },
+  "jason": {
+    "username": "jason",
+    "rounds_participated": 18,
+    "times_requested": 0,
+    "times_offered": 0,
+    "times_lost": 7,
+    "times_king": 0,
+    "times_bitch": 0,
+    "teas_made": 21
+  },
   "musa": {
     "username": "musa",
-    "rounds_participated": 4,
-    "times_requested": 2,
+    "rounds_participated": 18,
+    "times_requested": 18,
     "times_offered": 0,
-    "times_lost": 4,
+    "times_lost": 6,
     "times_king": 0,
-    "times_bitch": 0
+    "times_bitch": 0,
+    "teas_made": 18
   }
 }
