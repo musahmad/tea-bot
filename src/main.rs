@@ -555,14 +555,14 @@ async fn generate_leaderboard() -> Result<String, BoxError> {
     let stats_map = USER_STATS.lock().unwrap().clone();
 
     if stats_map.is_empty() {
-        return Ok("📊 *Tea Leaderboard*\n\nNo tea statistics yet! Start a tea round to begin tracking stats.".to_string());
+        return Ok("📊 *Teaderboard*\n\nNo tea statistics yet! Start a tea round to begin tracking stats.".to_string());
     }
 
     let mut stats_vec: Vec<UserStats> = stats_map.into_values().collect();
 
     stats_vec.sort_by(|a, b| b.teas_made.cmp(&a.teas_made));
 
-    let mut leaderboard = String::from("📊 *Tea Leaderboard*\n\n");
+    let mut leaderboard = String::from("📊 *Teaderboard*\n\n");
     
     for (i, stats) in stats_vec.iter().enumerate() {
         let medal = match i {
