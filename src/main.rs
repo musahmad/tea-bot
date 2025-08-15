@@ -258,9 +258,9 @@ async fn request_tea(username: &str) -> Result<(), BoxError> {
         tokio::time::sleep(tokio::time::Duration::from_secs(TEA_WAIT_TIME_SECONDS)).await;
 
         let responses = {
-            let mut responses = TEA_RESPONSES.lock().unwrap().clone().iter().cloned().collect::<Vec<_>>();
-            responses.push(username.clone());
-            responses
+            let mut responses = TEA_RESPONSES.lock().unwrap().clone();
+            responses.insert(username.clone());
+            responses.iter().cloned().collect::<Vec<_>>()
         };
 
         if responses.len() == 1 {
