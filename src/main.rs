@@ -32,7 +32,7 @@ lazy_static! {
     static ref USER_STATS: Mutex<HashMap<String, UserStats>> = Mutex::new(HashMap::new());
     static ref NAME_TO_MEME: HashMap<String, String> = {
         let mut m = HashMap::new();
-        m.insert("musa".to_string(), ":mumu-the-bull:".to_string());
+        m.insert("musa".to_string(), ":mumu_the_bull:".to_string());
         m.insert("alexwilliams0712".to_string(), ":bigger-show:".to_string());
         m.insert("m".to_string(), ":beardo:".to_string());
         m.insert("jem".to_string(), ":wisdom:".to_string());
@@ -367,7 +367,7 @@ async fn request_tea(username: &str) -> Result<(), BoxError> {
             // Track participation stats  
             update_participation_stats(&responses, &tea_maker, king_player.as_deref(), bitch_player.as_deref()).await?;
             
-            format!("{}\n\n*{}* rolled the lowest number and will make the tea! I'll start a {} minute timer for the perfect brew. {} Type 'c' to cancel.", all_roll_results.join("\n\n"), get_meme(tea_maker.clone()), TEA_TIMER_DURATION_MINUTES, get_helper_message(&responses))
+            format!("{}\n\n*{}* rolled the lowest number and will make the tea! I'll start a {} minute timer for the perfect brew. {} Type 'c' to cancel. \n\n{}", all_roll_results.join("\n\n"), get_meme(tea_maker.clone()), TEA_TIMER_DURATION_MINUTES, get_helper_message(&responses), get_meme(responses.last().unwrap().clone(),))
         };
 
             send_slack_message(&message.to_owned()).await?;
