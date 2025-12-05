@@ -1,0 +1,42 @@
+{
+  "musa": {
+    "username": "musa",
+    "rounds_participated": 1,
+    "times_requested": 1,
+    "times_offered": 0,
+    "times_lost": 0,
+    "times_king": 0,
+    "times_bitch": 0,
+    "teas_made": 0
+  },
+  "marcus": {
+    "username": "marcus",
+    "rounds_participated": 1,
+    "times_requested": 0,
+    "times_offered": 0,
+    "times_lost": 0,
+    "times_king": 0,
+    "times_bitch": 0,
+    "teas_made": 0
+  },
+  "alex": {
+    "username": "alex",
+    "rounds_participated": 1,
+    "times_requested": 0,
+    "times_offered": 0,
+    "times_lost": 1,
+    "times_king": 0,
+    "times_bitch": 0,
+    "teas_made": 4
+  },
+  "sasha": {
+    "username": "sasha",
+    "rounds_participated": 1,
+    "times_requested": 0,
+    "times_offered": 0,
+    "times_lost": 0,
+    "times_king": 0,
+    "times_bitch": 0,
+    "teas_made": 0
+  }
+}
