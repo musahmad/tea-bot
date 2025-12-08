@@ -30,20 +30,6 @@ lazy_static! {
     static ref TEA_RESPONSES: Mutex<std::collections::HashSet<String>> =
         Mutex::new(std::collections::HashSet::new());
     static ref USER_STATS: Mutex<HashMap<String, UserStats>> = Mutex::new(HashMap::new());
-    static ref NAME_TO_MEME: HashMap<String, String> = {
-        let mut m = HashMap::new();
-        m.insert("musa".to_string(), ":mumu_the_bull:".to_string());
-        m.insert("alexwilliams0712".to_string(), ":bigger-show:".to_string());
-        m.insert("m".to_string(), ":beardo:".to_string());
-        m.insert("jem".to_string(), ":wisdom:".to_string());
-        m.insert("martyn".to_string(), ":saint-martyn-of-afreetea:".to_string());
-        m.insert("alexander.stepanov".to_string(), ":angry-sasha:".to_string());
-        m.insert("laurence".to_string(), ":lawrence-magic:".to_string());
-        m.insert("twmeggs".to_string(), ":tim:".to_string());
-        m.insert("stephen285".to_string(), ":stephen:".to_string());
-        m.insert("megan".to_string(), ":megan:".to_string());
-        m
-    };
 }
 
 const TEA_WAIT_TIME_SECONDS: u64 = 30;
@@ -214,7 +200,20 @@ async fn message_matcher(message: &str, username: &str) -> Result<(), BoxError> 
 }
 
 fn get_meme(username: String) -> String {
-    NAME_TO_MEME.get(&username).cloned().unwrap_or_else(|| username)
+    match &*username {
+        "aatif" => ":aaa:",
+        "alexander.stepanov" => ":angry-sasha:",
+        "alexwilliams0712" => ":bigger-show:",
+        "jem" => ":wіѕdоm:",
+        "laurence" => ":lawrence-magic:",
+        "m" => ":beardo:",
+        "martyn" => ":saint-martyn-of-afreetea:",
+        "megan" => ":megan:",
+        "musa" => ":mumu_the_bull:",
+        "stephen285" => ":stephen:",
+        "twmeggs" => ":tim:",
+        _ => return username
+    }.into()
 }
 
 async fn offer_tea(username: &str) -> Result<(), BoxError> {
