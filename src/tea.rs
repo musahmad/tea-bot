@@ -7,7 +7,7 @@ use crate::slack::{SlackAction, UserCommand};
 use crate::User;
 
 pub struct TeaRound {
-    pub bids: HashMap<User, f64>,
+    pub bids: HashMap<User, u8>,
     pub start_time: Instant,
 }
 
@@ -53,10 +53,15 @@ impl Tea {
         }
     }
 
-    fn calculate_payments(&self, bids: &HashMap<User, f64>) -> HashMap<User, f64> {
-        let sum = bids.values().sum::<f64>();
+    fn calculate_payments(&self, bids: &HashMap<User, u8>) -> HashMap<User, f64> {
+        let sum = bids.values().sum::<u8>() as f64;
         bids.iter()
-            .map(|(user, bid)| (user.clone(), ((sum - bid) / (bids.len() - 1) as f64) - bid))
+            .map(|(user, bid)| {
+                (
+                    user.clone(),
+                    ((sum - *bid as f64) / (bids.len() - 1) as f64) - *bid as f64,
+                )
+            })
             .collect()
     }
 
@@ -110,7 +115,7 @@ impl Tea {
             UserCommand::Bid(user, bid, response_url) => {
                 if let Some(tea_round) = self.tea_round.as_mut() {
                     if let Some(balance) = self.contract.get_balance(user.id.clone()) {
-                        if balance < bid {
+                        if balance < bid.into() {
                             SlackAction::RejectBid(
                                 format!("☕️ Insufficient balance. You have {} TEA 🚨", balance),
                                 response_url,
@@ -146,7 +151,7 @@ impl Tea {
                         return;
                     }
                     if let Some(balance) = self.contract.get_balance(user.id.clone()) {
-                        if balance < bid {
+                        if balance < bid.into() {
                             SlackAction::RejectBid(
                                 format!("☕️ Insufficient balance. You have {} TEA 🚨", balance),
                                 response_url,
@@ -204,14 +209,14 @@ impl Tea {
                 SlackAction::AnnounceDiceRoll(rollers.clone(), *lowest_bid).send(&self.message_tx);
 
                 loop {
-                    let rolls: Vec<(User, Vec<u32>)> = rollers
+                    let rolls: Vec<(User, Vec<u8>)> = rollers
                         .iter()
                         .map(|user| {
                             (
                                 user.clone(),
                                 (0..3)
-                                    .map(|_| rand::random::<u32>() % 6 + 1)
-                                    .collect::<Vec<u32>>(),
+                                    .map(|_| rand::random::<u8>() % 6 + 1)
+                                    .collect::<Vec<u8>>(),
                             )
                         })
                         .collect();
@@ -220,7 +225,7 @@ impl Tea {
 
                     let lowest_score = &rolls
                         .iter()
-                        .min_by(|a, b| a.1.iter().sum::<u32>().cmp(&b.1.iter().sum::<u32>()))
+                        .min_by(|a, b| a.1.iter().sum::<u8>().cmp(&b.1.iter().sum::<u8>()))
                         .unwrap()
                         .1;
 
@@ -245,37 +250,41 @@ impl Tea {
             };
 
             let payments = self.calculate_payments(&bids);
-            let transfers = self.calculate_transfers(&payments);
+            let transfers: HashMap<(User, User), f64> = self.calculate_transfers(&payments);
 
-            SlackAction::AnnounceTeaMaker((tea_maker, *lowest_bid, bids.len() as u32))
+            SlackAction::AnnounceTeaMaker((tea_maker, *lowest_bid, bids.len()))
                 .send(&self.message_tx);
             SlackAction::AnnouncePayments(payments).send(&self.message_tx);
-            // SlackAction::AnnounceTransfers(transfers.clone()).send(&self.message_tx);
 
-            match self
-                .contract
-                .transfer(
-                    transfers
-                        .iter()
-                        .map(|((from, to), amount)| {
-                            (
-                                from.address.parse().unwrap(),
-                                to.address.parse().unwrap(),
-                                *amount,
-                            )
-                        })
-                        .collect(),
-                )
-                .await
-            {
-                Ok(_) => {
-                    SlackAction::SendMessage("☕️ *All transfers successful ✅*".to_string())
-                        .send(&self.message_tx);
+            if transfers.len() > 0 {
+                match self
+                    .contract
+                    .transfer(
+                        transfers
+                            .iter()
+                            .map(|((from, to), amount)| {
+                                (
+                                    from.address.parse().unwrap(),
+                                    to.address.parse().unwrap(),
+                                    *amount,
+                                )
+                            })
+                            .collect(),
+                    )
+                    .await
+                {
+                    Ok(_) => {
+                        SlackAction::SendMessage("☕️ *All transfers successful ✅*".to_string())
+                            .send(&self.message_tx);
+                    }
+                    Err(e) => {
+                        SlackAction::SendMessage(format!("☕️ *Failed to transfer 🚨:* {}", e))
+                            .send(&self.message_tx);
+                    }
                 }
-                Err(e) => {
-                    SlackAction::SendMessage(format!("☕️ *Failed to transfer 🚨:* {}", e))
-                        .send(&self.message_tx);
-                }
+            } else {
+                SlackAction::SendMessage("☕️ *No transfers to be made ✅*".to_string())
+                    .send(&self.message_tx);
             }
 
             match self.contract.refresh_balances().await {

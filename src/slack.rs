@@ -17,7 +17,7 @@ use crate::User;
 
 #[allow(dead_code)]
 pub enum UserCommand {
-    Bid(User, f64, Url),
+    Bid(User, u8, Url),
     CancelTeaRound,
 }
 
@@ -27,13 +27,12 @@ pub enum SlackAction {
     StartTeaRound(User),
     ConfirmBid(User, Url),
     RejectBid(String, Url),
-    RevealBids(Vec<(User, f64)>),
-    AnnounceDiceRoll(Vec<User>, f64),
+    RevealBids(Vec<(User, u8)>),
+    AnnounceDiceRoll(Vec<User>, u8),
     AnnounceDiceRollTie(Vec<User>),
-    RollDice(Vec<(User, Vec<u32>)>),
-    AnnounceTeaMaker((User, f64, u32)),
+    RollDice(Vec<(User, Vec<u8>)>),
+    AnnounceTeaMaker((User, u8, usize)),
     AnnouncePayments(HashMap<User, f64>),
-    // AnnounceTransfers(HashMap<(User, User), f64>),
     CancelTeaRound,
     ShowTeaderboard(Vec<(User, f64)>),
 }
@@ -219,7 +218,7 @@ impl SlackInterface {
                                         format!(
                                             ":dice-{}: = {}\n\n",
                                             roll,
-                                            rolls.iter().sum::<u32>()
+                                            rolls.iter().sum::<u8>()
                                         )
                                         .as_str(),
                                     );
@@ -249,21 +248,6 @@ impl SlackInterface {
                     }
                     self.send_message(&message).await;
                 }
-                // SlackAction::AnnounceTransfers(transfers) => {
-                //     tokio::time::sleep(Duration::from_secs(2)).await;
-                //     self.send_message(&format!(
-                //         "\n☕️ *Transfers to be made:*\n\n{}",
-                //         transfers
-                //             .iter()
-                //             .map(|((from, to), amount)| format!(
-                //                 "{} → {}:  {:.1} TEA",
-                //                 from, to, amount
-                //             ))
-                //             .collect::<Vec<_>>()
-                //             .join("\n")
-                //     ))
-                //     .await;
-                // }
                 SlackAction::CancelTeaRound => {
                     self.send_message(&format!("Tea round cancelled")).await;
                 }
@@ -385,30 +369,7 @@ impl SlackInterface {
             }
         };
 
-        if let Ok(bid) = payload.text.trim().parse::<f64>() {
-            if bid < 0.0 {
-                return (
-                    StatusCode::OK,
-                    Json(SlashCommandResponse {
-                        response_type: ResponseType::Ephemeral,
-                        text: "Invalid bid. Bid must be a non-negative number.".to_string(),
-                    }),
-                )
-                    .into_response();
-            }
-
-            if (bid * 10.0).round() != bid * 10.0 {
-                return (
-                    StatusCode::OK,
-                    Json(SlashCommandResponse {
-                        response_type: ResponseType::Ephemeral,
-                        text: "Invalid bid. Bid must have at most one decimal place (e.g., 5.5)."
-                            .to_string(),
-                    }),
-                )
-                    .into_response();
-            }
-
+        if let Ok(bid) = payload.text.trim().parse::<u8>() {
             self.command_tx
                 .send(UserCommand::Bid(user, bid, payload.response_url))
                 .ok();
@@ -418,7 +379,7 @@ impl SlackInterface {
                 StatusCode::OK,
                 Json(SlashCommandResponse {
                     response_type: ResponseType::Ephemeral,
-                    text: "Invalid bid. Please provide a number.".to_string(),
+                    text: "Invalid bid. Please provide a non-negative integer.".to_string(),
                 }),
             )
                 .into_response()
