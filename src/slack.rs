@@ -25,7 +25,7 @@ pub enum UserCommand {
 pub enum SlackAction {
     SendMessage(String),
     StartTeaRound(User),
-    ConfirmBid(User, f64, Url),
+    ConfirmBid(User, Url),
     RejectBid(String, Url),
     RevealBids(Vec<(User, f64)>),
     AnnounceDiceRoll(Vec<User>, f64),
@@ -131,9 +131,9 @@ impl SlackInterface {
                     ))
                     .await;
                 }
-                SlackAction::ConfirmBid(user, bid, response_url) => {
+                SlackAction::ConfirmBid(user, response_url) => {
                     self.respond_to_slash_command(
-                        &format!("Your bid of {} has been accepted!", bid),
+                        &format!("Your bid has been accepted!"),
                         &response_url,
                     )
                     .await;

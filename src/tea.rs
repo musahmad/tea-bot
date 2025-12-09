@@ -122,7 +122,7 @@ impl Tea {
                     if let Some(bid) = tea_round.bids.get(&user) {
                         SlackAction::RejectBid(
                             format!(
-                                "☕️ You have already bid {} TEA. That's locked in now! 🚨",
+                                "☕️ You have already bid {:.1} TEA. That's locked in now! 🚨",
                                 bid
                             ),
                             response_url,
@@ -133,7 +133,7 @@ impl Tea {
 
                     tea_round.bids.insert(user.clone(), bid);
 
-                    SlackAction::ConfirmBid(user.clone(), bid, response_url).send(&self.message_tx);
+                    SlackAction::ConfirmBid(user.clone(), response_url).send(&self.message_tx);
                 } else {
                     if let Err(e) = self.contract.refresh_balances().await {
                         tracing::error!("Failed to refresh balances 🚨: {}", e);
@@ -162,7 +162,7 @@ impl Tea {
                     });
 
                     SlackAction::StartTeaRound(user.clone()).send(&self.message_tx);
-                    SlackAction::ConfirmBid(user.clone(), bid, response_url).send(&self.message_tx);
+                    SlackAction::ConfirmBid(user.clone(), response_url).send(&self.message_tx);
                 }
             }
             UserCommand::CancelTeaRound => {
