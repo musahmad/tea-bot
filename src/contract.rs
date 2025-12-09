@@ -66,10 +66,8 @@ impl ContractInterface {
             .to_vec();
 
         for (i, balance) in balances.iter().enumerate() {
-            self.balances.insert(
-                self.users[i].clone(),
-                (*balance / U256::from(10u128.pow(18))).into(),
-            );
+            let balance_f64 = balance.to::<u128>() as f64 / 1e18;
+            self.balances.insert(self.users[i].clone(), balance_f64);
         }
         tracing::info!("Balances: {:?}", self.balances);
         Ok(self.balances.clone())
@@ -94,7 +92,10 @@ impl ContractInterface {
     ) -> Result<TransactionReceipt, Error> {
         let payments = payments
             .into_iter()
-            .map(|(from, to, amount)| (to, from, U256::from((amount * 10f64.powi(18)) as u128)))
+            .map(|(from, to, amount)| {
+                let amount_wei = (amount * 1e18).round() as u128;
+                (to, from, U256::from(amount_wei))
+            })
             .collect::<Vec<(Address, Address, U256)>>();
 
         Ok(self
