@@ -230,13 +230,12 @@ impl Tea {
                         .map(|(user, _)| user.clone())
                         .collect();
 
-                    if lowest_rollers.len() == 1 {
+                    rollers = lowest_rollers;
+
+                    if rollers.len() == 1 {
                         break;
                     } else {
-                        SlackAction::AnnounceDiceRollTie(lowest_rollers.clone())
-                            .send(&self.message_tx);
-
-                        rollers = lowest_rollers;
+                        SlackAction::AnnounceDiceRollTie(rollers.clone()).send(&self.message_tx);
                     }
                 }
 
