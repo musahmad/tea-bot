@@ -251,7 +251,7 @@ impl Tea {
             SlackAction::AnnounceTeaMaker((tea_maker, *lowest_bid, bids.len() as u32))
                 .send(&self.message_tx);
             SlackAction::AnnouncePayments(payments).send(&self.message_tx);
-            SlackAction::AnnounceTransfers(transfers.clone()).send(&self.message_tx);
+            // SlackAction::AnnounceTransfers(transfers.clone()).send(&self.message_tx);
 
             match self
                 .contract

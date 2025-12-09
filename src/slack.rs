@@ -33,7 +33,7 @@ pub enum SlackAction {
     RollDice(Vec<(User, Vec<u32>)>),
     AnnounceTeaMaker((User, f64, u32)),
     AnnouncePayments(HashMap<User, f64>),
-    AnnounceTransfers(HashMap<(User, User), f64>),
+    // AnnounceTransfers(HashMap<(User, User), f64>),
     CancelTeaRound,
     ShowTeaderboard(Vec<(User, f64)>),
 }
@@ -126,7 +126,7 @@ impl SlackInterface {
                 }
                 SlackAction::StartTeaRound(user) => {
                     self.send_message(&format!(
-                        "\n\n☕️ *{} is starting a tea round. Place your bid! You have 45 seconds.*\n\n",
+                        "\n\n☕️ *{} is starting a tea round! Place your bid with /t (e.g. /t 5.5). You have 45 seconds.*\n\n",
                         user
                     ))
                     .await;
@@ -157,11 +157,15 @@ impl SlackInterface {
                         for (index, (user, bid)) in sorted_bids.iter().enumerate() {
                             tokio::time::sleep(Duration::from_secs(2)).await;
                             if index < sorted_bids.len() - 1 {
-                                message = message
-                                    .replace("...", format!("{} bid: {}\n...", user, bid).as_str());
+                                message = message.replace(
+                                    "...",
+                                    format!("{} bid: {} TEA\n...", user, bid).as_str(),
+                                )
                             } else {
-                                message = message
-                                    .replace("...", format!("{} bid: {}\n", user, bid).as_str());
+                                message = message.replace(
+                                    "...",
+                                    format!("{} bid: {} TEA\n", user, bid).as_str(),
+                                );
                             }
                             self.update_message(&message, &response).await;
                         }
@@ -241,25 +245,25 @@ impl SlackInterface {
                     let mut message = String::from("\n☕️ *Payments to be made:*\n\n");
                     for (user, amount) in sorted_payments {
                         let emoji = if *amount > 0.0 { "🤑" } else { "☹️" };
-                        message += &format!("{} {}: {} TEA\n", emoji, user, amount);
+                        message += &format!("{}: {:.1} TEA {}\n\n", user, amount, emoji);
                     }
                     self.send_message(&message).await;
                 }
-                SlackAction::AnnounceTransfers(transfers) => {
-                    tokio::time::sleep(Duration::from_secs(2)).await;
-                    self.send_message(&format!(
-                        "\n☕️ *Transfers to be made:*\n\n{}",
-                        transfers
-                            .iter()
-                            .map(|((from, to), amount)| format!(
-                                "{} → {}: {} TEA",
-                                from, to, amount
-                            ))
-                            .collect::<Vec<_>>()
-                            .join("\n")
-                    ))
-                    .await;
-                }
+                // SlackAction::AnnounceTransfers(transfers) => {
+                //     tokio::time::sleep(Duration::from_secs(2)).await;
+                //     self.send_message(&format!(
+                //         "\n☕️ *Transfers to be made:*\n\n{}",
+                //         transfers
+                //             .iter()
+                //             .map(|((from, to), amount)| format!(
+                //                 "{} → {}:  {:.1} TEA",
+                //                 from, to, amount
+                //             ))
+                //             .collect::<Vec<_>>()
+                //             .join("\n")
+                //     ))
+                //     .await;
+                // }
                 SlackAction::CancelTeaRound => {
                     self.send_message(&format!("Tea round cancelled")).await;
                 }
@@ -277,7 +281,7 @@ impl SlackInterface {
                         };
 
                         leaderboard.push_str(&format!(
-                            "{} *{}* Balance: {} TEA\n\n",
+                            "{} *{}* Balance: {:.1} TEA\n\n",
                             medal, user, balance,
                         ));
                     }
