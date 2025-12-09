@@ -20,6 +20,9 @@ WORKDIR /app
 # Copy the built binary from builder
 COPY --from=builder /usr/src/app/target/release/tea-bot .
 
+# Copy necessary runtime files
+COPY abi.json .
+
 # Expose the port the app runs on
 EXPOSE 6969
 
