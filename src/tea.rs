@@ -223,15 +223,15 @@ impl Tea {
 
                     SlackAction::RollDice(rolls.clone()).send(&self.message_tx);
 
-                    let lowest_score = &rolls
+                    let lowest_score_sum: u8 = rolls
                         .iter()
-                        .min_by(|a, b| a.1.iter().sum::<u8>().cmp(&b.1.iter().sum::<u8>()))
-                        .unwrap()
-                        .1;
+                        .map(|(_, dice)| dice.iter().sum::<u8>())
+                        .min()
+                        .unwrap();
 
                     let lowest_rollers: Vec<User> = rolls
                         .iter()
-                        .filter(|(_, score)| score == lowest_score)
+                        .filter(|(_, dice)| dice.iter().sum::<u8>() == lowest_score_sum)
                         .map(|(user, _)| user.clone())
                         .collect();
 
