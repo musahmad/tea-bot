@@ -125,7 +125,7 @@ impl SlackInterface {
                 }
                 SlackAction::StartTeaRound(user) => {
                     self.send_message(&format!(
-                        "\n\n☕️ *{} is starting a tea round! Place your bid with /t (e.g. /t 5.5). You have 45 seconds.*\n\n",
+                        "\n\n☕️ *{} is starting a tea round! Place your bid with /t (e.g. /t 5). You have 45 seconds.*\n\n",
                         user
                     ))
                     .await;
