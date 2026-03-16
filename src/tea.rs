@@ -6,9 +6,6 @@ use crate::contract::ContractInterface;
 use crate::slack::{SlackAction, UserCommand};
 use crate::User;
 
-const SASHA_NAME: &str = "sasha";
-const MARTYN_NAME: &str = "martyn";
-
 pub struct TeaRound {
     pub bids: HashMap<User, u8>,
     pub start_time: Instant,
@@ -252,15 +249,14 @@ impl Tea {
                 (*lowest_bidders[0]).clone()
             };
 
-            SlackAction::AnnounceTeaMaker((tea_maker, *lowest_bid, bids.len()))
-                .send(&self.message_tx);
-
             let payments = self.calculate_payments(&bids);
             let transfers: HashMap<(User, User), f64> = self.calculate_transfers(&payments);
 
+            SlackAction::AnnounceTeaMaker((tea_maker, *lowest_bid, bids.len()))
+                .send(&self.message_tx);
             SlackAction::AnnouncePayments(payments).send(&self.message_tx);
 
-            if !transfers.is_empty() {
+            if transfers.len() > 0 {
                 match self
                     .contract
                     .transfer(
@@ -289,26 +285,6 @@ impl Tea {
             } else {
                 SlackAction::SendMessage("☕️ *No transfers to be made ✅*".to_string())
                     .send(&self.message_tx);
-            }
-
-            if self.contract.refresh_balances().await.is_ok() {
-                let sasha = self.contract.get_user_by_name(SASHA_NAME);
-                let martyn = self.contract.get_user_by_name(MARTYN_NAME);
-
-                if let (Some(sasha), Some(martyn)) = (sasha, martyn) {
-                    let amount = self.contract.get_balance_by_name(SASHA_NAME).unwrap_or(0.0);
-
-                    if amount > 0.0 {
-                        let _ = self
-                            .contract
-                            .transfer(vec![(
-                                sasha.address.parse().unwrap(),
-                                martyn.address.parse().unwrap(),
-                                amount,
-                            )])
-                            .await;
-                    }
-                }
             }
 
             match self.contract.refresh_balances().await {

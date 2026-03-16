@@ -86,18 +86,6 @@ impl ContractInterface {
         Some(balance)
     }
 
-    pub fn get_user_by_name(&self, name: &str) -> Option<User> {
-        self.users
-            .iter()
-            .find(|user| user.name.eq_ignore_ascii_case(name))
-            .cloned()
-    }
-
-    pub fn get_balance_by_name(&self, name: &str) -> Option<f64> {
-        let user = self.get_user_by_name(name)?;
-        self.balances.get(&user).copied()
-    }
-
     pub async fn transfer(
         &self,
         payments: Vec<(Address, Address, f64)>,
