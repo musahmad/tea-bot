@@ -56,13 +56,61 @@ impl Tea {
         }
     }
 
-    fn calculate_forced_payments(
-        &self,
-        from_user: &User,
-        to_user: &User,
-        amount: f64,
-    ) -> HashMap<User, f64> {
-        HashMap::from([(from_user.clone(), -amount), (to_user.clone(), amount)])
+    fn calculate_payments(&self, bids: &HashMap<User, u8>) -> HashMap<User, f64> {
+        let sum = bids.values().sum::<u8>() as f64;
+        bids.iter()
+            .map(|(user, bid)| {
+                (
+                    user.clone(),
+                    ((sum - *bid as f64) / (bids.len() - 1) as f64) - *bid as f64,
+                )
+            })
+            .collect()
+    }
+
+    fn calculate_transfers(&self, payments: &HashMap<User, f64>) -> HashMap<(User, User), f64> {
+        let mut sorted_payments: Vec<(User, f64)> = payments
+            .iter()
+            .map(|(user, amount)| (user.clone(), *amount))
+            .collect();
+        sorted_payments.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
+
+        let mut transfers = HashMap::new();
+        let mut i = 0;
+        let mut j = sorted_payments.len() - 1;
+
+        while i < j {
+            let receiver = sorted_payments[i].0.clone();
+            let receiver_amount = sorted_payments[i].1;
+
+            let payer = sorted_payments[j].0.clone();
+            let payer_amount = sorted_payments[j].1.abs();
+
+            if receiver_amount == 0.0 {
+                i += 1;
+                continue;
+            }
+            if payer_amount == 0.0 {
+                j -= 1;
+                continue;
+            }
+
+            let transfer_amount = receiver_amount.min(payer_amount);
+
+            transfers.insert((payer.clone(), receiver.clone()), transfer_amount);
+
+            sorted_payments[i].1 -= transfer_amount;
+            sorted_payments[j].1 += transfer_amount;
+
+            if sorted_payments[i].1 == 0.0 {
+                i += 1;
+            }
+            if sorted_payments[j].1 == 0.0 {
+                j -= 1;
+            }
+        }
+
+        transfers
     }
 
     async fn handle_command(&mut self, command: UserCommand) {
@@ -207,31 +255,28 @@ impl Tea {
             SlackAction::AnnounceTeaMaker((tea_maker, *lowest_bid, bids.len()))
                 .send(&self.message_tx);
 
-            let mut payments = HashMap::new();
-            let mut transfers = Vec::new();
-
-            if self.contract.refresh_balances().await.is_ok() {
-                let sasha = self.contract.get_user_by_name(SASHA_NAME);
-                let martyn = self.contract.get_user_by_name(MARTYN_NAME);
-
-                if let (Some(sasha), Some(martyn)) = (sasha, martyn) {
-                    let amount = self.contract.get_balance_by_name(SASHA_NAME).unwrap_or(0.0);
-                    payments = self.calculate_forced_payments(&sasha, &martyn, amount);
-
-                    if amount > 0.0 {
-                        transfers.push((
-                            sasha.address.parse().unwrap(),
-                            martyn.address.parse().unwrap(),
-                            amount,
-                        ));
-                    }
-                }
-            }
+            let payments = self.calculate_payments(&bids);
+            let transfers: HashMap<(User, User), f64> = self.calculate_transfers(&payments);
 
             SlackAction::AnnouncePayments(payments).send(&self.message_tx);
 
             if !transfers.is_empty() {
-                match self.contract.transfer(transfers).await {
+                match self
+                    .contract
+                    .transfer(
+                        transfers
+                            .iter()
+                            .map(|((from, to), amount)| {
+                                (
+                                    from.address.parse().unwrap(),
+                                    to.address.parse().unwrap(),
+                                    *amount,
+                                )
+                            })
+                            .collect(),
+                    )
+                    .await
+                {
                     Ok(_) => {
                         SlackAction::SendMessage("☕️ *All transfers successful ✅*".to_string())
                             .send(&self.message_tx);
@@ -244,6 +289,26 @@ impl Tea {
             } else {
                 SlackAction::SendMessage("☕️ *No transfers to be made ✅*".to_string())
                     .send(&self.message_tx);
+            }
+
+            if self.contract.refresh_balances().await.is_ok() {
+                let sasha = self.contract.get_user_by_name(SASHA_NAME);
+                let martyn = self.contract.get_user_by_name(MARTYN_NAME);
+
+                if let (Some(sasha), Some(martyn)) = (sasha, martyn) {
+                    let amount = self.contract.get_balance_by_name(SASHA_NAME).unwrap_or(0.0);
+
+                    if amount > 0.0 {
+                        let _ = self
+                            .contract
+                            .transfer(vec![(
+                                sasha.address.parse().unwrap(),
+                                martyn.address.parse().unwrap(),
+                                amount,
+                            )])
+                            .await;
+                    }
+                }
             }
 
             match self.contract.refresh_balances().await {
