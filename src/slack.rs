@@ -173,7 +173,7 @@ impl SlackInterface {
                 SlackAction::AnnounceDiceRoll(users, total) => {
                     tokio::time::sleep(Duration::from_secs(2)).await;
                     self.send_message(&format!(
-                       "\n\n☕️ *{} both bid {}! Going back to the old school way to settle this... 🎲 🎲 🎲*\n",
+                       "\n\n☕️ *{} each bid {}! Going back to the old school way to settle this... 🎲 🎲 🎲*\n",
                         users
                             .iter()
                             .map(|user| user.to_string())
