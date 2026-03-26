@@ -93,7 +93,14 @@ impl ContractInterface {
         let payments = payments
             .into_iter()
             .map(|(from, to, amount)| {
-                let amount_wei = (amount * 1e18).round() as u128;
+                let capped = self
+                    .users
+                    .iter()
+                    .find(|u| u.address.parse::<Address>().ok().as_ref() == Some(&from))
+                    .and_then(|u| self.balances.get(u))
+                    .map(|&balance| amount.min(balance))
+                    .unwrap_or(amount);
+                let amount_wei = (capped * 1e18).round() as u128;
                 (to, from, U256::from(amount_wei))
             })
             .collect::<Vec<(Address, Address, U256)>>();
