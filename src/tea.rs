@@ -53,16 +53,35 @@ impl Tea {
         }
     }
 
-    fn calculate_payments(&self, bids: &HashMap<User, u8>) -> HashMap<User, f64> {
+    fn calculate_payments(
+        &self,
+        bids: &HashMap<User, u8>,
+        lowest_bidder: &User,
+        highest_bid: u8,
+    ) -> HashMap<User, f64> {
         let sum = bids.values().sum::<u8>() as f64;
-        bids.iter()
+
+        let mut distribution = bids
+            .iter()
             .map(|(user, bid)| {
                 (
                     user.clone(),
                     ((sum - *bid as f64) / (bids.len() - 1) as f64) - *bid as f64,
                 )
             })
-            .collect()
+            .collect::<HashMap<User, f64>>();
+
+        let penalty = highest_bid as f64 * 2.;
+
+        for (user, amount) in distribution.iter_mut() {
+            if user == lowest_bidder {
+                *amount -= penalty;
+            } else {
+                *amount += penalty / (bids.len() - 1) as f64;
+            }
+        }
+
+        distribution
     }
 
     fn calculate_transfers(&self, payments: &HashMap<User, f64>) -> HashMap<(User, User), f64> {
@@ -195,6 +214,11 @@ impl Tea {
                 .min_by(|a, b| a.partial_cmp(b).unwrap())
                 .unwrap();
 
+            let highest_bid = bids
+                .values()
+                .max_by(|a, b| a.partial_cmp(b).unwrap())
+                .unwrap();
+
             let lowest_bidders = tea_round
                 .bids
                 .iter()
@@ -249,7 +273,7 @@ impl Tea {
                 (*lowest_bidders[0]).clone()
             };
 
-            let payments = self.calculate_payments(&bids);
+            let payments = self.calculate_payments(&bids, &tea_maker, *highest_bid);
             let transfers: HashMap<(User, User), f64> = self.calculate_transfers(&payments);
 
             SlackAction::AnnounceTeaMaker((tea_maker, *lowest_bid, bids.len()))
