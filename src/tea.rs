@@ -71,7 +71,7 @@ impl Tea {
             })
             .collect::<HashMap<User, f64>>();
 
-        let penalty = highest_bid as f64 * 2.;
+        let penalty = highest_bid as f64;
 
         for (user, amount) in distribution.iter_mut() {
             if user == lowest_bidder {
