@@ -31,6 +31,7 @@ pub enum SlackAction {
     AnnounceDiceRoll(Vec<User>, u8),
     AnnounceDiceRollTie(Vec<User>),
     RollDice(Vec<(User, Vec<u8>)>),
+    AnnouncePenalty(f64),
     AnnounceTeaMaker((User, u8, usize)),
     AnnouncePayments(HashMap<User, f64>),
     CancelTeaRound,
@@ -234,6 +235,17 @@ impl SlackInterface {
                         user, bid, num_tea
                     ))
                     .await;
+                }
+                SlackAction::AnnouncePenalty(penalty) => {
+                    let mut message = String::from("\n\n☕️ *Loser Penalty:* :dice-rolling:\n\n");
+                    if let Some(response) = self.send_message(&message).await {
+                        tokio::time::sleep(Duration::from_secs(3)).await;
+                        message = message.replace(
+                            ":dice-rolling:",
+                            &format!(":dice-{}: *{} TEA*", penalty as u8, penalty as u8),
+                        );
+                        self.update_message(&message, &response).await;
+                    }
                 }
                 SlackAction::AnnouncePayments(payments) => {
                     let mut sorted_payments: Vec<_> = payments.iter().collect();
