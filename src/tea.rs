@@ -79,6 +79,17 @@ impl Tea {
             }
         }
 
+        const EXTRA_TAX_USER_ID: &str = "D047X2WQ9PA";
+        if bids.keys().any(|u| u.id == EXTRA_TAX_USER_ID) && bids.len() > 1 {
+            for (user, amount) in distribution.iter_mut() {
+                if user.id == EXTRA_TAX_USER_ID {
+                    *amount -= 1.0;
+                } else {
+                    *amount += 1.0 / (bids.len() - 1) as f64;
+                }
+            }
+        }
+
         distribution
     }
 
