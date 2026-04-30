@@ -1,5 +1,9 @@
-use std::{collections::HashMap, sync::Arc, time::Duration};
-use tokio::sync::mpsc;
+use std::{
+    collections::HashMap,
+    sync::{Arc, Mutex},
+    time::Duration,
+};
+use tokio::{sync::mpsc, task::AbortHandle};
 
 use axum::{
     extract::State,
@@ -25,7 +29,12 @@ pub enum UserCommand {
 pub enum SlackAction {
     SendMessage(String),
     StartTeaRound(User),
-    ConfirmBid(User, Url),
+    StartTimer {
+        title: String,
+        duration_secs: u32,
+        completion_message: Option<String>,
+    },
+    ConfirmBid(Url),
     RejectBid(String, Url),
     RevealBids(Vec<(User, u8)>),
     AnnounceDiceRoll(Vec<User>, u8),
@@ -96,7 +105,11 @@ pub struct SlackInterface {
     pub client: Client,
     pub command_tx: mpsc::UnboundedSender<UserCommand>,
     pub users: Vec<User>,
+    active_timer: Mutex<Option<AbortHandle>>,
 }
+
+const TIMER_INTERVAL_SECS: u32 = 5;
+const TIMER_BAR_SEGMENTS: usize = 9;
 
 impl SlackInterface {
     pub fn new(
@@ -113,7 +126,14 @@ impl SlackInterface {
             client: reqwest::Client::new(),
             command_tx,
             users,
+            active_timer: Mutex::new(None),
         })
+    }
+
+    fn cancel_active_timer(&self) {
+        if let Some(handle) = self.active_timer.lock().unwrap().take() {
+            handle.abort();
+        }
     }
 
     pub async fn run(self: Arc<Self>, mut rx: mpsc::UnboundedReceiver<SlackAction>) {
@@ -131,14 +151,45 @@ impl SlackInterface {
                     ))
                     .await;
                 }
-                SlackAction::ConfirmBid(user, response_url) => {
+                SlackAction::StartTimer {
+                    title,
+                    duration_secs,
+                    completion_message,
+                } => {
+                    self.cancel_active_timer();
+
+                    let initial_msg = render_timer(&title, duration_secs, duration_secs);
+                    if let Some(response) = self.send_message(&initial_msg).await {
+                        let slack = self.clone();
+                        let join_handle = tokio::spawn(async move {
+                            let mut elapsed = 0u32;
+                            while elapsed < duration_secs {
+                                tokio::time::sleep(Duration::from_secs(
+                                    TIMER_INTERVAL_SECS as u64,
+                                ))
+                                .await;
+                                elapsed =
+                                    (elapsed + TIMER_INTERVAL_SECS).min(duration_secs);
+                                let remaining = duration_secs - elapsed;
+                                let msg = if remaining == 0 {
+                                    completion_message.clone().unwrap_or_else(|| {
+                                        render_timer(&title, 0, duration_secs)
+                                    })
+                                } else {
+                                    render_timer(&title, remaining, duration_secs)
+                                };
+                                slack.update_message(&msg, &response).await;
+                            }
+                        });
+                        *self.active_timer.lock().unwrap() = Some(join_handle.abort_handle());
+                    }
+                }
+                SlackAction::ConfirmBid(response_url) => {
                     self.respond_to_slash_command(
                         &format!("Your bid has been accepted!"),
                         &response_url,
                     )
                     .await;
-                    self.send_message(&format!("{} has joined the tea round ☕️", user))
-                        .await;
                 }
                 SlackAction::RejectBid(reason, response_url) => {
                     self.respond_to_slash_command(
@@ -148,6 +199,8 @@ impl SlackInterface {
                     .await;
                 }
                 SlackAction::RevealBids(bids) => {
+                    self.cancel_active_timer();
+
                     let mut sorted_bids: Vec<_> = bids.iter().collect();
                     sorted_bids.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
 
@@ -261,6 +314,7 @@ impl SlackInterface {
                     self.send_message(&message).await;
                 }
                 SlackAction::CancelTeaRound => {
+                    self.cancel_active_timer();
                     self.send_message(&format!("Tea round cancelled")).await;
                 }
                 SlackAction::ShowTeaderboard(balances) => {
@@ -396,6 +450,35 @@ impl SlackInterface {
             )
                 .into_response()
         }
+    }
+}
+
+fn render_timer(title: &str, remaining_secs: u32, duration_secs: u32) -> String {
+    format!(
+        "\n⏳ *{}*\n{} *{} remaining*\n",
+        title,
+        progress_bar(remaining_secs, duration_secs),
+        format_remaining(remaining_secs),
+    )
+}
+
+fn progress_bar(remaining_secs: u32, duration_secs: u32) -> String {
+    let filled = if duration_secs == 0 {
+        0
+    } else {
+        ((remaining_secs as f64 / duration_secs as f64) * TIMER_BAR_SEGMENTS as f64).ceil()
+            as usize
+    };
+    let filled = filled.min(TIMER_BAR_SEGMENTS);
+    let empty = TIMER_BAR_SEGMENTS - filled;
+    format!("[{}{}]", "▓".repeat(filled), "░".repeat(empty))
+}
+
+fn format_remaining(secs: u32) -> String {
+    if secs >= 60 {
+        format!("{}:{:02}", secs / 60, secs % 60)
+    } else {
+        format!("{}s", secs)
     }
 }
 
