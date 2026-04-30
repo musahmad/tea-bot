@@ -155,7 +155,7 @@ impl Tea {
 
                     tea_round.bids.insert(user.clone(), bid);
 
-                    SlackAction::ConfirmBid(user.clone(), response_url).send(&self.message_tx);
+                    SlackAction::ConfirmBid(response_url).send(&self.message_tx);
                 } else {
                     if let Err(e) = self.contract.refresh_balances().await {
                         tracing::error!("Failed to refresh balances 🚨: {}", e);
@@ -184,7 +184,13 @@ impl Tea {
                     });
 
                     SlackAction::StartTeaRound(user.clone()).send(&self.message_tx);
-                    SlackAction::ConfirmBid(user.clone(), response_url).send(&self.message_tx);
+                    SlackAction::StartTimer {
+                        title: "Bidding closes in".to_string(),
+                        duration_secs: 45,
+                        completion_message: None,
+                    }
+                    .send(&self.message_tx);
+                    SlackAction::ConfirmBid(response_url).send(&self.message_tx);
                 }
             }
             UserCommand::CancelTeaRound => {
@@ -271,10 +277,19 @@ impl Tea {
             let payments = self.calculate_payments(&bids, &tea_maker, penalty);
             let transfers: HashMap<(User, User), f64> = self.calculate_transfers(&payments);
 
-            SlackAction::AnnounceTeaMaker((tea_maker, *lowest_bid, bids.len()))
+            SlackAction::AnnounceTeaMaker((tea_maker.clone(), *lowest_bid, bids.len()))
                 .send(&self.message_tx);
             SlackAction::AnnouncePenalty(penalty).send(&self.message_tx);
             SlackAction::AnnouncePayments(payments).send(&self.message_tx);
+            SlackAction::StartTimer {
+                title: format!("{} is brewing tea", tea_maker),
+                duration_secs: 5 * 60,
+                completion_message: Some(format!(
+                    "\n🍵 *Tea should be ready! Brewed by {}.*\n",
+                    tea_maker
+                )),
+            }
+            .send(&self.message_tx);
 
             if transfers.len() > 0 {
                 match self
