@@ -11,13 +11,38 @@ use serde::Serialize;
 use tokio::sync::broadcast;
 use tokio_stream::{wrappers::BroadcastStream, Stream, StreamExt};
 
+use crate::User;
+
+#[derive(Clone, Debug, Serialize)]
+pub struct TvUser {
+    pub name: String,
+    pub image_url: Option<String>,
+}
+
+impl TvUser {
+    pub fn from_user(user: &User) -> Self {
+        TvUser {
+            name: user.name.clone(),
+            image_url: user.image_url.clone(),
+        }
+    }
+}
+
 #[derive(Clone, Debug, Serialize)]
 #[serde(tag = "type")]
 pub enum TvEvent {
-    TeaRoundStarted { started_by: String },
+    TeaRoundStarted { started_by: TvUser },
     TeaRoundCancelled,
-    TeaMakerAnnounced { maker: String, bid: u8, cups: usize },
-    Teaderboard { entries: Vec<(String, f64)> },
+    BidRevealed { user: TvUser, bid: u8 },
+    DiceRollAnnounced { rollers: Vec<TvUser>, tied_bid: u8 },
+    DiceRolling { user: TvUser },
+    DiceResult { user: TvUser, die_index: u8, value: u8 },
+    DiceRollTie { rollers: Vec<TvUser> },
+    TeaMakerAnnounced { maker: TvUser, bid: u8, cups: usize },
+    PenaltyRolling,
+    PenaltyRevealed { value: u8 },
+    PaymentsAnnounced { payments: Vec<(TvUser, f64)> },
+    Teaderboard { entries: Vec<(TvUser, f64)> },
 }
 
 pub async fn events_handler(

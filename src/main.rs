@@ -4,6 +4,7 @@ use axum::{
     routing::{get, post},
     Router,
 };
+use tower_http::services::ServeDir;
 use dotenv::dotenv;
 use serde::{Deserialize, Serialize};
 use tokio::sync::mpsc;
@@ -27,6 +28,7 @@ pub struct User {
     pub name: String,
     pub address: String,
     pub emoji: Option<String>,
+    pub image_url: Option<String>,
 }
 impl Eq for User {}
 impl PartialEq for User {
@@ -76,7 +78,7 @@ async fn main() {
 
     let (command_tx, command_rx) = mpsc::unbounded_channel::<UserCommand>();
     let (message_tx, message_rx) = mpsc::unbounded_channel::<SlackAction>();
-    let (tv_tx, _) = tokio::sync::broadcast::channel::<tv::TvEvent>(16);
+    let (tv_tx, _) = tokio::sync::broadcast::channel::<tv::TvEvent>(32);
 
     let slack_interface = SlackInterface::new(
         config.slack_bot_token,
@@ -84,6 +86,7 @@ async fn main() {
         config.slack_signing_secret,
         command_tx.clone(),
         config.users.clone(),
+        tv_tx.clone(),
     );
 
     let contract = ContractInterface::new(
@@ -101,7 +104,7 @@ async fn main() {
     });
 
     tokio::spawn({
-        let mut tea = Tea::new(message_tx, command_rx, contract, tv_tx.clone());
+        let mut tea = Tea::new(message_tx, command_rx, contract);
         async move {
             tea.run().await;
         }
@@ -116,7 +119,8 @@ async fn main() {
         .route("/slack/events", post(slack::handle_slack_event))
         .route("/slack/commands", post(slack::handle_slash_command))
         .with_state(slack_interface)
-        .merge(tv_routes);
+        .merge(tv_routes)
+        .nest_service("/static", ServeDir::new("static"));
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:6969").await.unwrap();
     axum::serve(listener, app).await.unwrap();
