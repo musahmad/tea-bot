@@ -55,10 +55,10 @@ impl SlackAction {
 }
 
 #[derive(Debug, Deserialize)]
-#[serde(tag = "type", content = "event", rename_all = "snake_case")]
+#[serde(tag = "type", rename_all = "snake_case")]
 pub enum SlackOuterEvent {
     UrlVerification { challenge: String },
-    EventCallback(SlackEvent),
+    EventCallback { event: SlackEvent },
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -439,7 +439,7 @@ impl SlackInterface {
             SlackOuterEvent::UrlVerification { challenge } => {
                 (StatusCode::OK, Json(json!({ "challenge": challenge })))
             }
-            SlackOuterEvent::EventCallback(event) => {
+            SlackOuterEvent::EventCallback { event } => {
                 if event.user.is_none() || event.text.is_none() {
                     return (StatusCode::OK, Json(json!({ "text": "Skipped event" })));
                 }
