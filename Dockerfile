@@ -22,6 +22,7 @@ COPY --from=builder /usr/src/app/target/release/tea-bot .
 
 # Copy necessary runtime files
 COPY abi.json .
+COPY static/ ./static/
 
 # Expose the port the app runs on
 EXPOSE 6969

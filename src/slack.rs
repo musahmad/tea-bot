@@ -3,7 +3,7 @@ use std::{
     sync::{Arc, Mutex},
     time::Duration,
 };
-use tokio::{sync::mpsc, task::AbortHandle};
+use tokio::{sync::{broadcast, mpsc}, task::AbortHandle};
 
 use axum::{
     extract::State,
@@ -17,6 +17,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use sha2::Sha256;
 
+use crate::tv::{TvEvent, TvUser};
 use crate::User;
 
 #[allow(dead_code)]
@@ -105,6 +106,7 @@ pub struct SlackInterface {
     pub client: Client,
     pub command_tx: mpsc::UnboundedSender<UserCommand>,
     pub users: Vec<User>,
+    pub tv_tx: broadcast::Sender<TvEvent>,
     active_timer: Mutex<Option<AbortHandle>>,
 }
 
@@ -118,6 +120,7 @@ impl SlackInterface {
         signing_secret: String,
         command_tx: mpsc::UnboundedSender<UserCommand>,
         users: Vec<User>,
+        tv_tx: broadcast::Sender<TvEvent>,
     ) -> Arc<Self> {
         Arc::new(Self {
             token,
@@ -126,6 +129,7 @@ impl SlackInterface {
             client: reqwest::Client::new(),
             command_tx,
             users,
+            tv_tx,
             active_timer: Mutex::new(None),
         })
     }
@@ -150,6 +154,9 @@ impl SlackInterface {
                         user
                     ))
                     .await;
+                    let _ = self.tv_tx.send(TvEvent::TeaRoundStarted {
+                        started_by: TvUser::from_user(&user),
+                    });
                 }
                 SlackAction::StartTimer {
                     title,
@@ -221,6 +228,10 @@ impl SlackInterface {
                                 );
                             }
                             self.update_message(&message, &response).await;
+                            let _ = self.tv_tx.send(TvEvent::BidRevealed {
+                                user: TvUser::from_user(user),
+                                bid: *bid,
+                            });
                         }
                     }
                 }
@@ -236,6 +247,10 @@ impl SlackInterface {
                         total
                     ))
                     .await;
+                    let _ = self.tv_tx.send(TvEvent::DiceRollAnnounced {
+                        rollers: users.iter().map(|u| TvUser::from_user(u)).collect(),
+                        tied_bid: total,
+                    });
                 }
                 SlackAction::AnnounceDiceRollTie(users) => {
                     tokio::time::sleep(Duration::from_secs(2)).await;
@@ -248,6 +263,9 @@ impl SlackInterface {
                             .join(", "),
                     ))
                     .await;
+                    let _ = self.tv_tx.send(TvEvent::DiceRollTie {
+                        rollers: users.iter().map(|u| TvUser::from_user(u)).collect(),
+                    });
                 }
                 SlackAction::RollDice(rolls) => {
                     let mut message = String::from("\n\n");
@@ -257,6 +275,9 @@ impl SlackInterface {
                         for (user, rolls) in rolls {
                             message += &format!("{}: :dice-rolling:", user);
                             self.update_message(&message, &response).await;
+                            let _ = self.tv_tx.send(TvEvent::DiceRolling {
+                                user: TvUser::from_user(&user),
+                            });
 
                             for (index, roll) in rolls.iter().enumerate() {
                                 tokio::time::sleep(Duration::from_secs(2)).await;
@@ -278,6 +299,11 @@ impl SlackInterface {
                                     );
                                 }
                                 self.update_message(&message, &response).await;
+                                let _ = self.tv_tx.send(TvEvent::DiceResult {
+                                    user: TvUser::from_user(&user),
+                                    die_index: index as u8,
+                                    value: *roll,
+                                });
                             }
                         }
                     }
@@ -288,16 +314,25 @@ impl SlackInterface {
                         user, bid, num_tea
                     ))
                     .await;
+                    let _ = self.tv_tx.send(TvEvent::TeaMakerAnnounced {
+                        maker: TvUser::from_user(&user),
+                        bid,
+                        cups: num_tea,
+                    });
                 }
                 SlackAction::AnnouncePenalty(penalty) => {
                     let mut message = String::from("\n\n☕️ *Loser Penalty:* :dice-rolling:\n\n");
                     if let Some(response) = self.send_message(&message).await {
+                        let _ = self.tv_tx.send(TvEvent::PenaltyRolling);
                         tokio::time::sleep(Duration::from_secs(3)).await;
                         message = message.replace(
                             ":dice-rolling:",
                             &format!(":dice-{}: *{} TEA*", penalty as u8, penalty as u8),
                         );
                         self.update_message(&message, &response).await;
+                        let _ = self.tv_tx.send(TvEvent::PenaltyRevealed {
+                            value: penalty as u8,
+                        });
                     }
                 }
                 SlackAction::AnnouncePayments(payments) => {
@@ -307,15 +342,22 @@ impl SlackInterface {
                     tokio::time::sleep(Duration::from_secs(2)).await;
 
                     let mut message = String::from("\n☕️ *Payments to be made:*\n\n");
-                    for (user, amount) in sorted_payments {
-                        let emoji = if *amount > 0.0 { "🤑" } else { "☹️" };
+                    for (user, amount) in &sorted_payments {
+                        let emoji = if **amount > 0.0 { "🤑" } else { "☹️" };
                         message += &format!("{}: {:.1} TEA {}\n\n", user, amount, emoji);
                     }
                     self.send_message(&message).await;
+                    let _ = self.tv_tx.send(TvEvent::PaymentsAnnounced {
+                        payments: sorted_payments
+                            .iter()
+                            .map(|(u, a)| (TvUser::from_user(u), **a))
+                            .collect(),
+                    });
                 }
                 SlackAction::CancelTeaRound => {
                     self.cancel_active_timer();
                     self.send_message(&format!("Tea round cancelled")).await;
+                    let _ = self.tv_tx.send(TvEvent::TeaRoundCancelled);
                 }
                 SlackAction::ShowTeaderboard(balances) => {
                     let mut leaderboard = String::from("\n\n☕️ *Teaderboard*\n\n");
@@ -336,6 +378,12 @@ impl SlackInterface {
                         ));
                     }
                     self.send_message(&leaderboard).await;
+                    let _ = self.tv_tx.send(TvEvent::Teaderboard {
+                        entries: sorted_balances
+                            .iter()
+                            .map(|(u, b)| (TvUser::from_user(u), *b))
+                            .collect(),
+                    });
                 }
             }
         }
