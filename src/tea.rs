@@ -2,8 +2,11 @@ use std::{collections::HashMap, time::Instant};
 use tokio::sync::mpsc;
 use tokio::time::{sleep, Duration};
 
+use tokio::sync::broadcast;
+
 use crate::contract::ContractInterface;
 use crate::slack::{SlackAction, UserCommand};
+use crate::tv::TvEvent;
 use crate::User;
 
 pub struct TeaRound {
@@ -16,6 +19,7 @@ pub struct Tea {
     pub command_rx: mpsc::UnboundedReceiver<UserCommand>,
     pub tea_round: Option<TeaRound>,
     pub contract: ContractInterface,
+    pub tv_tx: broadcast::Sender<TvEvent>,
 }
 
 impl Tea {
@@ -23,12 +27,14 @@ impl Tea {
         message_tx: mpsc::UnboundedSender<SlackAction>,
         command_rx: mpsc::UnboundedReceiver<UserCommand>,
         contract: ContractInterface,
+        tv_tx: broadcast::Sender<TvEvent>,
     ) -> Self {
         Self {
             message_tx,
             command_rx,
             tea_round: None,
             contract,
+            tv_tx,
         }
     }
 
@@ -184,6 +190,9 @@ impl Tea {
                     });
 
                     SlackAction::StartTeaRound(user.clone()).send(&self.message_tx);
+                    let _ = self.tv_tx.send(TvEvent::TeaRoundStarted {
+                        started_by: user.to_string(),
+                    });
                     SlackAction::StartTimer {
                         title: "Bidding closes in".to_string(),
                         duration_secs: 45,
@@ -197,6 +206,7 @@ impl Tea {
                 tracing::info!("Cancelled tea round");
                 self.tea_round = None;
                 SlackAction::CancelTeaRound.send(&self.message_tx);
+                let _ = self.tv_tx.send(TvEvent::TeaRoundCancelled);
             }
         }
     }
@@ -279,6 +289,11 @@ impl Tea {
 
             SlackAction::AnnounceTeaMaker((tea_maker.clone(), *lowest_bid, bids.len()))
                 .send(&self.message_tx);
+            let _ = self.tv_tx.send(TvEvent::TeaMakerAnnounced {
+                maker: tea_maker.to_string(),
+                bid: *lowest_bid,
+                cups: bids.len(),
+            });
             SlackAction::AnnouncePenalty(penalty).send(&self.message_tx);
             SlackAction::AnnouncePayments(payments).send(&self.message_tx);
             SlackAction::StartTimer {
@@ -324,8 +339,14 @@ impl Tea {
 
             match self.contract.refresh_balances().await {
                 Ok(new_balances) => {
-                    SlackAction::ShowTeaderboard(new_balances.into_iter().collect())
-                        .send(&self.message_tx);
+                    let balances: Vec<(User, f64)> = new_balances.into_iter().collect();
+                    SlackAction::ShowTeaderboard(balances.clone()).send(&self.message_tx);
+                    let _ = self.tv_tx.send(TvEvent::Teaderboard {
+                        entries: balances
+                            .iter()
+                            .map(|(u, b)| (u.to_string(), *b))
+                            .collect(),
+                    });
                 }
                 Err(e) => {
                     tracing::error!("Failed to refresh balances 🚨: {}", e);
