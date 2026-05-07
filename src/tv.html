@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tea Bot</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #121218;
+            color: #e8e0d8;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            transition: background 0.6s ease;
+        }
+
+        #activate {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            cursor: pointer;
+            user-select: none;
+        }
+        #activate .cup { font-size: 6rem; }
+        #activate p { font-size: 1.5rem; opacity: 0.5; margin-top: 1rem; }
+
+        #main {
+            display: none;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+
+        /* Idle view */
+        #idle {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            gap: 1rem;
+        }
+
+        .cup-wrap {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .cup { font-size: 8rem; }
+
+        .steam-wrap {
+            display: flex;
+            gap: 12px;
+            position: absolute;
+            top: -40px;
+        }
+
+        .steam {
+            width: 8px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+            animation: rise 2s ease-out infinite;
+        }
+        .steam:nth-child(2) { animation-delay: 0.5s; height: 50px; }
+        .steam:nth-child(3) { animation-delay: 1s; height: 35px; }
+
+        @keyframes rise {
+            0%   { transform: translateY(0) scaleX(1); opacity: 0.6; }
+            100% { transform: translateY(-60px) scaleX(2); opacity: 0; }
+        }
+
+        #idle h1 {
+            font-size: 3rem;
+            font-weight: 300;
+            color: #d4a574;
+            letter-spacing: 0.1em;
+        }
+
+        /* Teaderboard */
+        .board { margin-top: 2rem; text-align: center; }
+        .board h2 {
+            font-size: 1.6rem;
+            color: #d4a574;
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+        .board-entry {
+            font-size: 1.5rem;
+            padding: 0.4rem 0;
+            font-weight: 300;
+        }
+
+        /* Alert view */
+        #alert {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+
+        #alert.show {
+            display: flex;
+            animation: zoomIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #alert .alert-cup {
+            font-size: 10rem;
+            animation: wiggle 0.5s ease-in-out 3;
+        }
+
+        #alert h1 {
+            font-size: 5rem;
+            color: #f0c040;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        #alert .sub {
+            font-size: 2.2rem;
+            color: #d4a574;
+            margin-top: 0.5rem;
+            font-weight: 300;
+        }
+
+        @keyframes zoomIn {
+            0%   { opacity: 0; transform: scale(0.5); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25%      { transform: rotate(-10deg); }
+            75%      { transform: rotate(10deg); }
+        }
+
+        .glow {
+            background: radial-gradient(ellipse at center, #2a1a0a 0%, #121218 70%);
+        }
+    </style>
+</head>
+<body>
+    <div id="activate">
+        <div class="cup">☕</div>
+        <p>Click anywhere to activate</p>
+    </div>
+
+    <div id="main">
+        <div id="idle">
+            <div class="cup-wrap">
+                <div class="steam-wrap">
+                    <div class="steam"></div>
+                    <div class="steam"></div>
+                    <div class="steam"></div>
+                </div>
+                <div class="cup">☕</div>
+            </div>
+            <h1>TEA BOT</h1>
+            <div class="board" id="board"></div>
+        </div>
+
+        <div id="alert">
+            <div class="alert-cup">☕</div>
+            <h1 id="alert-title"></h1>
+            <p class="sub" id="alert-sub"></p>
+        </div>
+    </div>
+
+    <script>
+        let audioCtx;
+        let alertTimeout;
+
+        document.getElementById('activate').addEventListener('click', () => {
+            audioCtx = new AudioContext();
+            document.getElementById('activate').style.display = 'none';
+            document.getElementById('main').style.display = 'block';
+            connect();
+        });
+
+        // Ascending bell chime: C5, E5, G5, C6
+        // Each note uses additive synthesis (fundamental + harmonics with fast decay)
+        // to approximate a bell timbre.
+        function playChime() {
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+            [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+                const t = now + i * 0.22;
+                [1, 2, 3, 4.2].forEach((harmonic, j) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.value = freq * harmonic;
+                    const vol = [0.25, 0.12, 0.06, 0.03][j];
+                    gain.gain.setValueAtTime(0, t);
+                    gain.gain.linearRampToValueAtTime(vol, t + 0.005);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t + 1.8 / (j + 1));
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(t);
+                    osc.stop(t + 2);
+                });
+            });
+        }
+
+        function showAlert(title, subtitle) {
+            clearTimeout(alertTimeout);
+            const el = document.getElementById('alert');
+            document.getElementById('alert-title').textContent = title;
+            document.getElementById('alert-sub').textContent = subtitle;
+            el.classList.remove('show');
+            void el.offsetWidth; // reflow to restart animation
+            el.classList.add('show');
+            document.body.classList.add('glow');
+            playChime();
+            alertTimeout = setTimeout(hideAlert, 20000);
+        }
+
+        function hideAlert() {
+            document.getElementById('alert').classList.remove('show');
+            document.body.classList.remove('glow');
+        }
+
+        function updateBoard(entries) {
+            const el = document.getElementById('board');
+            if (!entries || !entries.length) { el.innerHTML = ''; return; }
+            const medals = ['\u{1F947}', '\u{1F948}', '\u{1F949}'];
+            el.innerHTML = '<h2>Teaderboard</h2>' +
+                entries.map(([name, bal], i) =>
+                    '<div class="board-entry">'
+                    + (medals[i] || '\u00A0\u00A0') + ' ' + name
+                    + ' \u2014 ' + bal.toFixed(1) + ' TEA</div>'
+                ).join('');
+        }
+
+        function connect() {
+            const src = new EventSource('/tv/events');
+            src.onmessage = (e) => {
+                const ev = JSON.parse(e.data);
+                switch (ev.type) {
+                    case 'TeaRoundStarted':
+                        showAlert('TEA ROUND!',
+                            ev.started_by + ' started a round \u2014 place your bids!');
+                        break;
+                    case 'TeaRoundCancelled':
+                        hideAlert();
+                        break;
+                    case 'TeaMakerAnnounced':
+                        showAlert('TEA TIME!',
+                            ev.maker + ' is brewing ' + ev.cups + ' cups!');
+                        break;
+                    case 'Teaderboard':
+                        updateBoard(ev.entries);
+                        break;
+                }
+            };
+        }
+    </script>
+</body>
+</html>

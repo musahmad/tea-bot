@@ -1,6 +1,9 @@
 use std::fmt::Display;
 
-use axum::{routing::post, Router};
+use axum::{
+    routing::{get, post},
+    Router,
+};
 use dotenv::dotenv;
 use serde::{Deserialize, Serialize};
 use tokio::sync::mpsc;
@@ -9,6 +12,7 @@ use tracing_subscriber;
 mod contract;
 mod slack;
 mod tea;
+mod tv;
 
 use crate::{
     contract::ContractInterface,
@@ -72,6 +76,7 @@ async fn main() {
 
     let (command_tx, command_rx) = mpsc::unbounded_channel::<UserCommand>();
     let (message_tx, message_rx) = mpsc::unbounded_channel::<SlackAction>();
+    let (tv_tx, _) = tokio::sync::broadcast::channel::<tv::TvEvent>(16);
 
     let slack_interface = SlackInterface::new(
         config.slack_bot_token,
@@ -96,16 +101,22 @@ async fn main() {
     });
 
     tokio::spawn({
-        let mut tea = Tea::new(message_tx, command_rx, contract);
+        let mut tea = Tea::new(message_tx, command_rx, contract, tv_tx.clone());
         async move {
             tea.run().await;
         }
     });
 
+    let tv_routes = Router::new()
+        .route("/tv", get(tv::page_handler))
+        .route("/tv/events", get(tv::events_handler))
+        .with_state(tv_tx);
+
     let app = Router::new()
         .route("/slack/events", post(slack::handle_slack_event))
         .route("/slack/commands", post(slack::handle_slash_command))
-        .with_state(slack_interface);
+        .with_state(slack_interface)
+        .merge(tv_routes);
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:6969").await.unwrap();
     axum::serve(listener, app).await.unwrap();

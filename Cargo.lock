@@ -4674,6 +4674,7 @@ dependencies = [
  "serde_urlencoded",
  "sha2",
  "tokio",
+ "tokio-stream",
  "tracing",
  "tracing-subscriber",
  "url",
