@@ -41,7 +41,11 @@ pub enum SlackAction {
     AnnounceDiceRoll(Vec<User>, u8),
     AnnounceDiceRollTie(Vec<User>),
     RollDice(Vec<(User, Vec<u8>)>),
-    AnnouncePenalty(f64),
+    AnnouncePenalty {
+        dice: u8,
+        players: usize,
+        penalty: f64,
+    },
     AnnounceTeaMaker((User, u8, usize)),
     AnnouncePayments(HashMap<User, f64>),
     CancelTeaRound,
@@ -149,10 +153,9 @@ impl SlackInterface {
                     self.send_message(&message).await;
                 }
                 SlackAction::StartTeaRound(user) => {
-                    self.send_message(&format!(
-                        "\n\n☕️ *{} is starting a tea round! Place your bid with /t (e.g. /t 5). You have 45 seconds.*\n\n",
-                        user
-                    ))
+                    self.send_message(
+                        "\n\n☕️ *A tea round is starting! Place your bid with /t (e.g. /t 5). You have 45 seconds.*\n\n",
+                    )
                     .await;
                     let _ = self.tv_tx.send(TvEvent::TeaRoundStarted {
                         started_by: TvUser::from_user(&user),
@@ -320,14 +323,19 @@ impl SlackInterface {
                         cups: num_tea,
                     });
                 }
-                SlackAction::AnnouncePenalty(penalty) => {
+                SlackAction::AnnouncePenalty {
+                    dice,
+                    players,
+                    penalty,
+                } => {
+                    let multiplier = 0.5 * (players - 1) as f64;
                     let mut message = String::from("\n\n☕️ *Loser Penalty:* :dice-rolling:\n\n");
                     if let Some(response) = self.send_message(&message).await {
                         let _ = self.tv_tx.send(TvEvent::PenaltyRolling);
                         tokio::time::sleep(Duration::from_secs(3)).await;
                         message = message.replace(
                             ":dice-rolling:",
-                            &format!(":dice-{}: *{} TEA*", penalty as u8, penalty as u8),
+                            &format!(":dice-{}: × {} = *{} TEA*", dice, multiplier, penalty),
                         );
                         self.update_message(&message, &response).await;
                         let _ = self.tv_tx.send(TvEvent::PenaltyRevealed {

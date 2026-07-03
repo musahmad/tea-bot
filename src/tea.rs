@@ -272,14 +272,20 @@ impl Tea {
                 (*lowest_bidders[0]).clone()
             };
 
-            let penalty = (rand::random::<u8>() % 6 + 1) as f64;
+            let dice = rand::random::<u8>() % 6 + 1;
+            let penalty = dice as f64 * 0.5 * (bids.len() - 1) as f64;
 
             let payments = self.calculate_payments(&bids, &tea_maker, penalty);
             let transfers: HashMap<(User, User), f64> = self.calculate_transfers(&payments);
 
             SlackAction::AnnounceTeaMaker((tea_maker.clone(), *lowest_bid, bids.len()))
                 .send(&self.message_tx);
-            SlackAction::AnnouncePenalty(penalty).send(&self.message_tx);
+            SlackAction::AnnouncePenalty {
+                dice,
+                players: bids.len(),
+                penalty,
+            }
+            .send(&self.message_tx);
             SlackAction::AnnouncePayments(payments).send(&self.message_tx);
             SlackAction::StartTimer {
                 title: format!("{} is brewing tea", tea_maker),
