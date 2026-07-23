@@ -450,18 +450,8 @@ impl SlackInterface {
                     required,
                 } => {
                     let blocks = slow_tea_blocks(&loser, 0, eligible, required);
-                    self.client
-                        .post("https://slack.com/api/chat.postMessage")
-                        .header("Authorization", format!("Bearer {}", self.token))
-                        .json(&json!({
-                            "channel": &self.channel,
-                            "text": format!("🐢 Is {}'s tea slow?", loser),
-                            "blocks": blocks,
-                        }))
-                        .send()
-                        .await
-                        .map_err(|e| tracing::error!("Failed to offer slow tea: {}", e))
-                        .ok();
+                    self.post_message(&format!("🐢 Is {}'s tea slow?", loser), Some(blocks))
+                        .await;
                 }
                 SlackAction::SlowTeaEphemeral(reason, response_url) => {
                     self.send_ephemeral(&reason, &response_url).await;
@@ -474,19 +464,12 @@ impl SlackInterface {
                     remaining,
                 } => {
                     let blocks = slow_tea_blocks(&loser, voted, eligible, remaining);
-                    self.client
-                        .post(response_url.as_str())
-                        .header("Authorization", format!("Bearer {}", self.token))
-                        .json(&json!({
-                            "replace_original": true,
-                            "response_type": "in_channel",
-                            "text": format!("🐢 Slow tea vote for {}: {}/{} voted", loser, voted, eligible),
-                            "blocks": blocks,
-                        }))
-                        .send()
-                        .await
-                        .map_err(|e| tracing::error!("Failed to update slow tea vote: {}", e))
-                        .ok();
+                    self.replace_message(
+                        &format!("🐢 Slow tea vote for {}: {}/{} voted", loser, voted, eligible),
+                        &response_url,
+                        Some(blocks),
+                    )
+                    .await;
                 }
                 SlackAction::SlowTeaResolved {
                     response_url,
@@ -499,7 +482,7 @@ impl SlackInterface {
                         "\n🐢 *Slow tea!* {} {} voted that {} was too slow. {} pays *1 TEA* to each of the other {} in the round.\n",
                         voters, people, loser, loser, count
                     );
-                    self.replace_message(&message, &response_url).await;
+                    self.replace_message(&message, &response_url, None).await;
                 }
             }
         }
@@ -520,11 +503,16 @@ impl SlackInterface {
     }
 
     /// Replace the message a button lives on (removing the button) with a plain-text update.
-    async fn replace_message(&self, message: &str, response_url: &Url) {
+    async fn replace_message(&self, message: &str, response_url: &Url, blocks: Option<Value>) {
+        let mut body =
+            json!({ "replace_original": true, "response_type": "in_channel", "text": message });
+        if let Some(blocks) = blocks {
+            body["blocks"] = blocks;
+        }
         self.client
             .post(response_url.as_str())
             .header("Authorization", format!("Bearer {}", self.token))
-            .json(&json!({ "replace_original": true, "response_type": "in_channel", "text": message }))
+            .json(&body)
             .send()
             .await
             .map_err(|e| tracing::error!("Failed to replace message: {}", e))
@@ -532,11 +520,23 @@ impl SlackInterface {
     }
 
     async fn send_message(&self, message: &str) -> Option<SlackMessageResponse> {
+        self.post_message(message, None).await
+    }
+
+    async fn post_message(
+        &self,
+        message: &str,
+        blocks: Option<Value>,
+    ) -> Option<SlackMessageResponse> {
+        let mut body = json!({ "channel": &self.channel, "text": message });
+        if let Some(blocks) = blocks {
+            body["blocks"] = blocks;
+        }
         let response = self
             .client
             .post("https://slack.com/api/chat.postMessage")
             .header("Authorization", format!("Bearer {}", self.token))
-            .json(&json!({ "channel": &self.channel, "text": message }))
+            .json(&body)
             .send()
             .await
             .map_err(|e| tracing::error!("Failed to send message: {}", e))
