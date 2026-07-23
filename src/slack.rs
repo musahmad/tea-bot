@@ -57,9 +57,19 @@ pub enum SlackAction {
     ShowTeaderboard(Vec<(User, f64)>),
     OfferSlowTea {
         loser: User,
-        others: usize,
+        eligible: usize,
+        required: usize,
     },
-    SlowTeaReject(String, Url),
+    /// An ephemeral reply to the voter that leaves the shared vote message untouched.
+    SlowTeaEphemeral(String, Url),
+    /// A new vote below the threshold: re-render the vote message with a live count, keeping the button.
+    SlowTeaProgress {
+        response_url: Url,
+        loser: User,
+        voted: usize,
+        eligible: usize,
+        remaining: usize,
+    },
     SlowTeaResolved {
         response_url: Url,
         voters: usize,
@@ -434,11 +444,32 @@ impl SlackInterface {
                             .collect(),
                     });
                 }
-                SlackAction::OfferSlowTea { loser, others } => {
-                    self.offer_slow_tea(&loser, others).await;
+                SlackAction::OfferSlowTea {
+                    loser,
+                    eligible,
+                    required,
+                } => {
+                    let blocks = slow_tea_blocks(&loser, 0, eligible, required);
+                    self.post_message(&format!("🐢 Is {}'s tea slow?", loser), Some(blocks))
+                        .await;
                 }
-                SlackAction::SlowTeaReject(reason, response_url) => {
-                    self.respond_to_slash_command(&reason, &response_url).await;
+                SlackAction::SlowTeaEphemeral(reason, response_url) => {
+                    self.send_ephemeral(&reason, &response_url).await;
+                }
+                SlackAction::SlowTeaProgress {
+                    response_url,
+                    loser,
+                    voted,
+                    eligible,
+                    remaining,
+                } => {
+                    let blocks = slow_tea_blocks(&loser, voted, eligible, remaining);
+                    self.replace_message(
+                        &format!("🐢 Slow tea vote for {}: {}/{} voted", loser, voted, eligible),
+                        &response_url,
+                        Some(blocks),
+                    )
+                    .await;
                 }
                 SlackAction::SlowTeaResolved {
                     response_url,
@@ -448,10 +479,10 @@ impl SlackInterface {
                 } => {
                     let people = if voters == 1 { "person" } else { "people" };
                     let message = format!(
-                        "\n🐢 *Slow tea!* {} {} reported {} for taking too long. {} pays *1 TEA* to each of the other {} in the round.\n",
+                        "\n🐢 *Slow tea!* {} parched {} voted that {} was too slow. {} pays *1 TEA* to each of the other {} in the round.\n",
                         voters, people, loser, loser, count
                     );
-                    self.replace_message(&message, &response_url).await;
+                    self.replace_message(&message, &response_url, None).await;
                 }
             }
         }
@@ -459,52 +490,29 @@ impl SlackInterface {
         tracing::info!("Message processing task ended");
     }
 
-    async fn offer_slow_tea(&self, loser: &User, others: usize) {
-        let blocks = json!([
-            {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": format!(
-                        "🐢 *Tea taking too long?* If {} is being slow, anyone else from the round can charge them *1 TEA* to each of the other {}.",
-                        loser, others
-                    )
-                }
-            },
-            {
-                "type": "actions",
-                "elements": [
-                    {
-                        "type": "button",
-                        "text": { "type": "plain_text", "text": "🐢 Report slow tea", "emoji": true },
-                        "style": "danger",
-                        "action_id": "slow_tea",
-                        "value": loser.id
-                    }
-                ]
-            }
-        ]);
-
+    /// An ephemeral reply to the voter that explicitly leaves the shared vote message in place.
+    async fn send_ephemeral(&self, message: &str, response_url: &Url) {
         self.client
-            .post("https://slack.com/api/chat.postMessage")
+            .post(response_url.as_str())
             .header("Authorization", format!("Bearer {}", self.token))
-            .json(&json!({
-                "channel": &self.channel,
-                "text": format!("🐢 Was {}'s tea slow?", loser),
-                "blocks": blocks,
-            }))
+            .json(&json!({ "response_type": "ephemeral", "replace_original": false, "text": message }))
             .send()
             .await
-            .map_err(|e| tracing::error!("Failed to offer slow tea: {}", e))
+            .map_err(|e| tracing::error!("Failed to send ephemeral: {}", e))
             .ok();
     }
 
     /// Replace the message a button lives on (removing the button) with a plain-text update.
-    async fn replace_message(&self, message: &str, response_url: &Url) {
+    async fn replace_message(&self, message: &str, response_url: &Url, blocks: Option<Value>) {
+        let mut body =
+            json!({ "replace_original": true, "response_type": "in_channel", "text": message });
+        if let Some(blocks) = blocks {
+            body["blocks"] = blocks;
+        }
         self.client
             .post(response_url.as_str())
             .header("Authorization", format!("Bearer {}", self.token))
-            .json(&json!({ "replace_original": true, "response_type": "in_channel", "text": message }))
+            .json(&body)
             .send()
             .await
             .map_err(|e| tracing::error!("Failed to replace message: {}", e))
@@ -512,11 +520,23 @@ impl SlackInterface {
     }
 
     async fn send_message(&self, message: &str) -> Option<SlackMessageResponse> {
+        self.post_message(message, None).await
+    }
+
+    async fn post_message(
+        &self,
+        message: &str,
+        blocks: Option<Value>,
+    ) -> Option<SlackMessageResponse> {
+        let mut body = json!({ "channel": &self.channel, "text": message });
+        if let Some(blocks) = blocks {
+            body["blocks"] = blocks;
+        }
         let response = self
             .client
             .post("https://slack.com/api/chat.postMessage")
             .header("Authorization", format!("Bearer {}", self.token))
-            .json(&json!({ "channel": &self.channel, "text": message }))
+            .json(&body)
             .send()
             .await
             .map_err(|e| tracing::error!("Failed to send message: {}", e))
@@ -659,6 +679,39 @@ fn render_timer(title: &str, remaining_secs: u32, duration_secs: u32) -> String 
         progress_bar(remaining_secs, duration_secs),
         format_remaining(remaining_secs),
     )
+}
+
+/// Block Kit for the slow-tea vote: democratic pitch, a live `voted/eligible` tally, and the vote button.
+fn slow_tea_blocks(loser: &User, voted: usize, eligible: usize, remaining: usize) -> Value {
+    let votes = match remaining == 1 {
+        true => "vote",
+        false => "votes",
+    };
+    json!([
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": format!(
+                    "🐢 *Slow tea vote!* Is {loser} taking too long to brew?\n\
+                     It's a democracy in here — once *half the round* agrees, {loser} pays *1 TEA* to each of the other {eligible}. Vote if you're parched.\n\n\
+                     *🗳️ {voted}/{eligible} voted* · {remaining} more {votes} to charge {loser}."
+                )
+            }
+        },
+        {
+            "type": "actions",
+            "elements": [
+                {
+                    "type": "button",
+                    "text": { "type": "plain_text", "text": "🐢 I'm parched", "emoji": true },
+                    "style": "danger",
+                    "action_id": "slow_tea",
+                    "value": loser.id.clone()
+                }
+            ]
+        }
+    ])
 }
 
 fn progress_bar(remaining_secs: u32, duration_secs: u32) -> String {

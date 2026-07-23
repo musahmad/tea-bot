@@ -234,8 +234,8 @@ impl Tea {
         let settled = match self.settled.as_mut() {
             Some(settled) => settled,
             None => {
-                SlackAction::SlowTeaReject(
-                    "☕️ There's no tea round to report as slow right now 🚨".to_string(),
+                SlackAction::SlowTeaEphemeral(
+                    "☕️ There's no tea round to vote on right now 🚨".to_string(),
                     response_url,
                 )
                 .send(&self.message_tx);
@@ -244,50 +244,60 @@ impl Tea {
         };
 
         if settled.loser.id != loser_id {
-            SlackAction::SlowTeaReject(
-                "🐢 That slow-tea report has already been claimed!".to_string(),
+            SlackAction::SlowTeaEphemeral(
+                "🐢 That slow-tea vote has already been settled!".to_string(),
                 response_url,
             )
             .send(&self.message_tx);
             return;
         }
         if clicker == settled.loser {
-            SlackAction::SlowTeaReject(
-                "🐢 You can't report your own slow tea! Get brewing!".to_string(),
+            SlackAction::SlowTeaEphemeral(
+                "🐢 You can't vote on your own slow tea — you're the one keeping everyone parched! Get brewing!".to_string(),
                 response_url,
             )
             .send(&self.message_tx);
             return;
         }
         if !settled.participants.iter().any(|user| user == &clicker) {
-            SlackAction::SlowTeaReject(
-                "☕️ Only people who were in the round can report slow tea 🚨".to_string(),
+            SlackAction::SlowTeaEphemeral(
+                "☕️ Only people who were in the round can vote 🚨".to_string(),
                 response_url,
             )
             .send(&self.message_tx);
             return;
         }
 
-        // Record this report; a slow tea is only charged once enough people agree.
-        let newly_added = settled.voters.insert(clicker.id.clone());
+        // Record this vote; a slow tea is only charged once enough people agree.
+        let eligible = settled.participants.len() - 1;
         let required = settled.required_votes();
-        let votes = settled.voters.len();
         let loser_display = settled.loser.to_string();
 
-        if votes < required {
-            let remaining = required - votes;
-            let people = if remaining == 1 { "person" } else { "people" };
-            let prefix = match newly_added {
-                true => "🐢 Slow tea reported!",
-                false => "🐢 You've already reported slow tea.",
-            };
-            SlackAction::SlowTeaReject(
+        if !settled.voters.insert(clicker.id.clone()) {
+            // Already voted — remind them privately, leaving the shared vote message untouched.
+            SlackAction::SlowTeaEphemeral(
                 format!(
-                    "{} {} more {} needed to charge {}.",
-                    prefix, remaining, people, loser_display
+                    "🐢 You've already voted on {}'s slow tea ({}/{}).",
+                    loser_display,
+                    settled.voters.len(),
+                    eligible
                 ),
                 response_url,
             )
+            .send(&self.message_tx);
+            return;
+        }
+
+        let votes = settled.voters.len();
+
+        if votes < required {
+            SlackAction::SlowTeaProgress {
+                response_url,
+                loser: settled.loser.clone(),
+                voted: votes,
+                eligible,
+                remaining: required - votes,
+            }
             .send(&self.message_tx);
             return;
         }
@@ -484,15 +494,16 @@ impl Tea {
                 }
             }
 
-            let others = bids.keys().filter(|user| **user != tea_maker).count();
             self.settled = Some(SettledRound {
                 participants: bids.keys().cloned().collect(),
                 loser: tea_maker.clone(),
                 voters: HashSet::new(),
             });
+            let settled = self.settled.as_ref().unwrap();
             SlackAction::OfferSlowTea {
                 loser: tea_maker,
-                others,
+                eligible: settled.participants.len() - 1,
+                required: settled.required_votes(),
             }
             .send(&self.message_tx);
         }
