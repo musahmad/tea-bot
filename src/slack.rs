@@ -24,6 +24,11 @@ use crate::User;
 pub enum UserCommand {
     Bid(User, u8, Url),
     CancelTeaRound,
+    SlowTea {
+        clicker: User,
+        loser_id: String,
+        response_url: Url,
+    },
 }
 
 #[derive(Debug)]
@@ -50,6 +55,17 @@ pub enum SlackAction {
     AnnouncePayments(HashMap<User, f64>),
     CancelTeaRound,
     ShowTeaderboard(Vec<(User, f64)>),
+    OfferSlowTea {
+        loser: User,
+        others: usize,
+    },
+    SlowTeaReject(String, Url),
+    SlowTeaResolved {
+        response_url: Url,
+        voters: usize,
+        loser: User,
+        count: usize,
+    },
 }
 
 impl SlackAction {
@@ -101,6 +117,31 @@ pub struct SlackMessageResponse {
 pub struct SlashCommandResponse {
     pub response_type: ResponseType,
     pub text: String,
+}
+
+/// Slack sends interactivity payloads as `payload=<url-encoded JSON>` in the form body.
+#[derive(Debug, Deserialize)]
+pub struct InteractionEnvelope {
+    pub payload: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct InteractionPayload {
+    pub user: InteractionUser,
+    pub response_url: Url,
+    pub actions: Vec<InteractionAction>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct InteractionUser {
+    pub id: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct InteractionAction {
+    pub action_id: String,
+    #[serde(default)]
+    pub value: Option<String>,
 }
 
 pub struct SlackInterface {
@@ -393,10 +434,81 @@ impl SlackInterface {
                             .collect(),
                     });
                 }
+                SlackAction::OfferSlowTea { loser, others } => {
+                    self.offer_slow_tea(&loser, others).await;
+                }
+                SlackAction::SlowTeaReject(reason, response_url) => {
+                    self.respond_to_slash_command(&reason, &response_url).await;
+                }
+                SlackAction::SlowTeaResolved {
+                    response_url,
+                    voters,
+                    loser,
+                    count,
+                } => {
+                    let people = if voters == 1 { "person" } else { "people" };
+                    let message = format!(
+                        "\n🐢 *Slow tea!* {} {} reported {} for taking too long. {} pays *1 TEA* to each of the other {} in the round.\n",
+                        voters, people, loser, loser, count
+                    );
+                    self.replace_message(&message, &response_url).await;
+                }
             }
         }
 
         tracing::info!("Message processing task ended");
+    }
+
+    async fn offer_slow_tea(&self, loser: &User, others: usize) {
+        let blocks = json!([
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": format!(
+                        "🐢 *Tea taking too long?* If {} is being slow, anyone else from the round can charge them *1 TEA* to each of the other {}.",
+                        loser, others
+                    )
+                }
+            },
+            {
+                "type": "actions",
+                "elements": [
+                    {
+                        "type": "button",
+                        "text": { "type": "plain_text", "text": "🐢 Report slow tea", "emoji": true },
+                        "style": "danger",
+                        "action_id": "slow_tea",
+                        "value": loser.id
+                    }
+                ]
+            }
+        ]);
+
+        self.client
+            .post("https://slack.com/api/chat.postMessage")
+            .header("Authorization", format!("Bearer {}", self.token))
+            .json(&json!({
+                "channel": &self.channel,
+                "text": format!("🐢 Was {}'s tea slow?", loser),
+                "blocks": blocks,
+            }))
+            .send()
+            .await
+            .map_err(|e| tracing::error!("Failed to offer slow tea: {}", e))
+            .ok();
+    }
+
+    /// Replace the message a button lives on (removing the button) with a plain-text update.
+    async fn replace_message(&self, message: &str, response_url: &Url) {
+        self.client
+            .post(response_url.as_str())
+            .header("Authorization", format!("Bearer {}", self.token))
+            .json(&json!({ "replace_original": true, "response_type": "in_channel", "text": message }))
+            .send()
+            .await
+            .map_err(|e| tracing::error!("Failed to replace message: {}", e))
+            .ok();
     }
 
     async fn send_message(&self, message: &str) -> Option<SlackMessageResponse> {
@@ -506,6 +618,37 @@ impl SlackInterface {
             )
                 .into_response()
         }
+    }
+
+    async fn handle_interaction(&self, payload: InteractionPayload) -> Response {
+        let action = match payload.actions.iter().find(|a| a.action_id == "slow_tea") {
+            Some(action) => action,
+            None => return StatusCode::OK.into_response(),
+        };
+
+        let user = match self.get_user(&payload.user.id) {
+            Some(user) => user,
+            None => {
+                return (
+                    StatusCode::OK,
+                    Json(SlashCommandResponse {
+                        response_type: ResponseType::Ephemeral,
+                        text: "You have not been added to the tea bot yet. Please contact the Tea admin to be added!".to_string(),
+                    }),
+                )
+                    .into_response()
+            }
+        };
+
+        self.command_tx
+            .send(UserCommand::SlowTea {
+                clicker: user,
+                loser_id: action.value.clone().unwrap_or_default(),
+                response_url: payload.response_url,
+            })
+            .ok();
+
+        StatusCode::OK.into_response()
     }
 }
 
@@ -706,6 +849,35 @@ pub async fn handle_slash_command(
                 }),
             )
                 .into_response()
+        }
+    }
+}
+
+#[axum::debug_handler]
+pub async fn handle_slack_interaction(
+    State(slack): State<Arc<SlackInterface>>,
+    headers: HeaderMap,
+    body: String,
+) -> Response {
+    if let Err(error_response) =
+        verify_request_signature(&headers, slack.signing_secret.as_str(), &body)
+    {
+        return (error_response.0, error_response.1).into_response();
+    }
+
+    let envelope = match serde_urlencoded::from_str::<InteractionEnvelope>(&body) {
+        Ok(envelope) => envelope,
+        Err(e) => {
+            tracing::error!("Failed to parse interaction envelope: {}", e);
+            return StatusCode::OK.into_response();
+        }
+    };
+
+    match serde_json::from_str::<InteractionPayload>(&envelope.payload) {
+        Ok(payload) => slack.handle_interaction(payload).await,
+        Err(e) => {
+            tracing::error!("Failed to parse interaction payload: {}", e);
+            StatusCode::OK.into_response()
         }
     }
 }

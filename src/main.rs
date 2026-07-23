@@ -118,6 +118,7 @@ async fn main() {
     let app = Router::new()
         .route("/slack/events", post(slack::handle_slack_event))
         .route("/slack/commands", post(slack::handle_slash_command))
+        .route("/slack/interactions", post(slack::handle_slack_interaction))
         .with_state(slack_interface)
         .merge(tv_routes)
         .nest_service("/static", ServeDir::new("static"));
