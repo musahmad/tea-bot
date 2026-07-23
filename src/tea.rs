@@ -253,7 +253,7 @@ impl Tea {
         }
         if clicker == settled.loser {
             SlackAction::SlowTeaEphemeral(
-                "🐢 You can't vote on your own slow tea! Get brewing!".to_string(),
+                "🐢 You can't vote on your own slow tea — you're the one keeping everyone parched! Get brewing!".to_string(),
                 response_url,
             )
             .send(&self.message_tx);

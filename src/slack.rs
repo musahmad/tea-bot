@@ -479,7 +479,7 @@ impl SlackInterface {
                 } => {
                     let people = if voters == 1 { "person" } else { "people" };
                     let message = format!(
-                        "\n🐢 *Slow tea!* {} {} voted that {} was too slow. {} pays *1 TEA* to each of the other {} in the round.\n",
+                        "\n🐢 *Slow tea!* {} parched {} voted that {} was too slow. {} pays *1 TEA* to each of the other {} in the round.\n",
                         voters, people, loser, loser, count
                     );
                     self.replace_message(&message, &response_url, None).await;
@@ -704,7 +704,7 @@ fn slow_tea_blocks(loser: &User, voted: usize, eligible: usize, remaining: usize
             "elements": [
                 {
                     "type": "button",
-                    "text": { "type": "plain_text", "text": "🐢 They're being slow", "emoji": true },
+                    "text": { "type": "plain_text", "text": "🐢 I'm parched", "emoji": true },
                     "style": "danger",
                     "action_id": "slow_tea",
                     "value": loser.id.clone()
