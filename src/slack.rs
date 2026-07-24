@@ -693,8 +693,8 @@ fn slow_tea_blocks(loser: &User, voted: usize, eligible: usize, remaining: usize
             "text": {
                 "type": "mrkdwn",
                 "text": format!(
-                    "🐢 *Slow tea vote!* Is {loser} taking too long to brew?\n\
-                     It's a democracy in here — once *half the round* agrees, {loser} pays *1 TEA* to each of the other {eligible}. Vote if you're parched.\n\n\
+                    "🐢 *Slow tea vote!* The brew timer's up and {loser} still hasn't delivered.\n\
+                     It's a democracy in here — but this one has to be *unanimous*: once *everyone else* agrees, {loser} pays *1 TEA* to each of the other {eligible}. Vote if you're parched.\n\n\
                      *🗳️ {voted}/{eligible} voted* · {remaining} more {votes} to charge {loser}."
                 )
             }
