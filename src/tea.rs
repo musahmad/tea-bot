@@ -10,6 +10,9 @@ use crate::contract::ContractInterface;
 use crate::slack::{SlackAction, UserCommand};
 use crate::User;
 
+/// How long the tea maker gets to brew before the slow-tea vote opens.
+const BREW_SECS: u32 = 5 * 60;
+
 pub struct TeaRound {
     pub bids: HashMap<User, u8>,
     pub start_time: Instant,
@@ -24,10 +27,9 @@ pub struct SettledRound {
 }
 
 impl SettledRound {
-    /// Number of reports needed to charge the loser: 50% of the non-losers, floored, min 1.
+    /// Number of reports needed to charge the loser: a unanimous vote of every non-loser.
     fn required_votes(&self) -> usize {
-        let non_losers = self.participants.len().saturating_sub(1);
-        (non_losers / 2).max(1)
+        self.participants.len().saturating_sub(1).max(1)
     }
 }
 
@@ -443,7 +445,7 @@ impl Tea {
             SlackAction::AnnouncePayments(payments).send(&self.message_tx);
             SlackAction::StartTimer {
                 title: format!("{} is brewing tea", tea_maker),
-                duration_secs: 5 * 60,
+                duration_secs: BREW_SECS,
                 completion_message: Some(format!(
                     "\n🍵 *Tea should be ready! Brewed by {}.*\n",
                     tea_maker
@@ -500,12 +502,18 @@ impl Tea {
                 voters: HashSet::new(),
             });
             let settled = self.settled.as_ref().unwrap();
-            SlackAction::OfferSlowTea {
+            // The slow-tea vote only opens once the brew timer is up — no one's
+            // parched until the tea should already be in the pot.
+            let offer = SlackAction::OfferSlowTea {
                 loser: tea_maker,
                 eligible: settled.participants.len() - 1,
                 required: settled.required_votes(),
-            }
-            .send(&self.message_tx);
+            };
+            let message_tx = self.message_tx.clone();
+            tokio::spawn(async move {
+                sleep(Duration::from_secs(BREW_SECS as u64)).await;
+                offer.send(&message_tx);
+            });
         }
     }
 }
