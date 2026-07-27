@@ -1,8 +1,4 @@
-use std::{
-    collections::{HashMap, HashSet},
-    time::Instant,
-};
-use reqwest::Url;
+use std::{collections::HashMap, time::Instant};
 use tokio::sync::mpsc;
 use tokio::time::{sleep, Duration};
 
@@ -10,34 +6,15 @@ use crate::contract::ContractInterface;
 use crate::slack::{SlackAction, UserCommand};
 use crate::User;
 
-/// How long the tea maker gets to brew before the slow-tea vote opens.
-const BREW_SECS: u32 = 5 * 60;
-
 pub struct TeaRound {
     pub bids: HashMap<User, u8>,
     pub start_time: Instant,
-}
-
-/// A round that has finished settling, kept around so the slow-tea button can charge the loser.
-pub struct SettledRound {
-    pub participants: Vec<User>,
-    pub loser: User,
-    /// Slack ids of non-loser participants who have reported slow tea so far.
-    pub voters: HashSet<String>,
-}
-
-impl SettledRound {
-    /// Number of reports needed to charge the loser: a unanimous vote of every non-loser.
-    fn required_votes(&self) -> usize {
-        self.participants.len().saturating_sub(1).max(1)
-    }
 }
 
 pub struct Tea {
     pub message_tx: mpsc::UnboundedSender<SlackAction>,
     pub command_rx: mpsc::UnboundedReceiver<UserCommand>,
     pub tea_round: Option<TeaRound>,
-    pub settled: Option<SettledRound>,
     pub contract: ContractInterface,
 }
 
@@ -51,7 +28,6 @@ impl Tea {
             message_tx,
             command_rx,
             tea_round: None,
-            settled: None,
             contract,
         }
     }
@@ -222,138 +198,6 @@ impl Tea {
                 self.tea_round = None;
                 SlackAction::CancelTeaRound.send(&self.message_tx);
             }
-            UserCommand::SlowTea {
-                clicker,
-                loser_id,
-                response_url,
-            } => {
-                self.handle_slow_tea(clicker, loser_id, response_url).await;
-            }
-        }
-    }
-
-    async fn handle_slow_tea(&mut self, clicker: User, loser_id: String, response_url: Url) {
-        let settled = match self.settled.as_mut() {
-            Some(settled) => settled,
-            None => {
-                SlackAction::SlowTeaEphemeral(
-                    "☕️ There's no tea round to vote on right now 🚨".to_string(),
-                    response_url,
-                )
-                .send(&self.message_tx);
-                return;
-            }
-        };
-
-        if settled.loser.id != loser_id {
-            SlackAction::SlowTeaEphemeral(
-                "🐢 That slow-tea vote has already been settled!".to_string(),
-                response_url,
-            )
-            .send(&self.message_tx);
-            return;
-        }
-        if clicker == settled.loser {
-            SlackAction::SlowTeaEphemeral(
-                "🐢 You can't vote on your own slow tea — you're the one keeping everyone parched! Get brewing!".to_string(),
-                response_url,
-            )
-            .send(&self.message_tx);
-            return;
-        }
-        if !settled.participants.iter().any(|user| user == &clicker) {
-            SlackAction::SlowTeaEphemeral(
-                "☕️ Only people who were in the round can vote 🚨".to_string(),
-                response_url,
-            )
-            .send(&self.message_tx);
-            return;
-        }
-
-        // Record this vote; a slow tea is only charged once enough people agree.
-        let eligible = settled.participants.len() - 1;
-        let required = settled.required_votes();
-        let loser_display = settled.loser.to_string();
-
-        if !settled.voters.insert(clicker.id.clone()) {
-            // Already voted — remind them privately, leaving the shared vote message untouched.
-            SlackAction::SlowTeaEphemeral(
-                format!(
-                    "🐢 You've already voted on {}'s slow tea ({}/{}).",
-                    loser_display,
-                    settled.voters.len(),
-                    eligible
-                ),
-                response_url,
-            )
-            .send(&self.message_tx);
-            return;
-        }
-
-        let votes = settled.voters.len();
-
-        if votes < required {
-            SlackAction::SlowTeaProgress {
-                response_url,
-                loser: settled.loser.clone(),
-                voted: votes,
-                eligible,
-                remaining: required - votes,
-            }
-            .send(&self.message_tx);
-            return;
-        }
-
-        // Enough people agree — take the round so it can only ever be charged once.
-        let settled = self.settled.take().unwrap();
-        let loser = settled.loser;
-        let others: Vec<User> = settled
-            .participants
-            .into_iter()
-            .filter(|user| user != &loser)
-            .collect();
-
-        SlackAction::SlowTeaResolved {
-            response_url,
-            voters: votes,
-            loser: loser.clone(),
-            count: others.len(),
-        }
-        .send(&self.message_tx);
-
-        match self
-            .contract
-            .transfer(
-                others
-                    .iter()
-                    .map(|to| (loser.address.parse().unwrap(), to.address.parse().unwrap(), 1.0))
-                    .collect(),
-            )
-            .await
-        {
-            Ok(_) => {
-                SlackAction::SendMessage("☕️ *Slow tea penalty transferred ✅*".to_string())
-                    .send(&self.message_tx);
-            }
-            Err(e) => {
-                SlackAction::SendMessage(format!(
-                    "☕️ *Failed to transfer slow tea penalty 🚨:* {}",
-                    e
-                ))
-                .send(&self.message_tx);
-            }
-        }
-
-        match self.contract.refresh_balances().await {
-            Ok(new_balances) => {
-                SlackAction::ShowTeaderboard(new_balances.into_iter().collect())
-                    .send(&self.message_tx);
-            }
-            Err(e) => {
-                tracing::error!("Failed to refresh balances 🚨: {}", e);
-                SlackAction::SendMessage(format!("☕️ *Failed to refresh balances 🚨:* {}", e))
-                    .send(&self.message_tx);
-            }
         }
     }
 
@@ -445,7 +289,7 @@ impl Tea {
             SlackAction::AnnouncePayments(payments).send(&self.message_tx);
             SlackAction::StartTimer {
                 title: format!("{} is brewing tea", tea_maker),
-                duration_secs: BREW_SECS,
+                duration_secs: 5 * 60,
                 completion_message: Some(format!(
                     "\n🍵 *Tea should be ready! Brewed by {}.*\n",
                     tea_maker
@@ -495,25 +339,6 @@ impl Tea {
                         .send(&self.message_tx);
                 }
             }
-
-            self.settled = Some(SettledRound {
-                participants: bids.keys().cloned().collect(),
-                loser: tea_maker.clone(),
-                voters: HashSet::new(),
-            });
-            let settled = self.settled.as_ref().unwrap();
-            // The slow-tea vote only opens once the brew timer is up — no one's
-            // parched until the tea should already be in the pot.
-            let offer = SlackAction::OfferSlowTea {
-                loser: tea_maker,
-                eligible: settled.participants.len() - 1,
-                required: settled.required_votes(),
-            };
-            let message_tx = self.message_tx.clone();
-            tokio::spawn(async move {
-                sleep(Duration::from_secs(BREW_SECS as u64)).await;
-                offer.send(&message_tx);
-            });
         }
     }
 }

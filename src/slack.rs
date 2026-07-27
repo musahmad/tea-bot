@@ -24,11 +24,6 @@ use crate::User;
 pub enum UserCommand {
     Bid(User, u8, Url),
     CancelTeaRound,
-    SlowTea {
-        clicker: User,
-        loser_id: String,
-        response_url: Url,
-    },
 }
 
 #[derive(Debug)]
@@ -55,27 +50,6 @@ pub enum SlackAction {
     AnnouncePayments(HashMap<User, f64>),
     CancelTeaRound,
     ShowTeaderboard(Vec<(User, f64)>),
-    OfferSlowTea {
-        loser: User,
-        eligible: usize,
-        required: usize,
-    },
-    /// An ephemeral reply to the voter that leaves the shared vote message untouched.
-    SlowTeaEphemeral(String, Url),
-    /// A new vote below the threshold: re-render the vote message with a live count, keeping the button.
-    SlowTeaProgress {
-        response_url: Url,
-        loser: User,
-        voted: usize,
-        eligible: usize,
-        remaining: usize,
-    },
-    SlowTeaResolved {
-        response_url: Url,
-        voters: usize,
-        loser: User,
-        count: usize,
-    },
 }
 
 impl SlackAction {
@@ -127,31 +101,6 @@ pub struct SlackMessageResponse {
 pub struct SlashCommandResponse {
     pub response_type: ResponseType,
     pub text: String,
-}
-
-/// Slack sends interactivity payloads as `payload=<url-encoded JSON>` in the form body.
-#[derive(Debug, Deserialize)]
-pub struct InteractionEnvelope {
-    pub payload: String,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct InteractionPayload {
-    pub user: InteractionUser,
-    pub response_url: Url,
-    pub actions: Vec<InteractionAction>,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct InteractionUser {
-    pub id: String,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct InteractionAction {
-    pub action_id: String,
-    #[serde(default)]
-    pub value: Option<String>,
 }
 
 pub struct SlackInterface {
@@ -444,99 +393,18 @@ impl SlackInterface {
                             .collect(),
                     });
                 }
-                SlackAction::OfferSlowTea {
-                    loser,
-                    eligible,
-                    required,
-                } => {
-                    let blocks = slow_tea_blocks(&loser, 0, eligible, required);
-                    self.post_message(&format!("🐢 Is {}'s tea slow?", loser), Some(blocks))
-                        .await;
-                }
-                SlackAction::SlowTeaEphemeral(reason, response_url) => {
-                    self.send_ephemeral(&reason, &response_url).await;
-                }
-                SlackAction::SlowTeaProgress {
-                    response_url,
-                    loser,
-                    voted,
-                    eligible,
-                    remaining,
-                } => {
-                    let blocks = slow_tea_blocks(&loser, voted, eligible, remaining);
-                    self.replace_message(
-                        &format!("🐢 Slow tea vote for {}: {}/{} voted", loser, voted, eligible),
-                        &response_url,
-                        Some(blocks),
-                    )
-                    .await;
-                }
-                SlackAction::SlowTeaResolved {
-                    response_url,
-                    voters,
-                    loser,
-                    count,
-                } => {
-                    let people = if voters == 1 { "person" } else { "people" };
-                    let message = format!(
-                        "\n🐢 *Slow tea!* {} parched {} voted that {} was too slow. {} pays *1 TEA* to each of the other {} in the round.\n",
-                        voters, people, loser, loser, count
-                    );
-                    self.replace_message(&message, &response_url, None).await;
-                }
             }
         }
 
         tracing::info!("Message processing task ended");
     }
 
-    /// An ephemeral reply to the voter that explicitly leaves the shared vote message in place.
-    async fn send_ephemeral(&self, message: &str, response_url: &Url) {
-        self.client
-            .post(response_url.as_str())
-            .header("Authorization", format!("Bearer {}", self.token))
-            .json(&json!({ "response_type": "ephemeral", "replace_original": false, "text": message }))
-            .send()
-            .await
-            .map_err(|e| tracing::error!("Failed to send ephemeral: {}", e))
-            .ok();
-    }
-
-    /// Replace the message a button lives on (removing the button) with a plain-text update.
-    async fn replace_message(&self, message: &str, response_url: &Url, blocks: Option<Value>) {
-        let mut body =
-            json!({ "replace_original": true, "response_type": "in_channel", "text": message });
-        if let Some(blocks) = blocks {
-            body["blocks"] = blocks;
-        }
-        self.client
-            .post(response_url.as_str())
-            .header("Authorization", format!("Bearer {}", self.token))
-            .json(&body)
-            .send()
-            .await
-            .map_err(|e| tracing::error!("Failed to replace message: {}", e))
-            .ok();
-    }
-
     async fn send_message(&self, message: &str) -> Option<SlackMessageResponse> {
-        self.post_message(message, None).await
-    }
-
-    async fn post_message(
-        &self,
-        message: &str,
-        blocks: Option<Value>,
-    ) -> Option<SlackMessageResponse> {
-        let mut body = json!({ "channel": &self.channel, "text": message });
-        if let Some(blocks) = blocks {
-            body["blocks"] = blocks;
-        }
         let response = self
             .client
             .post("https://slack.com/api/chat.postMessage")
             .header("Authorization", format!("Bearer {}", self.token))
-            .json(&body)
+            .json(&json!({ "channel": &self.channel, "text": message }))
             .send()
             .await
             .map_err(|e| tracing::error!("Failed to send message: {}", e))
@@ -639,37 +507,6 @@ impl SlackInterface {
                 .into_response()
         }
     }
-
-    async fn handle_interaction(&self, payload: InteractionPayload) -> Response {
-        let action = match payload.actions.iter().find(|a| a.action_id == "slow_tea") {
-            Some(action) => action,
-            None => return StatusCode::OK.into_response(),
-        };
-
-        let user = match self.get_user(&payload.user.id) {
-            Some(user) => user,
-            None => {
-                return (
-                    StatusCode::OK,
-                    Json(SlashCommandResponse {
-                        response_type: ResponseType::Ephemeral,
-                        text: "You have not been added to the tea bot yet. Please contact the Tea admin to be added!".to_string(),
-                    }),
-                )
-                    .into_response()
-            }
-        };
-
-        self.command_tx
-            .send(UserCommand::SlowTea {
-                clicker: user,
-                loser_id: action.value.clone().unwrap_or_default(),
-                response_url: payload.response_url,
-            })
-            .ok();
-
-        StatusCode::OK.into_response()
-    }
 }
 
 fn render_timer(title: &str, remaining_secs: u32, duration_secs: u32) -> String {
@@ -679,39 +516,6 @@ fn render_timer(title: &str, remaining_secs: u32, duration_secs: u32) -> String 
         progress_bar(remaining_secs, duration_secs),
         format_remaining(remaining_secs),
     )
-}
-
-/// Block Kit for the slow-tea vote: democratic pitch, a live `voted/eligible` tally, and the vote button.
-fn slow_tea_blocks(loser: &User, voted: usize, eligible: usize, remaining: usize) -> Value {
-    let votes = match remaining == 1 {
-        true => "vote",
-        false => "votes",
-    };
-    json!([
-        {
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": format!(
-                    "🐢 *Slow tea vote!* The brew timer's up and {loser} still hasn't delivered.\n\
-                     It's a democracy in here — but this one has to be *unanimous*: once *everyone else* agrees, {loser} pays *1 TEA* to each of the other {eligible}. Vote if you're parched.\n\n\
-                     *🗳️ {voted}/{eligible} voted* · {remaining} more {votes} to charge {loser}."
-                )
-            }
-        },
-        {
-            "type": "actions",
-            "elements": [
-                {
-                    "type": "button",
-                    "text": { "type": "plain_text", "text": "🐢 I'm parched", "emoji": true },
-                    "style": "danger",
-                    "action_id": "slow_tea",
-                    "value": loser.id.clone()
-                }
-            ]
-        }
-    ])
 }
 
 fn progress_bar(remaining_secs: u32, duration_secs: u32) -> String {
@@ -902,35 +706,6 @@ pub async fn handle_slash_command(
                 }),
             )
                 .into_response()
-        }
-    }
-}
-
-#[axum::debug_handler]
-pub async fn handle_slack_interaction(
-    State(slack): State<Arc<SlackInterface>>,
-    headers: HeaderMap,
-    body: String,
-) -> Response {
-    if let Err(error_response) =
-        verify_request_signature(&headers, slack.signing_secret.as_str(), &body)
-    {
-        return (error_response.0, error_response.1).into_response();
-    }
-
-    let envelope = match serde_urlencoded::from_str::<InteractionEnvelope>(&body) {
-        Ok(envelope) => envelope,
-        Err(e) => {
-            tracing::error!("Failed to parse interaction envelope: {}", e);
-            return StatusCode::OK.into_response();
-        }
-    };
-
-    match serde_json::from_str::<InteractionPayload>(&envelope.payload) {
-        Ok(payload) => slack.handle_interaction(payload).await,
-        Err(e) => {
-            tracing::error!("Failed to parse interaction payload: {}", e);
-            StatusCode::OK.into_response()
         }
     }
 }
