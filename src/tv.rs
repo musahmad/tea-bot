@@ -31,7 +31,7 @@ impl TvUser {
 #[derive(Clone, Debug, Serialize)]
 #[serde(tag = "type")]
 pub enum TvEvent {
-    TeaRoundStarted { started_by: TvUser },
+    TeaRoundStarted,
     TeaRoundCancelled,
     BidRevealed { user: TvUser, bid: u8 },
     DiceRollAnnounced { rollers: Vec<TvUser>, tied_bid: u8 },

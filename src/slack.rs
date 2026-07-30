@@ -29,7 +29,7 @@ pub enum UserCommand {
 #[derive(Debug)]
 pub enum SlackAction {
     SendMessage(String),
-    StartTeaRound(User),
+    StartTeaRound,
     StartTimer {
         title: String,
         duration_secs: u32,
@@ -152,14 +152,12 @@ impl SlackInterface {
                 SlackAction::SendMessage(message) => {
                     self.send_message(&message).await;
                 }
-                SlackAction::StartTeaRound(user) => {
+                SlackAction::StartTeaRound => {
                     self.send_message(
                         "\n\n☕️ *A tea round is starting! Place your bid with /t (e.g. /t 5). You have 45 seconds.*\n\n",
                     )
                     .await;
-                    let _ = self.tv_tx.send(TvEvent::TeaRoundStarted {
-                        started_by: TvUser::from_user(&user),
-                    });
+                    let _ = self.tv_tx.send(TvEvent::TeaRoundStarted);
                 }
                 SlackAction::StartTimer {
                     title,

@@ -183,7 +183,7 @@ impl Tea {
                         start_time: Instant::now(),
                     });
 
-                    SlackAction::StartTeaRound(user.clone()).send(&self.message_tx);
+                    SlackAction::StartTeaRound.send(&self.message_tx);
                     SlackAction::StartTimer {
                         title: "Bidding closes in".to_string(),
                         duration_secs: 45,
