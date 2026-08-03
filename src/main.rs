@@ -13,6 +13,7 @@ use tracing_subscriber;
 mod contract;
 mod slack;
 mod tea;
+mod terms;
 mod tv;
 
 use crate::{
@@ -48,6 +49,26 @@ impl Display for User {
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug)]
+pub struct FirestoreConfig {
+    /// GCP project id that owns the Firestore database.
+    pub project: String,
+    /// Firestore database id. Use "(default)" for the default database.
+    #[serde(default = "default_firestore_database")]
+    pub database: String,
+    /// Collection storing one terms-acceptance document per Slack user id.
+    #[serde(default = "default_firestore_collection")]
+    pub collection: String,
+}
+
+fn default_firestore_database() -> String {
+    "(default)".to_string()
+}
+
+fn default_firestore_collection() -> String {
+    "terms_acceptances".to_string()
+}
+
+#[derive(Deserialize, Serialize, Clone, Debug)]
 pub struct AppConfig {
     slack_bot_token: String,
     slack_channel: String,
@@ -56,6 +77,9 @@ pub struct AppConfig {
     wallet_address: String,
     provider_url: String,
     users: Vec<User>,
+    /// Omit (or leave `project` empty) to disable terms enforcement, e.g. locally.
+    #[serde(default)]
+    firestore: Option<FirestoreConfig>,
 }
 
 #[tokio::main]
@@ -80,6 +104,8 @@ async fn main() {
     let (message_tx, message_rx) = mpsc::unbounded_channel::<SlackAction>();
     let (tv_tx, _) = tokio::sync::broadcast::channel::<tv::TvEvent>(32);
 
+    let terms = terms::TermsStore::new(config.firestore.clone()).await;
+
     let slack_interface = SlackInterface::new(
         config.slack_bot_token,
         config.slack_channel,
@@ -87,6 +113,7 @@ async fn main() {
         command_tx.clone(),
         config.users.clone(),
         tv_tx.clone(),
+        terms,
     );
 
     let contract = ContractInterface::new(
@@ -118,6 +145,7 @@ async fn main() {
     let app = Router::new()
         .route("/slack/events", post(slack::handle_slack_event))
         .route("/slack/commands", post(slack::handle_slash_command))
+        .route("/slack/interactivity", post(slack::handle_slack_interactivity))
         .with_state(slack_interface)
         .merge(tv_routes)
         .nest_service("/static", ServeDir::new("static"));

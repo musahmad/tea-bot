@@ -17,6 +17,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use sha2::Sha256;
 
+use crate::terms::{TermsStore, TERMS_TEXT, TERMS_VERSION};
 use crate::tv::{TvEvent, TvUser};
 use crate::User;
 
@@ -111,7 +112,34 @@ pub struct SlackInterface {
     pub command_tx: mpsc::UnboundedSender<UserCommand>,
     pub users: Vec<User>,
     pub tv_tx: broadcast::Sender<TvEvent>,
+    pub terms: TermsStore,
     active_timer: Mutex<Option<AbortHandle>>,
+}
+
+/// Slack sends interactive component payloads as `payload=<url-encoded json>`.
+#[derive(Debug, Deserialize)]
+struct InteractivityForm {
+    payload: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct InteractivityPayload {
+    user: InteractivityUser,
+    #[serde(default)]
+    actions: Vec<InteractivityAction>,
+    response_url: Url,
+}
+
+#[derive(Debug, Deserialize)]
+struct InteractivityUser {
+    id: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct InteractivityAction {
+    action_id: String,
+    #[serde(default)]
+    value: Option<String>,
 }
 
 const TIMER_INTERVAL_SECS: u32 = 5;
@@ -125,6 +153,7 @@ impl SlackInterface {
         command_tx: mpsc::UnboundedSender<UserCommand>,
         users: Vec<User>,
         tv_tx: broadcast::Sender<TvEvent>,
+        terms: TermsStore,
     ) -> Arc<Self> {
         Arc::new(Self {
             token,
@@ -134,6 +163,7 @@ impl SlackInterface {
             command_tx,
             users,
             tv_tx,
+            terms,
             active_timer: Mutex::new(None),
         })
     }
@@ -490,6 +520,9 @@ impl SlackInterface {
         };
 
         if let Ok(bid) = payload.text.trim().parse::<u8>() {
+            if !self.terms.has_accepted(&payload.user_id).await {
+                return terms_prompt_response(bid);
+            }
             self.command_tx
                 .send(UserCommand::Bid(user, bid, payload.response_url))
                 .ok();
@@ -504,6 +537,114 @@ impl SlackInterface {
             )
                 .into_response()
         }
+    }
+
+    /// Replace the ephemeral message the button lives in (posts to the
+    /// interactive component's `response_url`, which is pre-authorised).
+    async fn replace_ephemeral(&self, message: &str, response_url: &Url) {
+        self.client
+            .post(response_url.as_str())
+            .json(&json!({
+                "response_type": "ephemeral",
+                "replace_original": true,
+                "text": message,
+            }))
+            .send()
+            .await
+            .map_err(|e| tracing::error!("Failed to replace ephemeral message: {}", e))
+            .ok();
+    }
+
+    async fn handle_interactivity(&self, payload: InteractivityPayload) -> Response {
+        let user = match self.get_user(&payload.user.id) {
+            Some(user) => user,
+            None => return StatusCode::OK.into_response(),
+        };
+
+        let Some(action) = payload.actions.first() else {
+            return StatusCode::OK.into_response();
+        };
+        if action.action_id != "accept_terms" {
+            return StatusCode::OK.into_response();
+        }
+
+        // Button value is "{version}:{bid}"; the bid is optional.
+        let (version, bid) = parse_accept_value(action.value.as_deref().unwrap_or(""));
+        if version != TERMS_VERSION {
+            self.replace_ephemeral(
+                "These terms are out of date — run `/t` again to see the latest.",
+                &payload.response_url,
+            )
+            .await;
+            return StatusCode::OK.into_response();
+        }
+
+        if !self.terms.record_acceptance(&payload.user.id).await {
+            self.replace_ephemeral(
+                "☕️ Couldn't record your acceptance — please try again.",
+                &payload.response_url,
+            )
+            .await;
+            return StatusCode::OK.into_response();
+        }
+
+        match bid {
+            Some(bid) => {
+                self.replace_ephemeral(
+                    &format!("✅ Terms accepted — placing your bid of {} TEA...", bid),
+                    &payload.response_url,
+                )
+                .await;
+                self.command_tx
+                    .send(UserCommand::Bid(user, bid, payload.response_url))
+                    .ok();
+            }
+            None => {
+                self.replace_ephemeral(
+                    "✅ Terms accepted — place your bid with `/t <n>`.",
+                    &payload.response_url,
+                )
+                .await;
+            }
+        }
+
+        StatusCode::OK.into_response()
+    }
+}
+
+/// Ephemeral response shown when a user tries to bid before accepting the
+/// current terms. The "I Agree" button carries `{version}:{bid}` so the bid can
+/// be auto-submitted once accepted.
+fn terms_prompt_response(bid: u8) -> Response {
+    let text = format!(
+        "*Tea-Bot Terms & Conditions* _(v{})_\n\n{}\n\n_Tap *I Agree* to accept and place your bid._",
+        TERMS_VERSION, TERMS_TEXT
+    );
+    (
+        StatusCode::OK,
+        Json(json!({
+            "response_type": "ephemeral",
+            "blocks": [
+                { "type": "section", "text": { "type": "mrkdwn", "text": text } },
+                { "type": "actions", "elements": [
+                    {
+                        "type": "button",
+                        "text": { "type": "plain_text", "text": "✅ I Agree", "emoji": true },
+                        "style": "primary",
+                        "action_id": "accept_terms",
+                        "value": format!("{}:{}", TERMS_VERSION, bid),
+                    }
+                ]}
+            ]
+        })),
+    )
+        .into_response()
+}
+
+fn parse_accept_value(value: &str) -> (&str, Option<u8>) {
+    match value.split_once(':') {
+        Some((version, bid)) => (version, bid.parse::<u8>().ok()),
+        None => (value, None),
     }
 }
 
@@ -704,6 +845,35 @@ pub async fn handle_slash_command(
                 }),
             )
                 .into_response()
+        }
+    }
+}
+
+#[axum::debug_handler]
+pub async fn handle_slack_interactivity(
+    State(slack): State<Arc<SlackInterface>>,
+    headers: HeaderMap,
+    body: String,
+) -> Response {
+    if let Err(error_response) =
+        verify_request_signature(&headers, slack.signing_secret.as_str(), &body)
+    {
+        return error_response.into_response();
+    }
+
+    let form = match serde_urlencoded::from_str::<InteractivityForm>(&body) {
+        Ok(form) => form,
+        Err(e) => {
+            tracing::error!("Failed to parse interactivity form: {}", e);
+            return StatusCode::BAD_REQUEST.into_response();
+        }
+    };
+
+    match serde_json::from_str::<InteractivityPayload>(&form.payload) {
+        Ok(payload) => slack.handle_interactivity(payload).await,
+        Err(e) => {
+            tracing::error!("Failed to parse interactivity payload: {}", e);
+            StatusCode::BAD_REQUEST.into_response()
         }
     }
 }
