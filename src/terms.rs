@@ -14,9 +14,11 @@ pub const TERMS_VERSION: &str = "2026-08-03";
 pub const TERMS_TEXT: &str = "\
 By placing a bid you agree to the Tea-Bot Terms & Conditions:
 
-1. You only bid when you genuinely want a hot tea and will accept one — an actual cup of hot tea, not some other random item from the kitchen — and not just to farm tokens.
-2. If you bid the lowest, you make the tea. All of it — no rush, just don't leave everyone parched.
+1. You only bid when you genuinely want and agree to accept a cup of hot tea. Variations (decaf, lemon, oat milk) are acceptable, but cold drinks and other kitchen items are not.
+2. If you bid the lowest, you make the tea, promptly.
 3. Bids are blind and locked the moment you place them.
+
+Failure to follow these rules may result in a TEA penalty, or temporary suspension at the discretion of the Tea Administration.
 ";
 
 const METADATA_TOKEN_URL: &str =
