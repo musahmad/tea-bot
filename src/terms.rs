@@ -14,10 +14,9 @@ pub const TERMS_VERSION: &str = "2026-08-03";
 pub const TERMS_TEXT: &str = "\
 By placing a bid you agree to the Tea-Bot Terms & Conditions:
 
-1. Tea-Bot is a game. TEA tokens are for fun and have no monetary value.
-2. You only bid when you genuinely intend to take part in the round in good faith — not solely to farm tokens.
-3. If you bid the lowest, you make the tea. All of it. Promptly.
-4. Bids are blind and locked the moment you place them.
+1. You only bid when you genuinely want a hot tea and will accept one — an actual cup of hot tea, not some other random item from the kitchen — and not just to farm tokens.
+2. If you bid the lowest, you make the tea. All of it — no rush, just don't leave everyone parched.
+3. Bids are blind and locked the moment you place them.
 ";
 
 const METADATA_TOKEN_URL: &str =
