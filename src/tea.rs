@@ -3,12 +3,18 @@ use tokio::sync::mpsc;
 use tokio::time::{sleep, Duration};
 
 use crate::contract::ContractInterface;
+use crate::rounds::{now_unix, RoundStore, RoundSummary};
 use crate::slack::{SlackAction, UserCommand};
-use crate::User;
+use crate::{FirestoreConfig, User};
 
 pub struct TeaRound {
     pub bids: HashMap<User, u8>,
     pub start_time: Instant,
+    /// Wall-clock start (Unix seconds), for persistence — `start_time` is a
+    /// monotonic `Instant` and can't be turned into a timestamp.
+    pub started_at_unix: u64,
+    /// The user who opened the round by placing the first bid.
+    pub starter: User,
 }
 
 pub struct Tea {
@@ -16,6 +22,7 @@ pub struct Tea {
     pub command_rx: mpsc::UnboundedReceiver<UserCommand>,
     pub tea_round: Option<TeaRound>,
     pub contract: ContractInterface,
+    pub rounds: RoundStore,
 }
 
 impl Tea {
@@ -23,12 +30,14 @@ impl Tea {
         message_tx: mpsc::UnboundedSender<SlackAction>,
         command_rx: mpsc::UnboundedReceiver<UserCommand>,
         contract: ContractInterface,
+        firestore: Option<FirestoreConfig>,
     ) -> Self {
         Self {
             message_tx,
             command_rx,
             tea_round: None,
             contract,
+            rounds: RoundStore::new(firestore),
         }
     }
 
@@ -181,6 +190,8 @@ impl Tea {
                     self.tea_round = Some(TeaRound {
                         bids: HashMap::from([(user.clone(), bid)]),
                         start_time: Instant::now(),
+                        started_at_unix: now_unix(),
+                        starter: user.clone(),
                     });
 
                     SlackAction::StartTeaRound.send(&self.message_tx);
@@ -210,6 +221,14 @@ impl Tea {
                     bids.keys().next().unwrap()
                 ))
                 .send(&self.message_tx);
+                self.rounds
+                    .record(RoundSummary::lonely(
+                        tea_round.started_at_unix,
+                        now_unix(),
+                        &tea_round.starter,
+                        &bids,
+                    ))
+                    .await;
                 return;
             }
 
@@ -226,6 +245,10 @@ impl Tea {
                 .collect::<Vec<_>>();
 
             SlackAction::RevealBids(bids.clone().into_iter().collect()).send(&self.message_tx);
+
+            // Captures every re-roll of a tie-break for the round record; stays
+            // empty when there was a single lowest bidder.
+            let mut rolloff_history: Vec<Vec<(User, Vec<u8>)>> = Vec::new();
 
             let tea_maker = if lowest_bidders.len() > 1 {
                 let mut rollers: Vec<User> = lowest_bidders.iter().map(|u| (*u).clone()).collect();
@@ -244,6 +267,7 @@ impl Tea {
                         })
                         .collect();
 
+                    rolloff_history.push(rolls.clone());
                     SlackAction::RollDice(rolls.clone()).send(&self.message_tx);
 
                     let lowest_score_sum: u8 = rolls
@@ -286,7 +310,7 @@ impl Tea {
                 penalty,
             }
             .send(&self.message_tx);
-            SlackAction::AnnouncePayments(payments).send(&self.message_tx);
+            SlackAction::AnnouncePayments(payments.clone()).send(&self.message_tx);
             SlackAction::StartTimer {
                 title: format!("{} is brewing tea", tea_maker),
                 duration_secs: 5 * 60,
@@ -297,48 +321,71 @@ impl Tea {
             }
             .send(&self.message_tx);
 
-            if transfers.len() > 0 {
-                match self
-                    .contract
-                    .transfer(
-                        transfers
-                            .iter()
-                            .map(|((from, to), amount)| {
-                                (
-                                    from.address.parse().unwrap(),
-                                    to.address.parse().unwrap(),
-                                    *amount,
-                                )
-                            })
-                            .collect(),
-                    )
-                    .await
-                {
-                    Ok(_) => {
+            // Fix an order so `settled` lines up with each transfer in the record.
+            let transfer_list: Vec<((User, User), f64)> = transfers.into_iter().collect();
+
+            let (settled, tx_hash): (Vec<f64>, Option<String>) = if !transfer_list.is_empty() {
+                let payment_args = transfer_list
+                    .iter()
+                    .map(|((from, to), amount)| {
+                        (
+                            from.address.parse().unwrap(),
+                            to.address.parse().unwrap(),
+                            *amount,
+                        )
+                    })
+                    .collect();
+                match self.contract.transfer(payment_args).await {
+                    Ok(outcome) => {
                         SlackAction::SendMessage("☕️ *All transfers successful ✅*".to_string())
                             .send(&self.message_tx);
+                        (outcome.settled, Some(outcome.tx_hash))
                     }
                     Err(e) => {
                         SlackAction::SendMessage(format!("☕️ *Failed to transfer 🚨:* {}", e))
                             .send(&self.message_tx);
+                        (Vec::new(), None)
                     }
                 }
             } else {
                 SlackAction::SendMessage("☕️ *No transfers to be made ✅*".to_string())
                     .send(&self.message_tx);
-            }
+                (Vec::new(), None)
+            };
 
-            match self.contract.refresh_balances().await {
+            let balances_after = match self.contract.refresh_balances().await {
                 Ok(new_balances) => {
-                    SlackAction::ShowTeaderboard(new_balances.into_iter().collect())
+                    SlackAction::ShowTeaderboard(new_balances.clone().into_iter().collect())
                         .send(&self.message_tx);
+                    Some(new_balances)
                 }
                 Err(e) => {
                     tracing::error!("Failed to refresh balances 🚨: {}", e);
                     SlackAction::SendMessage(format!("☕️ *Failed to refresh balances 🚨:* {}", e))
                         .send(&self.message_tx);
+                    None
                 }
-            }
+            };
+
+            self.rounds
+                .record(RoundSummary {
+                    started_at_unix: tea_round.started_at_unix,
+                    ended_at_unix: now_unix(),
+                    status: "completed",
+                    starter: &tea_round.starter,
+                    bids: &bids,
+                    lowest_bid: *lowest_bid,
+                    rolloff: &rolloff_history,
+                    loser: Some(&tea_maker),
+                    penalty_dice: Some(dice),
+                    penalty_amount: penalty,
+                    payments: Some(&payments),
+                    transfers: &transfer_list,
+                    settled: &settled,
+                    tx_hash,
+                    balances_after: balances_after.as_ref(),
+                })
+                .await;
         }
     }
 }
