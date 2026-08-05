@@ -24,6 +24,16 @@ alloy::sol!(
     "abi.json"
 );
 
+/// Result of settling a batch of transfers on-chain.
+pub struct TransferOutcome {
+    /// Hash of the `mass_transfer` transaction.
+    pub tx_hash: String,
+    /// Amounts actually submitted, parallel to the input `payments`. Each is
+    /// capped at the payer's on-chain balance, so it can be below the requested
+    /// amount.
+    pub settled: Vec<f64>,
+}
+
 impl ContractInterface {
     pub fn new(
         private_key: String,
@@ -89,7 +99,8 @@ impl ContractInterface {
     pub async fn transfer(
         &self,
         payments: Vec<(Address, Address, f64)>,
-    ) -> Result<TransactionReceipt, Error> {
+    ) -> Result<TransferOutcome, Error> {
+        let mut settled = Vec::with_capacity(payments.len());
         let payments = payments
             .into_iter()
             .map(|(from, to, amount)| {
@@ -100,17 +111,23 @@ impl ContractInterface {
                     .and_then(|u| self.balances.get(u))
                     .map(|&balance| amount.min(balance))
                     .unwrap_or(amount);
+                settled.push(capped);
                 let amount_wei = (capped * 1e18).round() as u128;
                 (to, from, U256::from(amount_wei))
             })
             .collect::<Vec<(Address, Address, U256)>>();
 
-        Ok(self
+        let receipt: TransactionReceipt = self
             .instance
             .mass_transfer(payments)
             .send()
             .await?
             .get_receipt()
-            .await?)
+            .await?;
+
+        Ok(TransferOutcome {
+            tx_hash: format!("{:?}", receipt.transaction_hash),
+            settled,
+        })
     }
 }

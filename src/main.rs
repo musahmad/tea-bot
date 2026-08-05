@@ -11,6 +11,7 @@ use tokio::sync::mpsc;
 use tracing_subscriber;
 
 mod contract;
+mod rounds;
 mod slack;
 mod tea;
 mod terms;
@@ -131,7 +132,7 @@ async fn main() {
     });
 
     tokio::spawn({
-        let mut tea = Tea::new(message_tx, command_rx, contract);
+        let mut tea = Tea::new(message_tx, command_rx, contract, config.firestore);
         async move {
             tea.run().await;
         }
