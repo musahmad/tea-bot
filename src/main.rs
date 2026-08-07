@@ -11,6 +11,7 @@ use tokio::sync::mpsc;
 use tracing_subscriber;
 
 mod contract;
+mod preferences;
 mod rounds;
 mod slack;
 mod tea;
@@ -107,6 +108,10 @@ async fn main() {
 
     let terms = terms::TermsStore::new(config.firestore.clone()).await;
 
+    // Shared so the picker (Slack) and the post-round tea order (tea loop) read
+    // and write the same preferences — including the in-memory store in local dev.
+    let prefs = std::sync::Arc::new(preferences::PreferenceStore::new(config.firestore.clone()));
+
     let slack_interface = SlackInterface::new(
         config.slack_bot_token,
         config.slack_channel,
@@ -115,6 +120,7 @@ async fn main() {
         config.users.clone(),
         tv_tx.clone(),
         terms,
+        prefs.clone(),
     );
 
     let contract = ContractInterface::new(
@@ -132,7 +138,7 @@ async fn main() {
     });
 
     tokio::spawn({
-        let mut tea = Tea::new(message_tx, command_rx, contract, config.firestore);
+        let mut tea = Tea::new(message_tx, command_rx, contract, config.firestore, prefs);
         async move {
             tea.run().await;
         }

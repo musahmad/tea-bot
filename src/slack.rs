@@ -17,6 +17,9 @@ use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use sha2::Sha256;
 
+use crate::preferences::{
+    london_now_minutes, PreferenceStore, TeaPreference, TeaSlot, DEFAULT_SWITCH_TIME,
+};
 use crate::terms::{TermsStore, TERMS_TEXT, TERMS_VERSION};
 use crate::tv::{TvEvent, TvUser};
 use crate::User;
@@ -51,6 +54,9 @@ pub enum SlackAction {
     AnnouncePayments(HashMap<User, f64>),
     CancelTeaRound,
     ShowTeaderboard(Vec<(User, f64)>),
+    /// The teas to be made for a just-finished round, grouped by tea (largest
+    /// group first). Participants with no saved preference are grouped as Normal.
+    ShowTeaOrders(Vec<(String, Vec<User>)>),
 }
 
 impl SlackAction {
@@ -113,6 +119,7 @@ pub struct SlackInterface {
     pub users: Vec<User>,
     pub tv_tx: broadcast::Sender<TvEvent>,
     pub terms: TermsStore,
+    pub prefs: Arc<PreferenceStore>,
     active_timer: Mutex<Option<AbortHandle>>,
 }
 
@@ -138,8 +145,20 @@ struct InteractivityUser {
 #[derive(Debug, Deserialize)]
 struct InteractivityAction {
     action_id: String,
+    /// Present on `button` actions (e.g. the terms "I Agree" button).
     #[serde(default)]
     value: Option<String>,
+    /// Present on `static_select` actions (the tea dropdowns).
+    #[serde(default)]
+    selected_option: Option<SelectedOption>,
+    /// Present on `timepicker` actions (the switchover time). "HH:MM".
+    #[serde(default)]
+    selected_time: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct SelectedOption {
+    value: String,
 }
 
 const TIMER_INTERVAL_SECS: u32 = 5;
@@ -154,6 +173,7 @@ impl SlackInterface {
         users: Vec<User>,
         tv_tx: broadcast::Sender<TvEvent>,
         terms: TermsStore,
+        prefs: Arc<PreferenceStore>,
     ) -> Arc<Self> {
         Arc::new(Self {
             token,
@@ -164,6 +184,7 @@ impl SlackInterface {
             users,
             tv_tx,
             terms,
+            prefs,
             active_timer: Mutex::new(None),
         })
     }
@@ -392,7 +413,7 @@ impl SlackInterface {
                 }
                 SlackAction::CancelTeaRound => {
                     self.cancel_active_timer();
-                    self.send_message(&format!("Tea round cancelled")).await;
+                    self.send_message("☕️ Tea round cancelled").await;
                     let _ = self.tv_tx.send(TvEvent::TeaRoundCancelled);
                 }
                 SlackAction::ShowTeaderboard(balances) => {
@@ -420,6 +441,21 @@ impl SlackInterface {
                             .map(|(u, b)| (TvUser::from_user(u), *b))
                             .collect(),
                     });
+                }
+                SlackAction::ShowTeaOrders(orders) => {
+                    if orders.is_empty() {
+                        continue;
+                    }
+                    let mut message = String::from("\n\n☕️ *Tea order*\n\n");
+                    for (tea, members) in &orders {
+                        let names = members
+                            .iter()
+                            .map(|u| u.name.clone())
+                            .collect::<Vec<_>>()
+                            .join(", ");
+                        message += &format!("*{}×* {} — {}\n", members.len(), tea, names);
+                    }
+                    self.send_message(&message).await;
                 }
             }
         }
@@ -519,6 +555,12 @@ impl SlackInterface {
             }
         };
 
+        if payload.text.trim().eq_ignore_ascii_case("prefs") {
+            let (pref, options) =
+                tokio::join!(self.prefs.get(&payload.user_id), self.prefs.options());
+            return preferences_response(&pref, &options, false);
+        }
+
         if let Ok(bid) = payload.text.trim().parse::<u8>() {
             if !self.terms.has_accepted(&payload.user_id).await {
                 return terms_prompt_response(bid);
@@ -532,7 +574,7 @@ impl SlackInterface {
                 StatusCode::OK,
                 Json(SlashCommandResponse {
                     response_type: ResponseType::Ephemeral,
-                    text: "Invalid bid. Please provide a non-negative integer.".to_string(),
+                    text: "Invalid bid. Enter a non-negative integer to bid, or `/t prefs` to set your tea.".to_string(),
                 }),
             )
                 .into_response()
@@ -564,6 +606,20 @@ impl SlackInterface {
         let Some(action) = payload.actions.first() else {
             return StatusCode::OK.into_response();
         };
+
+        // Tea-preference picker: the two dropdowns and the switchover timepicker
+        // each save on change and re-render the ephemeral message.
+        if let Some(slot) = TeaSlot::from_action_id(&action.action_id) {
+            return self
+                .save_tea_pref(&payload.user.id, slot, action, &payload.response_url)
+                .await;
+        }
+        if action.action_id == "pref_switch_time" {
+            return self
+                .save_switch_time(&payload.user.id, action, &payload.response_url)
+                .await;
+        }
+
         if action.action_id != "accept_terms" {
             return StatusCode::OK.into_response();
         }
@@ -610,6 +666,61 @@ impl SlackInterface {
 
         StatusCode::OK.into_response()
     }
+
+    /// Save a picked tea for one slot and re-render the picker. Ignores an
+    /// unknown tea (e.g. a stale message after the admin edited the list).
+    async fn save_tea_pref(
+        &self,
+        user_id: &str,
+        slot: TeaSlot,
+        action: &InteractivityAction,
+        response_url: &Url,
+    ) -> Response {
+        let options = self.prefs.options().await;
+        let saved = match action.selected_option.as_ref() {
+            Some(opt) if options.contains(&opt.value) => {
+                self.prefs.set_tea(user_id, slot, &opt.value).await
+            }
+            _ => false,
+        };
+        let pref = self.prefs.get(user_id).await;
+        self.replace_ephemeral_blocks(preferences_blocks(&pref, &options, saved), response_url)
+            .await;
+        StatusCode::OK.into_response()
+    }
+
+    /// Save the switchover time and re-render the picker.
+    async fn save_switch_time(
+        &self,
+        user_id: &str,
+        action: &InteractivityAction,
+        response_url: &Url,
+    ) -> Response {
+        let saved = match action.selected_time.as_deref() {
+            Some(time) => self.prefs.set_switch_time(user_id, time).await,
+            None => false,
+        };
+        let (pref, options) = tokio::join!(self.prefs.get(user_id), self.prefs.options());
+        self.replace_ephemeral_blocks(preferences_blocks(&pref, &options, saved), response_url)
+            .await;
+        StatusCode::OK.into_response()
+    }
+
+    /// Replace an ephemeral message with Block Kit blocks (posts to the
+    /// interactive component's pre-authorised `response_url`).
+    async fn replace_ephemeral_blocks(&self, blocks: Value, response_url: &Url) {
+        self.client
+            .post(response_url.as_str())
+            .json(&json!({
+                "response_type": "ephemeral",
+                "replace_original": true,
+                "blocks": blocks,
+            }))
+            .send()
+            .await
+            .map_err(|e| tracing::error!("Failed to replace ephemeral blocks: {}", e))
+            .ok();
+    }
 }
 
 /// Ephemeral response shown when a user tries to bid before accepting the
@@ -646,6 +757,109 @@ fn parse_accept_value(value: &str) -> (&str, Option<u8>) {
         Some((version, bid)) => (version, bid.parse::<u8>().ok()),
         None => (value, None),
     }
+}
+
+/// Ephemeral response wrapping the tea-preference picker blocks.
+fn preferences_response(pref: &TeaPreference, options: &[String], saved: bool) -> Response {
+    (
+        StatusCode::OK,
+        Json(json!({
+            "response_type": "ephemeral",
+            "blocks": preferences_blocks(pref, options, saved),
+        })),
+    )
+        .into_response()
+}
+
+/// The tea-preference picker: two tea dropdowns and a switchover timepicker,
+/// each pre-filled with the user's current choice. Every element saves on
+/// change, so there's no submit button. `saved` adds a "Saved" confirmation.
+fn preferences_blocks(pref: &TeaPreference, options: &[String], saved: bool) -> Value {
+    let switch_time = pref.switch_time.as_deref().unwrap_or(DEFAULT_SWITCH_TIME);
+    let now_tea = pref.resolve(london_now_minutes());
+
+    let mut blocks = vec![
+        json!({
+            "type": "section",
+            "text": { "type": "mrkdwn", "text": "☕️ *Your tea preferences*" }
+        }),
+        json!({
+            "type": "context",
+            "elements": [
+                { "type": "mrkdwn", "text": format!("Right now you'd be served *{}*.", now_tea) }
+            ]
+        }),
+        json!({ "type": "divider" }),
+        tea_select_block(
+            "🌅 *Morning tea*",
+            "pref_morning_tea",
+            options,
+            pref.tea(TeaSlot::Morning),
+        ),
+        tea_select_block(
+            "🌇 *Afternoon tea*",
+            "pref_afternoon_tea",
+            options,
+            pref.tea(TeaSlot::Afternoon),
+        ),
+        json!({
+            "type": "section",
+            "text": { "type": "mrkdwn", "text": "⏰ *Switch teas at*" },
+            "accessory": {
+                "type": "timepicker",
+                "action_id": "pref_switch_time",
+                "initial_time": switch_time,
+                "placeholder": { "type": "plain_text", "text": "Select time", "emoji": true }
+            }
+        }),
+        json!({
+            "type": "context",
+            "elements": [
+                { "type": "mrkdwn", "text": format!(
+                    "Before *{}* you'll get your morning tea; after it, your afternoon tea. Changes save automatically.",
+                    switch_time
+                ) }
+            ]
+        }),
+    ];
+
+    if saved {
+        blocks.push(json!({
+            "type": "context",
+            "elements": [ { "type": "mrkdwn", "text": "✅ Saved." } ]
+        }));
+    }
+
+    json!(blocks)
+}
+
+/// A section with a `static_select` accessory listing the tea options, with
+/// `selected` pre-chosen when it's still a valid option.
+fn tea_select_block(label: &str, action_id: &str, options: &[String], selected: Option<&str>) -> Value {
+    let option_objects: Vec<Value> = options
+        .iter()
+        .map(|o| json!({ "text": { "type": "plain_text", "text": o, "emoji": true }, "value": o }))
+        .collect();
+
+    let mut select = json!({
+        "type": "static_select",
+        "action_id": action_id,
+        "placeholder": { "type": "plain_text", "text": "Pick a tea", "emoji": true },
+        "options": option_objects,
+    });
+
+    if let Some(sel) = selected {
+        if options.iter().any(|o| o == sel) {
+            select["initial_option"] =
+                json!({ "text": { "type": "plain_text", "text": sel, "emoji": true }, "value": sel });
+        }
+    }
+
+    json!({
+        "type": "section",
+        "text": { "type": "mrkdwn", "text": label },
+        "accessory": select,
+    })
 }
 
 fn render_timer(title: &str, remaining_secs: u32, duration_secs: u32) -> String {

@@ -1,8 +1,9 @@
-use std::{collections::HashMap, time::Instant};
+use std::{collections::HashMap, sync::Arc, time::Instant};
 use tokio::sync::mpsc;
 use tokio::time::{sleep, Duration};
 
 use crate::contract::ContractInterface;
+use crate::preferences::{london_now_minutes, PreferenceStore};
 use crate::rounds::{now_unix, RoundStore, RoundSummary};
 use crate::slack::{SlackAction, UserCommand};
 use crate::{FirestoreConfig, User};
@@ -23,6 +24,7 @@ pub struct Tea {
     pub tea_round: Option<TeaRound>,
     pub contract: ContractInterface,
     pub rounds: RoundStore,
+    pub prefs: Arc<PreferenceStore>,
 }
 
 impl Tea {
@@ -31,6 +33,7 @@ impl Tea {
         command_rx: mpsc::UnboundedReceiver<UserCommand>,
         contract: ContractInterface,
         firestore: Option<FirestoreConfig>,
+        prefs: Arc<PreferenceStore>,
     ) -> Self {
         Self {
             message_tx,
@@ -38,7 +41,27 @@ impl Tea {
             tea_round: None,
             contract,
             rounds: RoundStore::new(firestore),
+            prefs,
         }
+    }
+
+    /// Group a round's participants by the tea each one wants *right now*
+    /// (Europe/London), for the post-round order. Larger groups first. Anyone
+    /// with no saved preference defaults to Normal (see `TeaPreference::resolve`).
+    async fn tea_orders(&self, users: &[User]) -> Vec<(String, Vec<User>)> {
+        let now = london_now_minutes();
+        let mut groups: Vec<(String, Vec<User>)> = Vec::new();
+
+        for user in users {
+            let tea = self.prefs.get(&user.id).await.resolve(now).to_string();
+            match groups.iter_mut().find(|(t, _)| *t == tea) {
+                Some((_, members)) => members.push(user.clone()),
+                None => groups.push((tea, vec![user.clone()])),
+            }
+        }
+
+        groups.sort_by(|a, b| b.1.len().cmp(&a.1.len()));
+        groups
     }
 
     pub async fn run(&mut self) {
@@ -217,16 +240,19 @@ impl Tea {
             let bids = tea_round.bids.clone();
             if bids.len() == 1 {
                 SlackAction::SendMessage(format!(
-                    "No one joined your tea round, {}! Go and treat yourself to a lonely tea.",
+                    "☕️ No one joined your tea round, {}! Go and treat yourself to a lonely tea.",
                     bids.keys().next().unwrap()
                 ))
                 .send(&self.message_tx);
+                let orders = self.tea_orders(&bids.keys().cloned().collect::<Vec<_>>()).await;
+                SlackAction::ShowTeaOrders(orders.clone()).send(&self.message_tx);
                 self.rounds
                     .record(RoundSummary::lonely(
                         tea_round.started_at_unix,
                         now_unix(),
                         &tea_round.starter,
                         &bids,
+                        &orders,
                     ))
                     .await;
                 return;
@@ -304,6 +330,8 @@ impl Tea {
 
             SlackAction::AnnounceTeaMaker((tea_maker.clone(), *lowest_bid, bids.len()))
                 .send(&self.message_tx);
+            let orders = self.tea_orders(&bids.keys().cloned().collect::<Vec<_>>()).await;
+            SlackAction::ShowTeaOrders(orders.clone()).send(&self.message_tx);
             SlackAction::AnnouncePenalty {
                 dice,
                 players: bids.len(),
@@ -315,7 +343,7 @@ impl Tea {
                 title: format!("{} is brewing tea", tea_maker),
                 duration_secs: 5 * 60,
                 completion_message: Some(format!(
-                    "\n🍵 *Tea should be ready! Brewed by {}.*\n",
+                    "\n☕️ *Tea should be ready! Brewed by {}.*\n",
                     tea_maker
                 )),
             }
@@ -374,6 +402,7 @@ impl Tea {
                     status: "completed",
                     starter: &tea_round.starter,
                     bids: &bids,
+                    teas: &orders,
                     lowest_bid: *lowest_bid,
                     rolloff: &rolloff_history,
                     loser: Some(&tea_maker),
