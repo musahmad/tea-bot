@@ -38,6 +38,9 @@ pub struct RoundSummary<'a> {
     pub status: &'a str,
     pub starter: &'a User,
     pub bids: &'a HashMap<User, u8>,
+    /// Teas to be made this round, grouped by tea (largest group first),
+    /// mirroring the Slack tea order. Empty for older records.
+    pub teas: &'a [(String, Vec<User>)],
     pub lowest_bid: u8,
     /// One entry per re-roll when the lowest bid was tied; empty otherwise.
     pub rolloff: &'a [Vec<(User, Vec<u8>)>],
@@ -65,6 +68,7 @@ impl<'a> RoundSummary<'a> {
         ended_at_unix: u64,
         starter: &'a User,
         bids: &'a HashMap<User, u8>,
+        teas: &'a [(String, Vec<User>)],
     ) -> Self {
         Self {
             started_at_unix,
@@ -72,6 +76,7 @@ impl<'a> RoundSummary<'a> {
             status: "lonely",
             starter,
             bids,
+            teas,
             lowest_bid: bids.values().copied().next().unwrap_or(0),
             rolloff: &[],
             loser: None,
@@ -235,6 +240,18 @@ fn build_document(s: &RoundSummary<'_>) -> Value {
         })
         .collect();
 
+    let teas: Vec<Value> = s
+        .teas
+        .iter()
+        .map(|(tea, players)| {
+            mv(json!({
+                "tea": sv(tea.clone()),
+                "count": iv(players.len() as i64),
+                "players": av(players.iter().map(|u| sv(u.name.clone())).collect()),
+            }))
+        })
+        .collect();
+
     let penalty = match s.penalty_dice {
         Some(dice) => mv(json!({
             "dice": iv(dice as i64),
@@ -312,6 +329,7 @@ fn build_document(s: &RoundSummary<'_>) -> Value {
             "status": sv(s.status),
             "starter": sv(s.starter.name.clone()),
             "bids": av(bids),
+            "teas": av(teas),
             "lowest_bid": iv(s.lowest_bid as i64),
             "cups": iv(players as i64),
             "tie_rolloff": av(rolloff),
