@@ -20,7 +20,7 @@ use sha2::Sha256;
 use crate::preferences::{
     london_now_minutes, PreferenceStore, TeaPreference, TeaSlot, DEFAULT_SWITCH_TIME,
 };
-use crate::terms::{TermsStore, TERMS_TEXT, TERMS_VERSION};
+use crate::terms::{TermsRevision, TermsStore};
 use crate::tv::{TvEvent, TvUser};
 use crate::User;
 
@@ -562,8 +562,10 @@ impl SlackInterface {
         }
 
         if let Ok(bid) = payload.text.trim().parse::<u8>() {
-            if !self.terms.has_accepted(&payload.user_id).await {
-                return terms_prompt_response(bid);
+            if let Some(rev) = self.terms.current_revision().await {
+                if !self.terms.has_accepted(&payload.user_id, &rev.version).await {
+                    return terms_prompt_response(&rev, bid);
+                }
             }
             self.command_tx
                 .send(UserCommand::Bid(user, bid, payload.response_url))
@@ -626,16 +628,18 @@ impl SlackInterface {
 
         // Button value is "{version}:{bid}"; the bid is optional.
         let (version, bid) = parse_accept_value(action.value.as_deref().unwrap_or(""));
-        if version != TERMS_VERSION {
-            self.replace_ephemeral(
-                "These terms are out of date — run `/t` again to see the latest.",
-                &payload.response_url,
-            )
-            .await;
-            return StatusCode::OK.into_response();
+        if let Some(rev) = self.terms.current_revision().await {
+            if rev.version.as_str() != version {
+                self.replace_ephemeral(
+                    "These terms are out of date — run `/t` again to see the latest.",
+                    &payload.response_url,
+                )
+                .await;
+                return StatusCode::OK.into_response();
+            }
         }
 
-        if !self.terms.record_acceptance(&payload.user.id).await {
+        if !self.terms.record_acceptance(&payload.user.id, version).await {
             self.replace_ephemeral(
                 "☕️ Couldn't record your acceptance — please try again.",
                 &payload.response_url,
@@ -726,10 +730,10 @@ impl SlackInterface {
 /// Ephemeral response shown when a user tries to bid before accepting the
 /// current terms. The "I Agree" button carries `{version}:{bid}` so the bid can
 /// be auto-submitted once accepted.
-fn terms_prompt_response(bid: u8) -> Response {
+fn terms_prompt_response(rev: &TermsRevision, bid: u8) -> Response {
     let text = format!(
         "*Tea-Bot Terms & Conditions* _(v{})_\n\n{}\n\n_Tap *I Agree* to accept and place your bid._",
-        TERMS_VERSION, TERMS_TEXT
+        rev.version, rev.text
     );
     (
         StatusCode::OK,
@@ -743,7 +747,7 @@ fn terms_prompt_response(bid: u8) -> Response {
                         "text": { "type": "plain_text", "text": "✅ I Agree", "emoji": true },
                         "style": "primary",
                         "action_id": "accept_terms",
-                        "value": format!("{}:{}", TERMS_VERSION, bid),
+                        "value": format!("{}:{}", rev.version, bid),
                     }
                 ]}
             ]

@@ -8,19 +8,6 @@ use serde_json::{json, Value};
 
 use crate::FirestoreConfig;
 
-/// Bump this whenever the terms change — every user must re-accept the new version.
-pub const TERMS_VERSION: &str = "2026-08-03";
-
-pub const TERMS_TEXT: &str = "\
-By placing a bid you agree to the Tea-Bot Terms & Conditions:
-
-1. You only bid when you genuinely want and agree to accept a cup of hot tea. Variations (decaf, lemon, oat milk) are acceptable, but cold drinks and other kitchen items are not.
-2. If you bid the lowest, you make the tea, promptly.
-3. Bids are blind and locked the moment you place them.
-
-Failure to follow these rules may result in a TEA penalty, or temporary suspension at the discretion of the Tea Administration.
-";
-
 const METADATA_TOKEN_URL: &str =
     "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token";
 
@@ -29,17 +16,33 @@ struct TokenResponse {
     access_token: String,
 }
 
-/// Durable record of which users have accepted the current terms, backed by
-/// Firestore (native mode). On Cloud Run this authenticates via the instance
-/// metadata server using the service account — no key files required.
+/// A single published version of the terms. The `version` is the revision
+/// document's id (e.g. `2026-08-03`); the `text` is what gets shown in Slack.
+#[derive(Clone, Debug)]
+pub struct TermsRevision {
+    pub version: String,
+    pub text: String,
+}
+
+/// Durable record of the terms and who has accepted them, backed by Firestore
+/// (native mode). On Cloud Run this authenticates via the instance metadata
+/// server using the service account — no key files required.
+///
+/// Two collections are used:
+/// - `revisions_collection`: one document per terms revision (admin-managed).
+///   The revision with the greatest `created_at_unix` is the enforced "latest".
+/// - `collection`: one acceptance document per Slack id, recording the
+///   `version` that user last accepted.
 pub struct TermsStore {
     client: Client,
     /// `None` (or a config with an empty project) disables enforcement, e.g.
     /// local dev with no GCP project.
     firestore: Option<FirestoreConfig>,
-    /// Slack ids known to have accepted the current `TERMS_VERSION`. Acceptance
-    /// is monotonic per version, so caching a `true` is always safe.
-    accepted_cache: Mutex<HashSet<String>>,
+    /// `(version, slack_id)` pairs known to have accepted that version.
+    /// Acceptance is monotonic per version, so caching a hit is always safe;
+    /// keying by version means publishing a new revision correctly ignores
+    /// acceptances of older versions.
+    accepted_cache: Mutex<HashSet<(String, String)>>,
 }
 
 impl TermsStore {
@@ -52,11 +55,10 @@ impl TermsStore {
                 "TermsStore: no firestore config. Terms enforcement DISABLED — bids will not be gated."
             ),
             Some(f) => tracing::info!(
-                "TermsStore: enforcing terms v{} against firestore {}/{}/{}",
-                TERMS_VERSION,
+                "TermsStore: enforcing latest revision from firestore {}/{}/{}",
                 f.project,
                 f.database,
-                f.collection
+                f.revisions_collection
             ),
         }
 
@@ -71,6 +73,13 @@ impl TermsStore {
         format!(
             "https://firestore.googleapis.com/v1/projects/{}/databases/{}/documents/{}/{}",
             fs.project, fs.database, fs.collection, slack_id
+        )
+    }
+
+    fn runquery_url(&self, fs: &FirestoreConfig) -> String {
+        format!(
+            "https://firestore.googleapis.com/v1/projects/{}/databases/{}/documents:runQuery",
+            fs.project, fs.database
         )
     }
 
@@ -89,18 +98,90 @@ impl TermsStore {
             .map(|t| t.access_token)
     }
 
-    /// Whether `slack_id` has accepted the current `TERMS_VERSION`.
+    /// The latest terms revision (greatest `created_at_unix`).
+    ///
+    /// Returns `None` when enforcement is disabled, when no revision has been
+    /// published yet, or on any transient Firestore/token error — all of which
+    /// callers treat as "don't gate", so an outage or an unconfigured project
+    /// can never block the whole game.
+    pub async fn current_revision(&self) -> Option<TermsRevision> {
+        let firestore = self.firestore.as_ref()?;
+        let token = self.access_token().await?;
+
+        let query = json!({
+            "structuredQuery": {
+                "from": [{ "collectionId": firestore.revisions_collection }],
+                "orderBy": [{
+                    "field": { "fieldPath": "created_at_unix" },
+                    "direction": "DESCENDING"
+                }],
+                "limit": 1
+            }
+        });
+
+        let resp = self
+            .client
+            .post(self.runquery_url(firestore))
+            .bearer_auth(token)
+            .json(&query)
+            .send()
+            .await
+            .map_err(|e| tracing::error!("TermsStore: revision query failed: {}", e))
+            .ok()?;
+
+        if !resp.status().is_success() {
+            tracing::error!(
+                "TermsStore: unexpected revision-query status {}",
+                resp.status()
+            );
+            return None;
+        }
+
+        let results: Value = resp
+            .json()
+            .await
+            .map_err(|e| tracing::error!("TermsStore: bad revision-query body: {}", e))
+            .ok()?;
+
+        // `runQuery` returns an array; each element is either a match with a
+        // `document` field or a bookkeeping entry (readTime only) when empty.
+        let doc = results.as_array()?.iter().find_map(|e| e.get("document"));
+        let Some(doc) = doc else {
+            tracing::warn!("TermsStore: no terms revision published; not gating bids");
+            return None;
+        };
+
+        // The version is the revision document's id — the last path segment of
+        // its resource name.
+        let version = doc
+            .get("name")
+            .and_then(|n| n.as_str())
+            .and_then(|n| n.rsplit('/').next())
+            .map(|s| s.to_string())?;
+        let text = doc
+            .get("fields")
+            .and_then(|f| f.get("text"))
+            .and_then(|t| t.get("stringValue"))
+            .and_then(|t| t.as_str())
+            .map(|s| s.to_string())?;
+
+        Some(TermsRevision { version, text })
+    }
+
+    /// Whether `slack_id` has accepted the given `version`.
     ///
     /// Returns `true` when enforcement is disabled (no project id), and fails
     /// open on transient Firestore/token errors so an outage cannot block the
-    /// whole game. A definitive "not found" or stale version returns `false`.
-    pub async fn has_accepted(&self, slack_id: &str) -> bool {
+    /// whole game. A definitive "not found" or a stale accepted version returns
+    /// `false`.
+    pub async fn has_accepted(&self, slack_id: &str, version: &str) -> bool {
         let Some(firestore) = self.firestore.as_ref() else {
             return true; // enforcement disabled (local dev)
         };
 
+        let key = (version.to_string(), slack_id.to_string());
         {
-            if self.accepted_cache.lock().unwrap().contains(slack_id) {
+            if self.accepted_cache.lock().unwrap().contains(&key) {
                 return true;
             }
         }
@@ -150,25 +231,21 @@ impl TermsStore {
             .and_then(|v| v.get("stringValue"))
             .and_then(|v| v.as_str());
 
-        if accepted_version == Some(TERMS_VERSION) {
-            self.accepted_cache
-                .lock()
-                .unwrap()
-                .insert(slack_id.to_string());
+        if accepted_version == Some(version) {
+            self.accepted_cache.lock().unwrap().insert(key);
             true
         } else {
             false
         }
     }
 
-    /// Persists that `slack_id` accepted the current `TERMS_VERSION`. Returns
-    /// `true` on success. With enforcement disabled it just updates the cache.
-    pub async fn record_acceptance(&self, slack_id: &str) -> bool {
+    /// Persists that `slack_id` accepted `version`. Returns `true` on success.
+    /// With enforcement disabled it just updates the cache.
+    pub async fn record_acceptance(&self, slack_id: &str, version: &str) -> bool {
+        let key = (version.to_string(), slack_id.to_string());
+
         let Some(firestore) = self.firestore.as_ref() else {
-            self.accepted_cache
-                .lock()
-                .unwrap()
-                .insert(slack_id.to_string());
+            self.accepted_cache.lock().unwrap().insert(key);
             return true;
         };
 
@@ -183,7 +260,7 @@ impl TermsStore {
 
         let doc = json!({
             "fields": {
-                "version": { "stringValue": TERMS_VERSION },
+                "version": { "stringValue": version },
                 "accepted_at_unix": { "integerValue": now.to_string() },
                 "method": { "stringValue": "button" },
             }
@@ -198,10 +275,7 @@ impl TermsStore {
             .await
         {
             Ok(r) if r.status().is_success() => {
-                self.accepted_cache
-                    .lock()
-                    .unwrap()
-                    .insert(slack_id.to_string());
+                self.accepted_cache.lock().unwrap().insert(key);
                 true
             }
             Ok(r) => {
