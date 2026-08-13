@@ -365,8 +365,36 @@ impl Tea {
                     .collect();
                 match self.contract.transfer(payment_args).await {
                     Ok(outcome) => {
-                        SlackAction::SendMessage("☕️ *All transfers successful ✅*".to_string())
+                        // A transfer settles for less than requested when the payer's
+                        // on-chain balance couldn't cover it — e.g. a loser penalty that
+                        // exceeded their balance. Surface that instead of a clean "success".
+                        let mut capped: Vec<String> = Vec::new();
+                        for (((from, _to), requested), settled) in
+                            transfer_list.iter().zip(outcome.settled.iter())
+                        {
+                            if *settled + 1e-9 < *requested {
+                                capped.push(format!(
+                                    "• {} was short by {:.1} TEA (owed {:.1}, paid {:.1})",
+                                    from,
+                                    *requested - *settled,
+                                    *requested,
+                                    *settled,
+                                ));
+                            }
+                        }
+
+                        if capped.is_empty() {
+                            SlackAction::SendMessage(
+                                "☕️ *All transfers successful ✅*".to_string(),
+                            )
                             .send(&self.message_tx);
+                        } else {
+                            SlackAction::SendMessage(format!(
+                                "☕️ *Transfers settled, but some were capped due to low balance 🚨*\n{}",
+                                capped.join("\n")
+                            ))
+                            .send(&self.message_tx);
+                        }
                         (outcome.settled, Some(outcome.tx_hash))
                     }
                     Err(e) => {
