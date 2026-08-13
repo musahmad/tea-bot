@@ -60,6 +60,10 @@ pub struct FirestoreConfig {
     /// Collection storing one terms-acceptance document per Slack user id.
     #[serde(default = "default_firestore_collection")]
     pub collection: String,
+    /// Collection storing one document per terms revision (admin-managed). The
+    /// revision with the greatest `created_at_unix` is the enforced "latest".
+    #[serde(default = "default_firestore_revisions_collection")]
+    pub revisions_collection: String,
 }
 
 fn default_firestore_database() -> String {
@@ -68,6 +72,10 @@ fn default_firestore_database() -> String {
 
 fn default_firestore_collection() -> String {
     "terms_acceptances".to_string()
+}
+
+fn default_firestore_revisions_collection() -> String {
+    "terms_revisions".to_string()
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug)]
