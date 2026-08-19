@@ -290,10 +290,6 @@ impl Tea {
                     from, settled, to
                 ))
                 .send(&self.message_tx);
-                if let Ok(balances) = self.contract.refresh_balances().await {
-                    SlackAction::ShowTeaderboard(balances.into_iter().collect())
-                        .send(&self.message_tx);
-                }
             }
             Err(e) => {
                 tracing::error!("Donation transfer failed 🚨: {}", e);

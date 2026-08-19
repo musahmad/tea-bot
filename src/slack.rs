@@ -787,9 +787,9 @@ impl SlackInterface {
             .as_deref()
             .map(str::trim)
             .and_then(|s| s.parse::<f64>().ok())
-            .filter(|a| *a > 0.0 && a.is_finite());
+            .filter(|a| a.is_finite() && *a >= 1.0);
         let Some(amount) = amount else {
-            self.replace_ephemeral_blocks(rerender("⚠️ Enter a positive amount."), &payload.response_url)
+            self.replace_ephemeral_blocks(rerender("⚠️ Enter an amount of at least 1 TEA."), &payload.response_url)
                 .await;
             return StatusCode::OK.into_response();
         };
