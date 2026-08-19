@@ -17,6 +17,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use sha2::Sha256;
 
+use crate::donate;
 use crate::preferences::{
     london_now_minutes, PreferenceStore, TeaPreference, TeaSlot, DEFAULT_SWITCH_TIME,
 };
@@ -28,6 +29,15 @@ use crate::User;
 pub enum UserCommand {
     Bid(User, u8, Url),
     CancelTeaRound,
+    /// Transfer `amount` TEA from `from` to `to`. The tea loop owns the contract,
+    /// so it does the balance check and settlement; `response_url` carries the
+    /// donor's ephemeral form for the result message.
+    Donate {
+        from: User,
+        to: User,
+        amount: f64,
+        response_url: Url,
+    },
 }
 
 #[derive(Debug)]
@@ -41,6 +51,9 @@ pub enum SlackAction {
     },
     ConfirmBid(Url),
     RejectBid(String, Url),
+    /// Replace an ephemeral message (via its `response_url`) with a final line.
+    /// Used for donation results the tea loop produces after settling on-chain.
+    RespondEphemeral(String, Url),
     RevealBids(Vec<(User, u8)>),
     AnnounceDiceRoll(Vec<User>, u8),
     AnnounceDiceRollTie(Vec<User>),
@@ -134,7 +147,18 @@ struct InteractivityPayload {
     user: InteractivityUser,
     #[serde(default)]
     actions: Vec<InteractivityAction>,
+    /// Current values of every stateful element in the message. Slack sends this
+    /// on `block_actions`, so the "Donate" button carries the picked recipient
+    /// and typed amount even though they live in other blocks.
+    #[serde(default)]
+    state: Option<InteractivityState>,
     response_url: Url,
+}
+
+#[derive(Debug, Deserialize, Default)]
+struct InteractivityState {
+    #[serde(default)]
+    values: Value,
 }
 
 #[derive(Debug, Deserialize)]
@@ -256,6 +280,9 @@ impl SlackInterface {
                         &response_url,
                     )
                     .await;
+                }
+                SlackAction::RespondEphemeral(message, response_url) => {
+                    self.replace_ephemeral(&message, &response_url).await;
                 }
                 SlackAction::RevealBids(bids) => {
                     self.cancel_active_timer();
@@ -561,6 +588,17 @@ impl SlackInterface {
             return preferences_response(&pref, &options, false);
         }
 
+        if payload.text.trim().eq_ignore_ascii_case("donate") {
+            return (
+                StatusCode::OK,
+                Json(json!({
+                    "response_type": "ephemeral",
+                    "blocks": donate::donate_blocks(&self.users, &payload.user_id, None, None, None),
+                })),
+            )
+                .into_response();
+        }
+
         if let Ok(bid) = payload.text.trim().parse::<u8>() {
             if let Some(rev) = self.terms.current_revision().await {
                 if !self.terms.has_accepted(&payload.user_id, &rev.version).await {
@@ -620,6 +658,15 @@ impl SlackInterface {
             return self
                 .save_switch_time(&payload.user.id, action, &payload.response_url)
                 .await;
+        }
+
+        if action.action_id == donate::SUBMIT_ACTION {
+            return self.submit_donation(user, &payload).await;
+        }
+        // The recipient dropdown fires on each pick; its value is kept in
+        // `state` and only read when the button is pressed, so ignore it here.
+        if action.action_id == donate::RECIPIENT_ACTION {
+            return StatusCode::OK.into_response();
         }
 
         if action.action_id != "accept_terms" {
@@ -707,6 +754,75 @@ impl SlackInterface {
         let (pref, options) = tokio::join!(self.prefs.get(user_id), self.prefs.options());
         self.replace_ephemeral_blocks(preferences_blocks(&pref, &options, saved), response_url)
             .await;
+        StatusCode::OK.into_response()
+    }
+
+    /// Validate the donation form and hand a settled transfer to the tea loop.
+    /// Re-renders the form with a notice (preserving the user's choices) on any
+    /// validation failure; on success replaces it with a "sending" line while
+    /// the tea loop settles on-chain and posts the final result.
+    async fn submit_donation(&self, donor: User, payload: &InteractivityPayload) -> Response {
+        let (recipient_id, amount_text) = match payload.state.as_ref() {
+            Some(state) => donate::parse_submission(&state.values),
+            None => (None, None),
+        };
+
+        let rerender = |notice: &str| {
+            donate::donate_blocks(
+                &self.users,
+                &donor.id,
+                recipient_id.as_deref(),
+                amount_text.as_deref(),
+                Some(notice),
+            )
+        };
+
+        let Some(recipient_id) = recipient_id.clone() else {
+            self.replace_ephemeral_blocks(rerender("⚠️ Pick someone to donate to."), &payload.response_url)
+                .await;
+            return StatusCode::OK.into_response();
+        };
+
+        let amount = amount_text
+            .as_deref()
+            .map(str::trim)
+            .and_then(|s| s.parse::<f64>().ok())
+            .filter(|a| *a > 0.0 && a.is_finite());
+        let Some(amount) = amount else {
+            self.replace_ephemeral_blocks(rerender("⚠️ Enter a positive amount."), &payload.response_url)
+                .await;
+            return StatusCode::OK.into_response();
+        };
+
+        // A stale form could still name the donor (options exclude them); guard.
+        let recipient = match self.get_user(&recipient_id) {
+            Some(recipient) if recipient.id != donor.id => recipient,
+            Some(_) => {
+                self.replace_ephemeral_blocks(
+                    rerender("⚠️ You can't donate to yourself."),
+                    &payload.response_url,
+                )
+                .await;
+                return StatusCode::OK.into_response();
+            }
+            None => return StatusCode::OK.into_response(),
+        };
+
+        self.replace_ephemeral(
+            &format!("⏳ Sending {:.1} TEA to {}…", amount, recipient),
+            &payload.response_url,
+        )
+        .await;
+
+        self.command_tx
+            .send(UserCommand::Donate {
+                from: donor,
+                to: recipient,
+                amount,
+                response_url: payload.response_url.clone(),
+            })
+            .ok();
+
         StatusCode::OK.into_response()
     }
 

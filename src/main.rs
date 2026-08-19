@@ -11,6 +11,7 @@ use tokio::sync::mpsc;
 use tracing_subscriber;
 
 mod contract;
+mod donate;
 mod preferences;
 mod rounds;
 mod slack;

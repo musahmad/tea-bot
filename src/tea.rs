@@ -1,4 +1,5 @@
 use std::{collections::HashMap, sync::Arc, time::Instant};
+use reqwest::Url;
 use tokio::sync::mpsc;
 use tokio::time::{sleep, Duration};
 
@@ -232,6 +233,76 @@ impl Tea {
                 self.tea_round = None;
                 SlackAction::CancelTeaRound.send(&self.message_tx);
             }
+            UserCommand::Donate {
+                from,
+                to,
+                amount,
+                response_url,
+            } => {
+                self.handle_donation(from, to, amount, response_url).await;
+            }
+        }
+    }
+
+    /// Settle a `/t donate` transfer. Refreshes balances, rejects an
+    /// over-balance gift privately, then moves the TEA on-chain and announces it.
+    async fn handle_donation(&mut self, from: User, to: User, amount: f64, response_url: Url) {
+        if let Err(e) = self.contract.refresh_balances().await {
+            tracing::error!("Failed to refresh balances 🚨: {}", e);
+            SlackAction::RespondEphemeral(
+                "☕️ Couldn't reach the bank to refresh balances — try again in a moment. 🚨"
+                    .to_string(),
+                response_url,
+            )
+            .send(&self.message_tx);
+            return;
+        }
+
+        let balance = self.contract.get_balance(from.id.clone()).unwrap_or(0.0);
+        if balance < amount {
+            SlackAction::RespondEphemeral(
+                format!(
+                    "☕️ You only have {:.1} TEA — can't donate {:.1}. 🚨",
+                    balance, amount
+                ),
+                response_url,
+            )
+            .send(&self.message_tx);
+            return;
+        }
+
+        let transfer = vec![(
+            from.address.parse().unwrap(),
+            to.address.parse().unwrap(),
+            amount,
+        )];
+
+        match self.contract.transfer(transfer).await {
+            Ok(outcome) => {
+                let settled = outcome.settled.first().copied().unwrap_or(amount);
+                SlackAction::RespondEphemeral(
+                    format!("✅ Donated {:.1} TEA to {}!", settled, to),
+                    response_url,
+                )
+                .send(&self.message_tx);
+                SlackAction::SendMessage(format!(
+                    "💸 *{} donated {:.1} TEA to {}!* What a legend.",
+                    from, settled, to
+                ))
+                .send(&self.message_tx);
+                if let Ok(balances) = self.contract.refresh_balances().await {
+                    SlackAction::ShowTeaderboard(balances.into_iter().collect())
+                        .send(&self.message_tx);
+                }
+            }
+            Err(e) => {
+                tracing::error!("Donation transfer failed 🚨: {}", e);
+                SlackAction::RespondEphemeral(
+                    format!("☕️ Donation failed 🚨: {}", e),
+                    response_url,
+                )
+                .send(&self.message_tx);
+            }
         }
     }
 
@@ -331,7 +402,6 @@ impl Tea {
             SlackAction::AnnounceTeaMaker((tea_maker.clone(), *lowest_bid, bids.len()))
                 .send(&self.message_tx);
             let orders = self.tea_orders(&bids.keys().cloned().collect::<Vec<_>>()).await;
-            SlackAction::ShowTeaOrders(orders.clone()).send(&self.message_tx);
             SlackAction::AnnouncePenalty {
                 dice,
                 players: bids.len(),
@@ -408,6 +478,8 @@ impl Tea {
                     .send(&self.message_tx);
                 (Vec::new(), None)
             };
+
+            SlackAction::ShowTeaOrders(orders.clone()).send(&self.message_tx);
 
             let balances_after = match self.contract.refresh_balances().await {
                 Ok(new_balances) => {
