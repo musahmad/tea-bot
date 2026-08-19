@@ -271,12 +271,12 @@ impl SlackInterface {
                             if index < sorted_bids.len() - 1 {
                                 message = message.replace(
                                     "...",
-                                    format!("{} bid: {} TEA\n...", user, bid).as_str(),
+                                    format!("{} {} TEA\n...", user, bid).as_str(),
                                 )
                             } else {
                                 message = message.replace(
                                     "...",
-                                    format!("{} bid: {} TEA\n", user, bid).as_str(),
+                                    format!("{} {} TEA\n", user, bid).as_str(),
                                 );
                             }
                             self.update_message(&message, &response).await;
@@ -430,7 +430,7 @@ impl SlackInterface {
                         };
 
                         leaderboard.push_str(&format!(
-                            "{} *{}* Balance: {:.1} TEA\n\n",
+                            "{} *{}* {:.1} TEA\n\n",
                             medal, user, balance,
                         ));
                     }
