@@ -1,0 +1,162 @@
+# datetime	type	detail
+2024-12-12 16:20	origin	CHANNEL CREATED. Musa Ahmad joins #t (C084Y1ASX9A) at 16:20:48 GMT
+2024-12-12 16:21	origin	Musa adds the "t" bot integration; the bot joins at 16:22:15
+2024-12-12 16:22	origin	First bot interaction: musa types "ot", nobody accepts, bot orders a selfish tea
+2024-12-12 16:24	origin	Alex Williams, Tim, Marcus, Jem, Sasha and Stephen all join within the same second
+2024-12-12 17:10	bug	Early RNG bug: three-dice totals outside 3-18 (a 20 and a 1 in consecutive rounds)
+2024-12-12 17:11	source	Musa links github.com/musahmad/tea-bot for the first time
+2024-12-12 20:50	ops	Alex: "needs a 'u up?' healthz check". Musa: "Should add it to grafana". Marcus: "tbot down?"
+2024-12-13 10:02	flavour	Marcus: "i think we should drop market making in favour of this ... i'm all in ... pivot". Also asks to push "t-statistics (pun intended)" to Atlas and whether tbot needs an org repo.
+2024-12-13 10:21	feature-request	Alex Williams' day-one enhancement list: unique names, case-insensitive commands, re-roll, and per-person dice messages "like Jem: 4...6...2 ... builds the suspense". The per-die animation ships 2025-06-14; rerolls 2025-06-10.
+2024-12-13 10:22	feature-request	Jem: "should use the dice emoji too like the unicode dice faces". Sasha: "you can strip whitespace too"
+2024-12-13 11:38	bot	Musa adds the "t" integration (bot user U084VFPKR0S) to the channel
+2024-12-13 14:15	bug	The brew timer is "quite fucked" - a deadlock in the Slack-update loop. Marcus code-reviews Musa's Rust: reuse the reqwest client, wrap it in an Arc, split the update and counting tasks
+2024-12-13 14:36	pivot	Musa: "This has been a good learning exercise ... I think I'm ready to do a market adapter". The tea bot was Musa's Rust warm-up.
+2024-12-13 20:25	flavour	Marcus: "I was showing the app off at a party. It's a hit. Pivot the whole business"
+2025-01-02 17:48	rule-origin	Alex rolls 1-1-1 = 3. Marcus: "bitch for the day numbers!!" - the earliest BITCH reference; the bot only implements it on 2025-06-23
+2025-01-13 11:55	flavour	Marcus responds to the bot's "go make tea baldy" line by linking the Guardian article "Calling a man bald is sexual harassment, employment tribunal rules"
+2025-01-14 15:29	feature-request	Alex Williams posts the roadmap that defines the next six months of the bot: "Rerolls / Bitch/king for day features / fix timer". All three ship eventually.
+2025-01-15 10:08	rule	Sasha: "what happens if we roll king/bitch but the feature is NYI?" Marcus: "it's enforced via shame"
+2025-01-20 15:59	rule-origin	Sasha rolls 18; Musa crowns him "King for the day" by hand. Alex: "the first king in the new kingdom?" The bot only automates KING on 2025-07-17.
+2025-01-31 13:02	observation	Marcus, back from paternity leave: "the prevalence of 'ot' has increased massively since I've been on pat leave. what gives"
+2025-02-19 15:09	feature-request	Stephen after an unbroken tie: "reroll ... make it do a reroll". Marcus: "the dice have spoken". Tie rerolls ship in June.
+2025-02-26 14:40	feature-request	Tim asks for the bot to occasionally require a PHYSICAL dice roll instead - "The physical was fun occasionally". Marcus: "plz ignore this request". Musa: "will add it to the very long backlog"
+2025-03-07 15:44	outage	Tea bot stops responding; Musa: "tea bot has zero downtime but i think you hit the rate limit for the slack api with your antics earlier". Stephen: "RIP teabot". Alex: "we'll have to roll dice like cave people"
+2025-03-14 15:20	naming	Sasha proposes "lonely tea" for the no-takers case; the bot later adopts it for declined offers
+2025-03-25 10:13	outage	Bot dead; Marcus spams "tttt botttttt / PLZZZZ". Alex: "teabot > nova ui"
+2025-03-27 16:51	feature-request	Alex Williams: "bt - for when theres a bitch and you want tea" - the first sighting of the BITCH idea, which shipped ~4 months later
+2025-04-11 10:23	join	Stephen joins #t
+2025-05-19 11:21	join	Aatif Syed joins #t
+2025-05-29 12:37	join	Marcus joins #t
+2025-05-29 12:38	join	Musa, Jem, Stephen, Sasha and Tim all join #t within 21 seconds of each other
+2025-05-29 14:18	join	Alex Williams joins #t
+2025-06-04 14:43	bug	Early bot had no tie-break reroll: equal totals were resolved by ordering alone. Rerolls appear from 2025-06-10.
+2025-06-09 15:52	era-change	TEA BOT GOES LIVE. First tracked round: stephen requests, musa loses. Join window 10s, brew timer 1 min (both later lengthened to 30s / 5 min).
+2025-06-09 15:53	rule	"promise" mechanic: the bot refuses Sasha's fancy-tea preference - "Sorry Sasha, only standard tea is available. Please type 'promise' to promise that you will accept standard tea." Removed by 2025-06-10 ("I got rid of promise")
+2025-06-09 15:53	feature	Teaderboard (stats tracking) added. The bot itself predates it - rounds run from at least 2025-06-02.
+2025-06-10 14:09	flavour	Bot ad-libs at Marcus: "ha, go make tea baldy"
+2025-06-11 14:42	source	Musa links src/main.rs of github.com/musahmad/tea-bot after Alex offers to add Slack tables
+2025-06-11 15:18	feature	Bot briefly renders the Teaderboard as a monospaced markdown table (Alex Williams' PR); reverted within the hour
+2025-06-12 10:25	admin	Musa: "im docking points for that one sorry". Marcus: "he's gone power mad"
+2025-06-13 10:32	feature-request	Sasha: "wen will the dashboard be reversed?"
+2025-06-14 11:48	feature	Bot switches from a plain "Dice roll results:" summary to animated per-die :dice-N: messages. Jem: "Woah these are some next generation graphics". Musa: "thanks i built a custom rendering engine from scratch"
+2025-06-18 09:55	outage	Bot goes unresponsive; Marcus: "deadbot". Musa: "weird i didnt change anything"
+2025-06-23 14:26	stat	Jem computes the odds of the same person rolling three-of-a-kind and then the bitch roll: 1 in 7776
+2025-06-26 10:21	join	Laurence Lewars joins #t
+2025-06-30 15:46	idea	Alex Williams asks to convert the tea bot into a beer bot for the week; Sasha: "easy, just make it generic on beverage"
+2025-07-09 11:19	join	Eoin Devlin joins #t
+2025-07-10 12:16	admin	Musa hand-edits the bot's stats JSON to credit an unregistered "ot"
+2025-07-10 15:27	bug	Alex on the six-dice king bug: "took me 6 of the bloody things to get to 18". Sasha: "we need this bug fixed"
+2025-07-16 10:01	channel	Aatif sets the #t channel topic to :teapot: and description to :teapot: :coffee:
+2025-07-16 11:00	issue	Aatif links tea-bot issue #3
+2025-07-18 11:12	feature-request	Alex Williams asks for a single-line Teaderboard sorted by teas-per-round ratio
+2025-07-18 14:08	feature-request	Tim asks Musa for a "tt" command to start a tea timer
+2025-07-24 14:01	rule	KING mechanic: rolling 6-6-6 (=18) makes you king for the day and exempt from making tea. Marcus is the one who triggers it here.
+2025-07-25 10:49	idea	Alex Williams: "a t-bot token would be brilliant mumu" - the first mention of a TEA token, four and a half months before it shipped
+2025-07-25 15:22	stats-reset	The Teaderboard is WIPED. Pre-reset final standings (teas made): jem 82, musa 78, sasha 69, alex 53, stephen 48, marcus 39, tim 24, laurence 13. King counts alex 3, stephen 1, marcus 1; bitch sasha 1. Everything after this restarts from zero.
+2025-08-15 14:59	naming	Aatif coins "teaderboard" ("teabot has the ~tea leaderboard~ teaderboard"); the bot's board is renamed within days
+2025-08-15 16:07	commit	Musa links tea-bot commit f50b46717f692be488d391dec90308d6705e2b42 minutes after the six-dice bug
+2025-08-21 11:05	spam	Marcus and Jem spam 30+ rt/t/tr/trt variants in ~15 seconds; the bot fires two overlapping tea rounds and interleaves their dice output
+2025-08-26 10:25	join	Tania Atyabi joins #t
+2025-08-26 10:26	rename	Bot renames the stats board from "Tea Leaderboard" to "Teaderboard"
+2025-08-26 12:49	join	Laura joins #t
+2025-09-30 11:33	join	Martyn North joins #t - goes on to become the all-time teas-made leader
+2025-10-09 14:05	bot-failure	Martyn's "ot" did not register; he honoured the tea round manually
+2025-11-05 15:45	rule	BITCH mechanic revealed: rolling 1-1-1 (=3) makes you "bitch for the day" and you must make ALL the teas. Musa is the only person ever to do it.
+2025-11-28 15:17	join	Megan Williams joins #t
+2025-12-03 14:01	command	"pr <user>" bot command in use (era 2)
+2025-12-03 14:02	player	"tania" appears on the Teaderboard (5 rounds, 0 teas made)
+2025-12-03 14:26	command	"stats" prints the Teaderboard on demand
+2025-12-05 00:54	design	Alexander Stepanov posts the RFC that becomes Era 3: on-chain TEA airdrop, sealed-bid auction, lowest bid makes tea, dice to break ties, pay/receive = own bid minus average of everyone else's, secondary TEA/USDT orderbook, points for holding
+2025-12-05 14:12	dev	/bid command being tested in-channel (jem "/bid 2", marcus "/bid 1") four days before the bidding era starts
+2025-12-05 16:02	setup	Marcus posts the TEA contract address 0x7eAb07a82f20C296aaC0025e93296EFce21D8bE1 in-channel
+2025-12-09 - 2025-12-10	format	Round-start prompt example was "/t 5.5" (fractional bids allowed); later changed to "/t 5"
+2025-12-09 10:28	setup	Musa asks everyone for their Arbitrum addresses to be added to the tea bot
+2025-12-09 11:14	setup	Marcus walks the channel through ERC-20 approve() on arbiscan for contract 0x7eAb07a8..., spender 0x7ead7bff9c7edb076658be8dee4561af81427b57, amount max-uint256
+2025-12-09 11:53	proposal	Martyn: could you spend TEA on actions, e.g. 30 TEA to force someone to make you tea - "help whales liquidate"
+2025-12-09 12:17	market	Marcus posts a Uniswap TEA pool on Arbitrum - "premarket is live"; Sasha jokes about a 1% fee
+2025-12-09 13:26	pr	Musa links tea-bot PR #6 (the bidding rewrite)
+2025-12-09 13:46	era-change	FIRST BIDDING ROUND. Era 2 (roll-only + stats board) ends, Era 3 (sealed bids + TEA currency) begins
+2025-12-09 14:45	format	Earliest rounds allowed FRACTIONAL bids (0.2, 0.4, 0.6) and printed explicit "Transfers to be made: A -> B: amount" lines
+2025-12-09 16:50	rules	Musa: "Integers only" - fractional bids disabled
+2025-12-09 17:12	setup	Musa added the "t" integration to the channel; channel description set to "test"
+2025-12-09 17:17	bug	Settlement failed on-chain: "erc20: insufficient allowance" (first transfer failure)
+2025-12-09 17:59	commentary	Martyn: "looks like we all just bidding 0 from now on then / gameover" - the race to zero begins on day one
+2025-12-09 ~14:45	inconsistency	Early tiebreaks are inconsistent about whether high or low roll makes the tea (14:42 low roll lost; 14:46 high roll lost). Later rounds settle consistently on LOWEST roll makes the tea.
+2026-01-28 11:09	proposal	Marcus asks Musa for a fixed 3 TEA loser penalty split among participants; Sasha suggests a fixed per-person amount instead
+2026-01-29 14:30	fat-finger	Martyn bid 40 TEA in a 2-player round and lost all 40 to Musa. Martyn 93.5 -> 53.5, Musa 93.9 -> 133.9. Sasha: "where's price band protection?"
+2026-02-03 12:14	king	martyn rolled 6-6-6 = 18 (KING) in tiebreak; Martyn: "king status activated (manual)"
+2026-02-04 11:33	channel	Amrit Sohal joined #t
+2026-03-04 10:08	king	stephen rolled 6-6-6 = 18 (KING) in a tiebreak reroll
+2026-03-13 15:27	proposal	Martyn: on a tied lowest bid all tied losers should lose their full bid, not a split share - "get some liquidity moving!"
+2026-03-16 10:18	channel	Rad joined #t (also new to lo.tech)
+2026-03-16 13:50	pr	Aatif opens tea-bot PR #7
+2026-03-16 14:36	pr	Martyn opens tea-bot PR #8
+2026-03-23 09:54	cancelled	round cancelled by Musa
+2026-03-26 13:41	player	:guinness: (Eoin Devlin) appears on the teaderboard with the 69.0 TEA seed but never plays; Sasha: "Eoin's TEA tokens should be burned". On-chain 0x1cd51346, seeded 2025-12-08, one tx ever
+2026-03-26 14:19	cancelled	round cancelled by Musa
+2026-03-27 - 2026-04-07	gap	No tea rounds for ~11 days
+2026-03-27 15:47	proposal	Sasha argues the loser penalty should be fixed or 1x, not 2x - "wrong incentive to bid all your balance and screw someone over"
+2026-03-27 15:52	feature	Musa opens tea-bot PR #10 (dice-based Loser Penalty); penalty line first appears in rounds from 2026-04-07
+2026-04-13 10:38	rules	Musa states the payout formula: base payout = (average of all OTHER bids) - your own bid; the loser penalty is then taken from the loser and split evenly among the other participants
+2026-04-15 10:30	fat-finger	Musa bid 56 TEA (meant 5/6) - paid out 50.2 TEA: sasha +14.8, alex +14.8, martyn +13.5, stephen +7.2. Balance 125.7 -> 75.5
+2026-04-30 ~15:00	format	Bot stops posting per-player "X has joined the tea round" lines (present until ~2026-04-30 14:40)
+2026-05-07 ~11:00	anomaly	jem balance jumps 76.0 -> 106.0 (+30 TEA) with no round; Martyn: "has someone just airdropped jem 40 TEA?"; Jem: "I rugpulled my LP"
+2026-05-14 ~16:00	rename	Martyn's emoji changes from :saint-martyn-of-afreetea: to :martan:
+2026-06-08 12:53	fat-finger	Musa refers to "that 56 bid really fked me up" (earlier mis-bid of 56)
+2026-06-08 13:38	channel	Adam M joined #t
+2026-06-09 12:50	cancelled	round cancelled by Musa/Stephen
+2026-06-09 13:13	cancelled	brew cancelled by Aatif (after settlement)
+2026-06-09 ~13:00	anomaly	sasha balance drops 151.2 -> 83.7 between 2026-06-08 14:45 and 2026-06-09 13:13 (-67.5 TEA); Aatif: "Very generous of Sasha". Reversed on 2026-06-15
+2026-06-15 ~12:00	anomaly	sasha balance jumps 85.5 -> 154.8 between 11:16 and 14:21 with no round in between (+69.3 TEA, unexplained top-up)
+2026-06-16 16:02	cancelled	round cancelled by Aatif, then again by Jem
+2026-06-16 16:50	cancelled	round cancelled by Jem
+2026-06-18 12:41	cancelled	round cancelled by Aatif
+2026-06-23 12:53	ban	Aatif temporarily removed from the game by democratic vote for repeated ToS violations; balance preserved. Disappears from teaderboard 2026-06-23 -> 2026-07-01
+2026-06-26 14:33	cancelled	round cancelled by Musa
+2026-07-02 15:37	cancelled	brew cancelled by Martyn (after settlement)
+2026-07-03 16:16	cancelled	round cancelled by Musa
+2026-07-06 ~	format	Loser Penalty gains a multiplier (dN x M) from ~2026-07-06; earlier rounds show plain dN. Round-start message stops naming the starter around the same time.
+2026-07-13 14:03	poll	Simple Poll "should we kick aatif for repeat offending" - 4 no / 1 yes (5 respondents)
+2026-07-13 16:23	cancelled	round cancelled by Aatif
+2026-07-13 16:59	cancelled	round cancelled by Martyn
+2026-07-15 16:37	cancelled	brew cancelled by Martyn (after settlement)
+2026-07-16 11:42	cancelled	round cancelled by Aatif
+2026-07-16 16:39	king	alex rolled 6-6-6 = 18 (KING) in 6-way tiebreak
+2026-07-17 09:25	king	adam rolled 6-6-6 = 18 (KING) in tiebreak
+2026-07-20 11:44	cancelled	round cancelled by Martyn
+2026-07-20 11:45	cancelled	round cancelled by Martyn
+2026-07-21 11:50	proposal	Stephen proposes tea-token punishment for slow brewing (became the "slow tea" feature)
+2026-07-23 16:22	slow-tea-vote	Slow tea reported on megan, 1 more vote needed - not charged
+2026-07-24 14:46	slow-tea	SLOW TEA charge: 2 parched votes, aatif too slow -> aatif pays 1 TEA to each of other 4 (aatif 115.8 -> 111.8)
+2026-07-24 14:56	channel	Aatif joined #t
+2026-07-24 16:09	slow-tea-vote	Slow tea vote on jem, 2/3 voted (needed 3) - not charged
+2026-07-27 10:43	cancelled	round cancelled by Martyn
+2026-07-27 10:50	slow-tea-vote	Slow tea vote opened on aatif, 0/6 voted (needed unanimous 6) - not charged
+2026-07-27 12:30	slow-tea	SLOW TEA charge: 1 parched vote, sasha too slow -> sasha pays 1 TEA to each of other 1 in round (sasha 147.8 -> 146.8, martyn 81.3 -> 82.3)
+2026-07-27 13:31	cancelled	round cancelled by Musa
+2026-07-27 13:31	feature-removed	Musa deprecates "slow tea" penalty after backlash from Aatif and Sasha
+2026-07-28 11:37	channel	Claude bot (U0BEC3HEWDD) joined #t
+2026-08-03 14:55	cancelled	round cancelled by marcus
+2026-08-03 15:00	rules	Musa sets channel description: bid only if you genuinely want a hot tea; lowest bid makes it
+2026-08-03 16:13	cancelled	round cancelled by Aatif
+2026-08-07 10:25	cancelled	round cancelled by Martyn
+2026-08-07 15:07	request	Aatif asks Musa to publish historical roll data / add to rocketsled
+2026-08-07 15:48	feature	Musa ships /t prefs (tea variant preferences + per-round tea order)
+2026-08-11 10:05	fat-finger	Aatif bid 66 TEA (meant 6?) - paid out 56.5 TEA: martyn +32.0, alex +24.5. Balance 126.8 -> 70.3
+2026-08-12 17:13	cancelled	round cancelled by Martyn
+2026-08-12 17:14	anomaly	martyn 130.9 -> 166.9 and musa 44.4 -> 9.4 between 14:57 and 17:14 (no round in between); channel reacts "9.4!!" / "game on"
+2026-08-13 09:55	dispute	Martyn: "35 tokens removed from my wallet, all trust in the system is gone" (martyn balance later shows 0.0 at 15:32)
+2026-08-19 15:11	feature	Musa ships /t donate
+2026-08-19 15:12	donation	martyn -> musa 0.0 TEA
+2026-08-19 15:14	donation	jem -> musa 1.0 TEA
+2026-08-19 15:16	donation	sasha -> musa 1.0 TEA
+2026-08-19 15:17	joke	Martyn posts fake teaderboard "sasha donated 90 TEA to musa"
+2026-08-19 15:21	donation	jem -> musa 1.0 TEA
+2026-08-19 15:21	donation	martyn -> musa 0.0 TEA
+2026-08-19 15:45	donation	aatif -> musa 1.0 TEA
+2026-08-19 16:21	donation	jem -> musa 1.0 TEA
+2026-08-20 11:56	donation	marcus -> musa 3.0 TEA
+2026-08-20 16:37	cancelled	round cancelled by Martyn
+2026-08-21 13:34	donation	beardo -> aaa 3.0 TEA
+2026-08-24 11:56	donation	retardio -> stephen 1.0 TEA

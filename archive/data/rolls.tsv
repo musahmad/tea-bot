@@ -1,0 +1,811 @@
+# datetime	participants	rolls	loser(made tea)	cups	notes
+2024-12-12 16:22	musa (offer declined)	-	musa	1	THE FIRST EVER TEA BOT ROUND. Musa offers, nobody accepts, selfish tea. Join window 15s.
+2024-12-12 16:26	musa,jem,alex,marcus	musa=13,jem=6,alex=3,marcus=1 (totals only)	marcus	1	BOT BUG: marcus rolled 1 on three dice. Marcus: "fu tbot"
+2024-12-12 17:09	marcus,musa,alex	marcus=20,musa=12,alex=5 (totals only)	alex	3	BOT BUG: marcus rolled 20 on three dice. "some sick rolling by me there, 20 with three dice!!" Join window was 15 seconds at this point.
+2024-12-12 20:50	musa,musa(dupe),alex	musa=12,musa_dupe=10,alex=8 (totals only)	alex	2	Musa: "I think I added myself twice" - the duplicate-entry bug, discovered on day one
+2024-12-12 20:51	musa(offered),alex	-	musa	2	"ot" offered tea; cancelled
+2024-12-12 20:52	alex (offer declined)	-	alex	-	selfish tea; cancelled
+2024-12-12 20:57	marcus (offer declined)	-	marcus	-	selfish tea; cancelled
+2024-12-13 09:56	marcus (no takers)	-	marcus	1	selfish tea
+2024-12-13 10:15	jem,musa,jem(dupe),alex	jem=17,musa=14,jem_dupe=14,alex=12 (totals only)	alex	4	duplicate entry on day one of the bot
+2024-12-13 10:47	alex,marcus,musa	alex=11,marcus=6,musa=6 (totals only)	musa	3	tie broken without a reroll
+2024-12-13 11:54	musa (no takers)	-	musa	-	selfish tea; cancelled
+2024-12-13 14:08	alex,marcus	alex=17,marcus=4 (totals only)	marcus	2	"ha, go make tea baldy"; Alex: "thanks baldy"
+2024-12-13 15:18	marcus,alex	marcus=13,alex=8 (totals only)	alex	2	
+2024-12-13 16:18	alex (no takers)	-	alex	-	selfish tea; cancelled
+2024-12-13 16:19	alex,marcus	alex=18,marcus=12 (totals only)	marcus	2	alex rolls 18; "ha, go make tea baldy"
+2024-12-13 20:22	marcus,alex	marcus=12,alex=7 (totals only)	alex	2	a Friday-night round at 20:22. Jem: "having a wild friday night I see"
+2024-12-16 14:19	jem,musa	jem=10,musa=4 (totals only)	musa	2	
+2024-12-16 14:37	tim,alex,musa	tim=13,alex=8,musa=5 (totals only)	musa	3	
+2024-12-16 16:05	alex,musa	alex=13,musa=13 (totals only)	musa	2	Alex: "13 < 13"
+2024-12-17 11:05	sasha (no takers)	-	sasha	-	selfish tea; cancelled
+2024-12-17 11:07	stephen,musa	stephen=12,musa=8 (totals only)	musa	2	
+2024-12-17 12:24	alex,marcus,musa,stephen	alex=9,marcus=9,musa=7,stephen=7 (totals only)	stephen	4	tie broken without a reroll
+2024-12-17 13:47	marcus,jem	marcus=11,jem=8 (totals only)	jem	2	
+2024-12-17 14:08	musa,marcus,stephen	musa=16,marcus=11,stephen=6 (totals only)	stephen	3	
+2024-12-17 15:06	alex,stephen,musa	alex=15,stephen=12,musa=10 (totals only)	musa	3	
+2024-12-17 15:55	alex,marcus,musa,stephen,jem	alex=12,marcus=10,musa=10,stephen=10,jem=7 (totals only)	jem	5	
+2024-12-17 16:14	stephen (no takers)	-	stephen	1	selfish tea
+2024-12-17 17:08	stephen (bot failed)	-	musa	4	bot did not fire - "tea bot panik", "it didnt working". Musa offered manually.
+2024-12-18 10:29	alex,jem,marcus,musa	alex=15,jem=11,marcus=10,musa=8 (totals only)	musa	4	
+2024-12-18 11:12	alex,marcus,musa	alex=15,marcus=12,musa=8 (totals only)	musa	3	Marcus: "if roller.eq(musa) { lose() }"
+2024-12-18 12:16	alex,musa,marcus	alex=12,musa=10,marcus=10 (totals only)	marcus	3	tie broken without a reroll; "ha, go make tea baldy"
+2024-12-18 13:24	sasha,marcus	sasha=15,marcus=10 (totals only)	marcus	2	cancelled; "ha, go make tea baldy"
+2024-12-18 13:24	marcus (no takers)	-	marcus	-	selfish tea; cancelled
+2024-12-20 10:19	alex,sasha	alex=15,sasha=5 (totals only)	sasha	2	
+2024-12-20 14:51	alex,musa	alex=11,musa=8 (totals only)	musa	2	Jem: "what P threshold are we using before we determine that musa definitely has some bias against him?"
+2024-12-20 16:38	alex,musa	alex=11,musa=9 (totals only)	musa	2	Musa beforehand: "if it picks me i swear to god im decommisioning it". It picked him.
+2024-12-20 16:39	alex,musa	alex=11,musa=9 (totals only)	musa	2	Alex: "need to record the stats" - the Teaderboard idea, six months early
+2024-12-23 13:40	marcus,sasha	marcus=10,sasha=8 (totals only)	sasha	2	Musa: "it'll still choose me somehow"; Jem: "I predict marcus will lose"
+2024-12-23 14:48	alex,musa,marcus	alex=11,musa=9,marcus=5 (totals only)	marcus	3	demo round; "ha, go make tea baldy"
+2024-12-23 15:17	marcus,tim	marcus=12,tim=9 (totals only)	tim	2	cancelled
+2024-12-23 16:22	marcus(offered),sasha	-	marcus	2	"ot" offered tea. Musa: "never thought i'd see the day"
+2024-12-30 09:56	marcus (no takers)	-	marcus	1	selfish tea
+2024-12-30 13:56	alex (no takers)	-	alex	1	selfish tea - marcus typed "t." and the bot ignored it. Musa: "no full stops plz"
+2024-12-30 13:57	marcus,alex	marcus=13,alex=9 (totals only)	alex	2	
+2025-01-02 09:52	musa,marcus	musa=15,marcus=11 (totals only)	marcus	2	"ha, go make tea baldy"
+2025-01-02 13:40	sasha,alex,marcus,jem	sasha=13,alex=9,marcus=8,jem=7 (totals only)	jem	4	
+2025-01-02 14:38	marcus,musa	marcus=10,musa=9 (totals only)	musa	2	
+2025-01-02 15:26	musa,alex,marcus	musa=11,alex=10,marcus=9 (totals only)	marcus	3	"ha, go make tea baldy"
+2025-01-02 16:14	alex,tim,marcus,musa	alex=16,tim=13,marcus=12,musa=9 (totals only)	musa	4	
+2025-01-02 17:48	marcus,alex	marcus=10,alex=3 (totals only)	alex	2	Marcus: "bitch for the day numbers!!" - the earliest BITCH reference in the channel
+2025-01-03 09:21	musa,alex	musa=6,alex=6 (totals only)	alex	2	tie broken without a reroll. Alex: "that feels like I didn't really lose"
+2025-01-03 09:44	alex,marcus	alex=16,marcus=13 (totals only)	marcus	2	"ha, go make tea baldy"
+2025-01-03 10:27	sasha,musa,alex,marcus	sasha=16,musa=15,alex=10,marcus=9 (totals only)	marcus	4	"ha, go make tea baldy"
+2025-01-03 11:17	musa,alex	musa=18,alex=13 (totals only)	alex	2	musa rolls 18
+2025-01-03 13:13	marcus (no takers)	-	marcus	1	selfish tea
+2025-01-03 14:15	marcus,musa,alex	marcus=12,musa=10,alex=5 (totals only)	alex	3	
+2025-01-03 15:51	marcus,alex	marcus=12,alex=12 (totals only)	alex	2	tie broken without a reroll
+2025-01-06 09:55	musa,alex,marcus	musa=12,alex=9,marcus=6 (totals only)	marcus	3	"ha, go make tea baldy"
+2025-01-06 10:59	marcus,alex	marcus=10,alex=7 (totals only)	alex	2	cancelled
+2025-01-06 13:37	marcus,musa,alex	marcus=14,musa=13,alex=9 (totals only)	alex	3	
+2025-01-06 14:50	alex,musa,marcus	alex=10,musa=7,marcus=7 (totals only)	marcus	3	tie broken without a reroll; "ha, go make tea baldy"
+2025-01-06 15:43	alex,musa,marcus	alex=11,musa=10,marcus=9 (totals only)	marcus	3	"ha, go make tea baldy"
+2025-01-06 17:05	musa,alex,marcus	musa=15,alex=12,marcus=5 (totals only)	marcus	3	"ha, go make tea baldy"
+2025-01-07 09:25	marcus,musa	marcus=12,musa=8 (totals only)	musa	2	
+2025-01-07 10:51	marcus (no takers)	-	marcus	1	selfish tea
+2025-01-07 13:41	marcus (no takers)	-	marcus	1	selfish tea
+2025-01-07 16:39	musa,marcus,sasha	musa=11,marcus=11,sasha=6 (totals only)	sasha	3	
+2025-01-08 11:17	marcus,sasha	marcus=11,sasha=9 (totals only)	sasha	2	
+2025-01-08 13:34	tim (no takers)	-	tim	1	selfish tea
+2025-01-08 13:52	sasha,tim	sasha=11,tim=10 (totals only)	tim	2	
+2025-01-08 15:07	marcus (no takers)	-	marcus	1	selfish tea
+2025-01-09 10:46	marcus,musa	marcus=16,musa=11 (totals only)	musa	2	
+2025-01-09 13:52	marcus,musa	marcus=14,musa=7 (totals only)	musa	2	
+2025-01-09 14:55	sasha,marcus,musa	sasha=17,marcus=9,musa=8 (totals only)	musa	3	
+2025-01-09 15:45	marcus(offered),musa	-	marcus	2	"ot" offered tea
+2025-01-09 17:21	marcus,musa	marcus=11,musa=4 (totals only)	musa	2	
+2025-01-10 14:30	jem,musa,sasha,marcus	jem=12,musa=12,sasha=11,marcus=10 (totals only)	marcus	4	"ha, go make tea baldy"
+2025-01-10 15:35	musa(offered),marcus	-	musa	2	"ot" offered tea
+2025-01-13 10:20	stephen,tim,marcus	stephen=14,tim=13,marcus=12 (totals only)	marcus	1	"ha, go make tea baldy"; only one cup came out
+2025-01-13 10:20	marcus (no takers)	-	marcus	-	selfish tea; cancelled
+2025-01-13 11:54	stephen,marcus	stephen=10,marcus=4 (totals only)	marcus	2	"ha, go make tea baldy" - Marcus responds by linking the Guardian piece on calling a man bald being sexual harassment
+2025-01-13 12:40	musa,marcus	musa=11,marcus=6 (totals only)	marcus	2	cancelled; "ha, go make tea baldy"
+2025-01-13 12:42	stephen,musa	stephen=11,musa=8 (totals only)	musa	2	cancelled
+2025-01-13 12:43	stephen,musa,marcus	stephen=12,musa=11,marcus=8 (totals only)	marcus	3	"ha, go make tea baldy"
+2025-01-13 14:34	marcus,musa,sasha,stephen	marcus=13,musa=11,sasha=9,stephen=9 (totals only)	stephen	4	tie broken without a reroll; Stephen: "pr reroll on same number"
+2025-01-14 10:20	jem,alex,musa	jem=12,alex=10,musa=9 (totals only)	musa	3	
+2025-01-14 10:48	stephen,jem,alex	stephen=15,jem=10,alex=7 (totals only)	alex	3	
+2025-01-14 12:29	alex,jem	alex=12,jem=10 (totals only)	jem	2	
+2025-01-14 14:24	stephen,jem,musa,marcus,alex	stephen=15,jem=15,musa=12,marcus=9,alex=9 (totals only)	alex	5	
+2025-01-14 15:16	jem,stephen,alex,musa	jem=16,stephen=12,alex=10,musa=10 (totals only)	musa	4	
+2025-01-15 10:05	alex,sasha	alex=17,sasha=12 (totals only)	sasha	2	
+2025-01-15 11:44	stephen,alex	stephen=12,alex=9 (totals only)	alex	2	
+2025-01-15 15:43	stephen(offered),alex	-	stephen	2	"ot" offered tea
+2025-01-16 10:46	alex,jem,sasha	alex=13,jem=12,sasha=9 (totals only)	sasha	3	
+2025-01-16 12:58	jem (no takers)	-	jem	1	selfish tea
+2025-01-16 15:50	musa,alex,jem	musa=10,alex=9,jem=5 (totals only)	jem	3	
+2025-01-17 11:23	alex,jem	alex=14,jem=11 (totals only)	jem	2	
+2025-01-17 13:19	alex,jem	alex=14,jem=10 (totals only)	jem	2	
+2025-01-17 13:19	alex,jem	alex=14,jem=10 (totals only)	jem	2	Alex: "just maximising your chances of making it jem?" (jem typed t three times)
+2025-01-20 11:47	alex,jem,musa	alex=10,jem=8,musa=7 (totals only)	musa	3	
+2025-01-20 14:57	musa,alex	musa=10,alex=8 (totals only)	alex	2	
+2025-01-20 15:58	sasha,alex,musa,jem	sasha=18,alex=11,musa=10,jem=9 (totals only)	jem	4	Sasha rolls 18. Musa: "King for the day Sasha". Alex: "the first king in the new kingdom?" - the KING idea, six months before the bot implemented it
+2025-01-20 16:42	alex (no takers)	-	alex	1	selfish tea
+2025-01-21 13:51	alex,sasha	alex=8,sasha=6 (totals only)	sasha	2	Alex posts :lemon: - the earliest lemon reference
+2025-01-21 15:38	alex,tim	alex=13,tim=9 (totals only)	tim	2	
+2025-01-22 11:12	musa,stephen,alex,jem	musa=15,stephen=12,alex=9,jem=7 (totals only)	jem	4	
+2025-01-22 13:42	stephen(offered),alex,musa	-	stephen	3	"ot" offered tea
+2025-01-22 15:17	stephen,alex,musa	stephen=15,alex=11,musa=11 (totals only)	musa	3	tie broken without a reroll
+2025-01-23 13:06	jem,alex	jem=10,alex=9 (totals only)	alex	2	
+2025-01-23 13:51	musa,jem,alex	musa=13,jem=12,alex=7 (totals only)	alex	3	
+2025-01-23 15:16	musa,alex	musa=12,alex=4 (totals only)	alex	2	Alex: "thats 3 today ... Im the only person to lose today ... #riggedelection"
+2025-01-24 10:13	stephen(offered),musa,sasha	-	stephen	3	"ot" offered tea
+2025-01-27 10:48	musa,stephen,alex,jem,sasha	musa=15,stephen=11,alex=11,jem=9,sasha=6 (totals only)	sasha	5	
+2025-01-27 12:33	musa(offered),alex,stephen,jem,sasha	-	musa	5	"ot" offered tea
+2025-01-27 13:48	stephen(offered),musa	-	stephen	2	"ot" offered tea
+2025-01-28 14:15	musa,alex,stephen,jem	musa=13,alex=9,stephen=9,jem=6 (totals only)	jem	4	
+2025-01-28 15:15	stephen(offered),musa,alex	-	stephen	3	"ot" offered tea
+2025-01-28 16:56	stephen,musa,alex	stephen=13,musa=10,alex=9 (totals only)	alex	3	
+2025-01-29 10:05	alex,musa	alex=15,musa=11 (totals only)	musa	2	
+2025-01-29 11:38	jem,musa,alex,stephen	jem=15,musa=13,alex=9,stephen=8 (totals only)	stephen	4	
+2025-01-29 14:42	musa (no takers)	-	musa	-	selfish tea; cancelled
+2025-01-29 14:52	musa(offered),alex	-	musa	2	"ot" offered tea
+2025-01-29 16:08	musa,stephen,alex	musa=12,stephen=9,alex=8 (totals only)	alex	3	
+2025-01-30 14:45	tim,alex,jem	tim=10,alex=6,jem=6 (totals only)	jem	3	tie broken without a reroll
+2025-01-30 15:14	alex (no takers)	-	alex	1	selfish tea
+2025-01-31 12:58	musa(offered),stephen,jem,alex	-	musa	4	"ot" offered tea
+2025-01-31 13:49	musa,alex,jem,stephen	musa=17,alex=15,jem=10,stephen=7 (totals only)	stephen	4	
+2025-01-31 15:24	musa(offered),alex,stephen	-	musa	3	"ot" offered tea
+2025-01-31 16:14	stephen(offered),musa,alex	-	stephen	3	"ot" offered tea
+2025-02-03 10:49	alex(offered),musa	-	alex	2	"ot" offered tea
+2025-02-03 15:05	jem(offered),alex,sasha,musa,tim	-	jem	5	"ot" offered tea
+2025-02-03 16:04	musa(offered),alex,jem	-	musa	3	"ot" offered tea
+2025-02-04 12:22	jem,alex,stephen	jem=15,alex=12,stephen=11 (totals only)	stephen	3	
+2025-02-04 14:44	alex,musa,sasha	alex=13,musa=10,sasha=7 (totals only)	sasha	3	
+2025-02-05 11:43	alex,stephen,musa,sasha	alex=10,stephen=8,musa=7,sasha=6 (totals only)	sasha	4	
+2025-02-05 16:04	stephen,musa	stephen=13,musa=9 (totals only)	musa	2	
+2025-02-06 12:16	tim(offered),musa,sasha,stephen	-	tim	4	"ot" offered tea
+2025-02-11 10:46	stephen,jem,alex,sasha	stephen=9,jem=9,alex=9,sasha=7 (totals only)	sasha	4	
+2025-02-17 09:46	musa,marcus,alex,jem	musa=14,marcus=9,alex=8,jem=7 (totals only)	jem	4	
+2025-02-17 10:38	alex(offered),marcus	-	alex	2	"ot" offered tea
+2025-02-17 13:20	musa,marcus,alex	musa=11,marcus=10,alex=9 (totals only)	alex	3	
+2025-02-17 13:20	marcus (no takers)	-	marcus	-	selfish tea; cancelled
+2025-02-17 14:43	alex,marcus,musa	alex=13,marcus=10,musa=10 (totals only)	musa	3	tie broken without a reroll
+2025-02-17 15:38	alex (no takers)	-	alex	1	selfish tea
+2025-02-18 14:51	marcus,stephen,alex	marcus=12,stephen=10,alex=6 (totals only)	alex	3	
+2025-02-19 13:37	stephen,marcus	stephen=16,marcus=5 (totals only)	marcus	2	"ha, go make tea baldy"
+2025-02-19 15:07	marcus (no takers)	-	marcus	-	selfish tea; cancelled
+2025-02-19 15:08	marcus,stephen	marcus=12,stephen=12 (totals only)	stephen	2	tie at 12 broken without a reroll - this is the round that prompted the reroll feature
+2025-02-19 16:21	marcus (no takers)	-	marcus	1	selfish tea
+2025-02-20 10:02	jem,alex	jem=15,alex=14 (totals only)	alex	2	
+2025-02-24 10:31	alex,jem,musa,marcus	alex=13,jem=12,musa=8,marcus=6 (totals only)	marcus	4	"ha, go make tea baldy"
+2025-02-24 13:29	sasha,marcus,musa	sasha=14,marcus=14,musa=9 (totals only)	musa	3	
+2025-02-24 15:35	sasha,alex,jem,marcus	sasha=13,alex=9,jem=9,marcus=7 (totals only)	marcus	4	"ha, go make tea baldy"
+2025-02-24 16:42	musa,marcus	musa=11,marcus=6 (totals only)	marcus	2	"ha, go make tea baldy"
+2025-02-25 11:15	jem(offered),alex,marcus	-	jem	3	"ot" offered tea
+2025-02-25 13:52	marcus,jem,alex	marcus=13,jem=10,alex=8 (totals only)	alex	3	
+2025-02-25 15:44	alex,sasha,jem,marcus,musa	alex=15,sasha=12,jem=11,marcus=11,musa=5 (totals only)	musa	5	
+2025-02-26 14:21	jem,alex,marcus	jem=16,alex=11,marcus=9 (totals only)	marcus	3	"ha, go make tea baldy"
+2025-02-26 15:00	jem (bot silent)	-	-	-	"ot" got no bot response
+2025-02-26 16:08	musa (bot silent)	-	-	-	no bot response
+2025-02-27 13:02	jem,musa	jem=12,musa=10 (totals only)	musa	2	
+2025-03-03 10:42	marcus,alex,jem	marcus=13,alex=11,jem=8 (totals only)	jem	3	
+2025-03-03 12:25	sasha,alex,marcus,jem	sasha=13,alex=10,marcus=9,jem=8 (totals only)	jem	4	
+2025-03-03 14:35	alex,marcus,jem	alex=10,marcus=8,jem=6 (totals only)	jem	3	
+2025-03-03 15:15	marcus,stephen,sasha,jem,alex	marcus=12,stephen=11,sasha=11,jem=10,alex=8 (totals only)	alex	5	
+2025-03-03 15:15	jem (no takers)	-	jem	-	selfish tea; cancelled
+2025-03-04 10:53	marcus,alex,sasha,jem	marcus=14,alex=12,sasha=8,jem=7 (totals only)	jem	4	
+2025-03-04 14:06	alex,marcus,jem	alex=14,marcus=10,jem=8 (totals only)	jem	3	
+2025-03-04 14:22	marcus,jem,tim,alex	marcus=11,jem=9,tim=9,alex=8 (totals only)	alex	4	
+2025-03-04 16:44	marcus,alex,jem	marcus=12,alex=12,jem=8 (totals only)	jem	3	
+2025-03-05 09:34	alex,marcus	alex=12,marcus=12 (totals only)	marcus	2	Alex: "12 < 12"; tie broken without a reroll
+2025-03-05 10:26	sasha,stephen,marcus,alex,jem	sasha=13,stephen=11,marcus=10,alex=10,jem=10 (totals only)	jem	5	three-way tie at 10 broken without a reroll
+2025-03-05 11:04	jem,marcus,stephen,alex	jem=16,marcus=10,stephen=9,alex=8 (totals only)	alex	4	
+2025-03-05 12:38	jem,marcus,alex	jem=16,marcus=15,alex=5 (totals only)	alex	3	
+2025-03-05 13:38	tim,marcus	tim=7,marcus=5 (totals only)	marcus	2	"ha, go make tea baldy"
+2025-03-05 14:16	jem,marcus	jem=8,marcus=4 (totals only)	marcus	2	"ha, go make tea baldy"
+2025-03-05 15:51	jem,sasha	jem=14,sasha=12 (totals only)	sasha	2	
+2025-03-05 17:31	stephen,marcus	stephen=12,marcus=10 (totals only)	marcus	2	cancelled and re-run; "ha, go make tea baldy"
+2025-03-05 17:32	marcus,alex,jem,stephen,sasha	marcus=16,alex=14,jem=14,stephen=13,sasha=6 (totals only)	sasha	5	
+2025-03-06 09:06	marcus,alex,tim	marcus=12,alex=7,tim=6 (totals only)	tim	3	
+2025-03-06 09:48	jem,alex,marcus	jem=13,alex=8,marcus=7 (totals only)	marcus	3	"ha, go make tea baldy"
+2025-03-06 11:07	jem(offered),sasha,marcus,alex,stephen	-	jem	5	"ot" offered tea
+2025-03-06 14:16	jem (no takers)	-	jem	1	selfish tea
+2025-03-06 16:08	alex,stephen,marcus	alex=11,stephen=11,marcus=6 (totals only)	marcus	3	"ha, go make tea baldy"
+2025-03-07 10:23	sasha(offered),alex,stephen,jem	-	sasha	4	"ot" offered tea
+2025-03-07 11:04	stephen,alex	stephen=13,alex=12 (totals only)	alex	2	
+2025-03-07 13:43	sasha,tim,alex	sasha=17,tim=16,alex=7 (totals only)	alex	3	
+2025-03-07 13:44	marcus,stephen,tim,jem,sasha,jem(dupe)	sasha=16,jem=14,stephen=12,jem_dupe=12,tim=9,marcus=8 (totals only)	marcus	6	duplicate entry; Alex: "#teabotbug"; "ha, go make tea baldy"
+2025-03-07 14:33	alex (no takers)	-	alex	1	selfish tea
+2025-03-07 14:35	stephen,tim,jem,tim(dupe),marcus,alex	stephen=14,tim=13,jem=12,tim_dupe=9,marcus=6,alex=6 (totals only)	alex	6	Marcus: "tim in twice ... not sure that's fair ... reroll"
+2025-03-07 15:43	musa (no takers)	-	musa	1	selfish tea; bot had just been rate-limited by the Slack API
+2025-03-10 09:06	alex,marcus	alex=9,marcus=6 (totals only)	marcus	2	"ha, go make tea baldy"
+2025-03-10 10:09	marcus,stephen,jem,sasha	marcus=15,stephen=12,jem=9,sasha=7 (totals only)	sasha	4	
+2025-03-10 11:35	stephen,alex,marcus,jem	stephen=12,alex=10,marcus=8,jem=4 (totals only)	jem	4	
+2025-03-10 13:35	stephen,alex,sasha,marcus,jem	stephen=14,alex=13,sasha=13,marcus=11,jem=7 (totals only)	jem	5	
+2025-03-10 15:13	marcus (bot silent)	-	-	-	"ot" got no bot response
+2025-03-10 16:41	sasha,jem,alex,marcus,stephen	sasha=14,jem=14,alex=13,marcus=11,stephen=9 (totals only)	stephen	5	
+2025-03-11 09:29	alex,alex(dupe),marcus,stephen	alex=12,alex_dupe=11,marcus=11,stephen=10 (totals only)	stephen	4	duplicate entry
+2025-03-11 10:52	tim,jem,stephen,alex,marcus	tim=11,jem=10,stephen=7,alex=6,marcus=4 (totals only)	marcus	5	cancelled and re-run; "ha, go make tea baldy"
+2025-03-11 10:53	jem,tim,alex,marcus,stephen,sasha	jem=18,tim=13,alex=10,marcus=9,stephen=8,sasha=8 (totals only)	sasha	6	jem rolled 18; Tim posts a crown emoji - four months before the bot had a KING mechanic
+2025-03-11 11:41	alex (offer declined)	-	alex	1	selfish tea
+2025-03-11 14:05	sasha (bot silent)	-	-	-	no bot response
+2025-03-11 16:35	marcus (bot silent)	-	-	-	no bot response
+2025-03-11 16:36	musa (no takers)	-	musa	1	selfish tea
+2025-03-12 09:58	jem,alex	jem=6,alex=6 (totals only)	alex	2	tie broken without a reroll
+2025-03-12 10:43	alex(offered),marcus	-	alex	2	"ot" offered tea
+2025-03-12 11:40	alex,marcus	alex=13,marcus=4 (totals only)	marcus	2	"ha, go make tea baldy"
+2025-03-12 13:59	sasha,alex,marcus	sasha=14,alex=10,marcus=9 (totals only)	marcus	3	"ha, go make tea baldy"
+2025-03-12 15:03	jem(offered),tim	-	jem	2	"ot" offered tea
+2025-03-13 11:08	marcus,stephen	marcus=12,stephen=4 (totals only)	stephen	2	
+2025-03-13 12:00	jem(offered),stephen,marcus,alex	-	jem	4	"ot" offered tea
+2025-03-13 14:03	jem,alex,sasha,marcus,stephen	jem=17,alex=11,sasha=9,marcus=9,stephen=6 (totals only)	stephen	5	
+2025-03-13 15:44	jem (no takers)	-	jem	1	selfish tea
+2025-03-13 16:04	alex,stephen,marcus	alex=16,stephen=11,marcus=11 (totals only)	marcus	3	tie broken without a reroll; cancelled
+2025-03-13 16:51	stephen(offered),jem,marcus,alex	-	stephen	4	"ot" offered tea
+2025-03-13 17:55	alex (no takers)	-	alex	1	selfish tea
+2025-03-14 10:12	alex,jem,sasha	alex=14,jem=12,sasha=7 (totals only)	sasha	3	
+2025-03-14 11:24	alex (bot silent)	-	-	-	"ot" got no bot response
+2025-03-14 15:19	stephen (no takers)	-	stephen	1	selfish tea
+2025-03-14 15:56	jem,alex,stephen	jem=12,alex=12,stephen=11 (totals only)	stephen	3	
+2025-03-17 11:00	jem,sasha	jem=12,sasha=11 (totals only)	sasha	2	
+2025-03-17 11:35	jem(offered),tim	-	jem	2	"ot" offered tea
+2025-03-17 12:48	jem (offer declined)	-	jem	1	selfish tea
+2025-03-17 16:54	tim(offered),jem	-	tim	2	"ot" offered tea
+2025-03-18 10:55	sasha,jem,marcus	sasha=13,jem=10,marcus=9 (totals only)	marcus	3	"ha, go make tea baldy"
+2025-03-18 14:33	sasha,marcus	sasha=12,marcus=4 (totals only)	marcus	2	"ha, go make tea baldy"
+2025-03-19 14:13	jem,sasha,marcus	marcus=11,jem=9,sasha=7 (totals only)	sasha	3	double "rt" fired two rounds; the other produced a selfish tea for marcus
+2025-03-19 14:38	jem (offer declined)	-	jem	1	selfish tea
+2025-03-19 15:30	tim,jem,marcus	tim=14,jem=13,marcus=13 (totals only)	marcus	3	tie broken without a reroll; "ha, go make tea baldy"
+2025-03-20 10:06	marcus (offer declined)	-	marcus	1	selfish tea (jem and sasha answered too late)
+2025-03-20 10:37	jem(offered),marcus	-	jem	2	"ot" offered tea
+2025-03-20 14:14	tim,marcus,sasha	tim=9,marcus=8,sasha=5 (totals only)	sasha	3	
+2025-03-21 14:20	tim,sasha,jem,marcus	tim=13,sasha=13,jem=11,marcus=11 (totals only)	marcus	4	tie broken without a reroll; "ha, go make tea baldy"
+2025-03-24 10:11	alex,tim,marcus,stephen	alex=10,tim=9,marcus=9,stephen=8 (totals only)	stephen	4	
+2025-03-24 11:08	alex,marcus,sasha	alex=13,marcus=10,sasha=8 (totals only)	sasha	3	
+2025-03-24 14:18	stephen,sasha,alex,marcus	stephen=13,sasha=12,alex=10,marcus=9 (totals only)	marcus	4	"ha, go make tea baldy"
+2025-03-24 14:25	marcus,jem	marcus=9,jem=8 (totals only)	jem	2	Stephen: "force marcus to make all the tea" - a pr request to Musa
+2025-03-24 15:25	alex,marcus	alex=10,marcus=6 (totals only)	marcus	2	Alex: "rigged"; "ha, go make tea baldy"
+2025-03-24 15:51	tim (bot silent)	-	-	-	"ot" got no bot response
+2025-03-25 10:12	jem (bot dead)	-	-	-	"bot dead"; "tttt botttttt"
+2025-03-25 14:15	musa (no takers)	-	musa	1	selfish tea
+2025-03-25 14:41	jem,tim,marcus,alex	jem=16,tim=12,marcus=11,alex=3 (totals only)	alex	4	
+2025-03-25 15:35	alex (offer declined)	-	alex	1	selfish tea
+2025-03-26 09:38	marcus,alex	marcus=10,alex=8 (totals only)	alex	2	
+2025-03-26 10:52	alex,sasha,jem,marcus	alex=13,sasha=12,jem=12,marcus=9 (totals only)	marcus	4	"ha, go make tea baldy"
+2025-03-26 12:55	alex(offered),marcus	-	alex	2	"ot" offered tea
+2025-03-26 16:38	marcus,alex	marcus=16,alex=14 (totals only)	alex	2	
+2025-03-27 10:41	marcus,alex,jem	marcus=11,alex=11,jem=4 (totals only)	jem	3	
+2025-03-27 12:59	stephen(offered),alex,sasha	-	stephen	3	"ot" offered tea
+2025-03-27 14:15	stephen (no takers)	-	stephen	1	selfish tea; Stephen: "lonely tea"
+2025-03-27 16:50	alex,marcus	alex=15,marcus=11 (totals only)	marcus	2	"ha, go make tea baldy"
+2025-03-28 10:22	sasha,alex	sasha=13,alex=12 (totals only)	alex	2	
+2025-03-31 10:11	alex (no takers)	-	alex	-	selfish tea; cancelled
+2025-03-31 11:57	sasha,tim,alex,jem	sasha=13,tim=13,alex=11,jem=7 (totals only)	jem	4	
+2025-03-31 16:39	tim(offered),jem,alex,stephen	-	tim	3	"ot" offered tea
+2025-04-01 11:09	alex,jem,sasha,marcus	alex=13,jem=9,sasha=7,marcus=7 (totals only)	marcus	4	tie broken without a reroll; "ha, go make tea baldy"
+2025-04-01 14:36	stephen,musa	stephen=16,musa=11 (totals only)	musa	2	
+2025-04-01 15:49	marcus,musa,sasha,stephen	marcus=16,musa=13,sasha=11,stephen=7 (totals only)	stephen	4	
+2025-04-02 11:22	tim,musa,sasha,jem,stephen	tim=12,musa=11,sasha=11,jem=9,stephen=8 (totals only)	stephen	5	
+2025-04-02 14:54	tim(offered),musa	-	tim	2	"ot" offered tea
+2025-04-02 16:25	musa,stephen,sasha	musa=11,stephen=9,sasha=8 (totals only)	sasha	3	
+2025-04-03 10:12	marcus,jem,musa	marcus=12,jem=11,musa=9 (totals only)	musa	3	
+2025-04-03 16:44	alex,musa,marcus,jem	alex=8,musa=7,marcus=7,jem=6 (totals only)	jem	4	
+2025-04-07 11:34	musa,stephen,marcus	musa=11,stephen=8,marcus=5 (totals only)	marcus	3	"ha, go make tea baldy"
+2025-04-07 13:53	sasha(offered),jem,stephen,alex	-	sasha	4	"ot" offered tea
+2025-04-07 14:58	musa,tim,stephen	musa=9,tim=8,stephen=7 (totals only)	stephen	3	
+2025-04-07 14:58	tim (no takers)	-	tim	-	selfish tea; cancelled
+2025-04-08 14:50	sasha,marcus	sasha=12,marcus=12 (totals only)	marcus	2	tie broken without a reroll; "ha, go make tea baldy"
+2025-04-08 16:09	marcus (no takers, then offer declined)	-	marcus	1	selfish tea
+2025-04-09 13:52	jem,alex,marcus	jem=16,alex=12,marcus=8 (totals only)	marcus	3	Alex: "you have never heard a shriek like what just came out of m"
+2025-04-09 13:52	alex,marcus,jem,stephen	alex=13,marcus=10,jem=9,stephen=7 (totals only)	stephen	4	cancelled and re-run
+2025-04-10 13:36	tim,marcus,musa,jem	tim=15,marcus=13,musa=11,jem=10 (totals only)	jem	4	
+2025-04-10 15:09	musa,marcus	musa=12,marcus=7 (totals only)	marcus	2	"ha, go make tea baldy"
+2025-04-10 16:26	marcus(offered),musa,jem	-	marcus	3	"ot" offered tea
+2025-04-11 11:11	stephen(offered),jem	-	stephen	2	"ot" offered tea; stephen's first round, 48 min after joining
+2025-04-14 10:09	marcus,jem,stephen,musa	marcus=13,jem=13,stephen=10,musa=7 (totals only)	musa	4	
+2025-04-14 10:09	jem (no takers)	-	jem	-	selfish tea; cancelled
+2025-04-14 13:23	stephen,musa,marcus	stephen=8,musa=8,marcus=3 (totals only)	marcus	3	"ha, go make tea baldy"
+2025-04-15 14:22	marcus,jem	marcus=10,jem=3 (totals only)	jem	2	
+2025-04-16 10:01	stephen(offered),marcus	-	stephen	2	"ot" offered tea
+2025-04-16 11:54	musa,stephen,marcus	musa=11,stephen=10,marcus=8 (totals only)	marcus	3	"ha, go make tea baldy"
+2025-04-16 11:54	stephen (no takers)	-	stephen	-	selfish tea; cancelled
+2025-04-16 13:58	musa,marcus,stephen	musa=11,marcus=9,stephen=7 (totals only)	stephen	3	
+2025-04-16 13:58	stephen (no takers)	-	stephen	-	selfish tea; cancelled
+2025-04-17 10:22	jem(offered),musa,marcus	-	jem	3	"ot" offered tea
+2025-04-17 15:19	sasha,stephen,marcus,musa	sasha=9,stephen=8,marcus=8,musa=4 (totals only)	musa	4	
+2025-04-17 16:51	stephen,musa	stephen=16,musa=13 (totals only)	musa	2	
+2025-04-17 16:54	jem,jem(dupe),stephen,musa,marcus	jem=14,jem_dupe=12,stephen=11,musa=8,marcus=6 (totals only)	marcus	5	duplicate entry; "ha, go make tea baldy"
+2025-04-22 11:15	stephen,musa,sasha	stephen=10,musa=9,sasha=7 (totals only)	sasha	3	
+2025-04-22 13:39	stephen,musa,sasha,jem,alex	stephen=16,musa=11,sasha=9,jem=7,alex=6 (totals only)	alex	5	
+2025-04-22 15:50	musa,stephen	musa=13,stephen=12 (totals only)	stephen	2	cancelled and re-run
+2025-04-22 15:51	alex,musa,jem,stephen	alex=16,musa=12,jem=12,stephen=7 (totals only)	stephen	4	
+2025-04-23 10:19	stephen(offered),jem,marcus,alex	-	stephen	4	"ot" offered tea
+2025-04-23 12:27	alex,musa,jem,marcus	alex=11,musa=8,jem=5,marcus=4 (totals only)	marcus	4	"ha, go make tea baldy"
+2025-04-23 15:12	jem,alex,stephen,marcus	jem=16,alex=11,stephen=10,marcus=8 (totals only)	marcus	4	"ha, go make tea baldy"
+2025-04-23 16:39	alex,musa,marcus,jem	alex=12,musa=12,marcus=8,jem=8 (totals only)	jem	4	tie broken without a reroll
+2025-04-24 09:47	tim(offered),alex,musa,marcus,jem	-	tim	5	"ot" offered tea
+2025-04-24 14:52	musa,sasha,alex,marcus	musa=14,sasha=13,alex=12,marcus=9 (totals only)	marcus	4	"ha, go make tea baldy"
+2025-04-24 14:54	jem,marcus,tim	jem=13,marcus=8,tim=6 (totals only)	tim	3	
+2025-04-25 15:55	marcus,jem,alex,stephen,musa	marcus=12,jem=10,alex=10,stephen=9,musa=6 (totals only)	musa	5	
+2025-04-28 11:46	sasha,alex,musa	sasha=15,alex=13,musa=12 (totals only)	musa	3	
+2025-04-28 14:02	musa (no takers)	-	musa	-	selfish tea
+2025-04-28 14:03	alex,musa	alex=11,musa=10 (totals only)	musa	2	
+2025-04-28 17:12	alex(offered),musa	-	alex	2	"ot" offered tea
+2025-04-29 10:26	sasha,musa,alex	sasha=14,musa=13,alex=10 (totals only)	alex	3	
+2025-04-29 14:17	musa (no takers)	-	musa	-	selfish tea; cancelled
+2025-04-29 16:43	musa,alex	musa=15,alex=12 (totals only)	alex	2	
+2025-04-30 09:31	sasha,alex	sasha=14,alex=12 (totals only)	alex	2	
+2025-04-30 16:03	alex,sasha,musa	alex=11,sasha=7,musa=5 (totals only)	musa	3	
+2025-05-01 09:39	alex,musa	alex=9,musa=5 (totals only)	musa	2	
+2025-05-01 13:44	sasha(offered),musa	-	sasha	2	"ot" offered tea
+2025-05-02 10:21	alex (offer declined)	-	alex	1	selfish tea
+2025-05-02 11:13	alex (no takers)	-	alex	1	selfish tea; "got the anti-tea brigade in today"
+2025-05-06 11:02	stephen,alex,sasha,tim	stephen=14,alex=14,sasha=8,tim=6 (totals only)	tim	4	
+2025-05-06 15:46	alex,stephen,sasha	alex=16,stephen=10,sasha=9 (totals only)	sasha	3	
+2025-05-07 08:27	marcus (offer declined)	-	marcus	1	selfish tea. Alex: "Ffs, wait till 9 at least"
+2025-05-07 09:12	alex (bot silent)	-	-	-	"ot" got no bot response
+2025-05-07 09:39	alex (no takers)	-	alex	1	selfish tea
+2025-05-07 11:07	stephen(offered),tim,marcus,sasha,alex	-	stephen	5	"ot" offered tea
+2025-05-07 13:31	sasha,marcus,alex	sasha=15,marcus=7,alex=7 (totals only)	alex	3	tie broken without a reroll
+2025-05-07 14:30	marcus,alex,stephen	marcus=10,alex=7,stephen=6 (totals only)	stephen	3	
+2025-05-07 14:32	tim,jem,jem(dupe),stephen	tim=9,jem=9,jem_dupe=8,stephen=7 (totals only)	stephen	4	duplicate-entry bug already present in the earliest bot
+2025-05-08 10:52	marcus,alex,jem	marcus=9,alex=6,jem=5 (totals only)	jem	3	
+2025-05-08 15:34	jem,stephen,alex	jem=10,stephen=8,alex=7 (totals only)	alex	3	
+2025-05-09 10:44	alex,sasha,jem	alex=10,sasha=7,jem=6 (totals only)	jem	3	
+2025-05-09 11:43	alex (no takers)	-	alex	1	selfish tea
+2025-05-09 14:08	sasha,jem,marcus,alex	sasha=12,jem=12,marcus=10,alex=3 (totals only)	alex	4	
+2025-05-12 10:17	marcus,alex	marcus=10,alex=3 (totals only)	alex	2	Alex: "rigged election"
+2025-05-12 11:17	alex(offered),stephen,jem,marcus	-	alex	4	"ot" offered tea
+2025-05-12 14:04	jem (no takers)	-	jem	1	selfish tea
+2025-05-13 09:44	marcus,sasha,jem	marcus=11,sasha=11,jem=10 (totals only)	jem	3	
+2025-05-13 10:48	jem,marcus,alex	jem=13,marcus=10,alex=7 (totals only)	alex	3	
+2025-05-13 11:49	stephen,marcus,alex	stephen=14,marcus=10,alex=6 (totals only)	alex	3	Alex: "your app is fucked"
+2025-05-13 14:51	jem,stephen,alex,sasha,marcus	jem=17,stephen=13,alex=12,sasha=11,marcus=8 (totals only)	marcus	5	"ha, go make tea baldy"
+2025-05-13 16:32	marcus,stephen,jem,alex	marcus=17,stephen=15,jem=14,alex=11 (totals only)	alex	4	
+2025-05-14 09:53	jem,marcus,stephen	jem=15,marcus=9,stephen=6 (totals only)	stephen	3	
+2025-05-14 10:38	stephen,marcus,musa	stephen=12,marcus=10,musa=7 (totals only)	musa	3	
+2025-05-14 13:53	musa,stephen	musa=9,stephen=8 (totals only)	stephen	2	
+2025-05-14 14:55	sasha,marcus	sasha=13,marcus=12 (totals only)	marcus	2	"ha, go make tea baldy"
+2025-05-14 16:21	jem,musa,marcus	jem=14,musa=13,marcus=13 (totals only)	marcus	3	tie broken without a reroll; cancelled - Marcus got it "on tick"
+2025-05-15 10:43	sasha,marcus,musa	sasha=12,marcus=10,musa=8 (totals only)	musa	3	
+2025-05-15 11:53	marcus,alex,jem	marcus=14,alex=10,jem=5 (totals only)	jem	3	
+2025-05-15 14:42	marcus,jem,alex	marcus=11,jem=10,alex=4 (totals only)	alex	3	
+2025-05-16 13:11	musa,sasha,alex,jem	musa=11,sasha=11,alex=7,jem=5 (totals only)	jem	4	
+2025-05-19 10:08	sasha,musa,tim,stephen	sasha=10,musa=8,tim=8,stephen=7 (totals only)	stephen	4	
+2025-05-19 12:40	musa,sasha,marcus,stephen	musa=15,sasha=9,marcus=7,stephen=6 (totals only)	stephen	4	
+2025-05-19 13:30	stephen (no takers)	-	stephen	-	selfish tea; cancelled
+2025-05-19 13:32	stephen,marcus	stephen=16,marcus=10 (totals only)	marcus	2	"ha, go make tea baldy"
+2025-05-19 15:22	musa (bot silent)	-	-	-	"ot" got no bot response
+2025-05-20 10:23	marcus (bot silent)	-	-	-	"ot" got no bot response
+2025-05-20 11:54	stephen (bot silent)	-	-	-	bot did not respond
+2025-05-20 11:58	stephen,musa,marcus,sasha	stephen=14,musa=11,marcus=10,sasha=9 (totals only)	sasha	4	
+2025-05-20 16:03	sasha,stephen,marcus,musa	sasha=14,stephen=11,marcus=9,musa=8 (totals only)	musa	4	
+2025-05-20 17:28	stephen (no takers)	-	stephen	1	selfish tea
+2025-05-21 10:26	stephen,sasha,alex,musa,marcus	stephen=14,sasha=13,alex=12,musa=9,marcus=8 (totals only)	marcus	5	"ha, go make tea baldy"
+2025-05-21 12:06	musa,sasha,stephen,marcus	musa=17,sasha=13,stephen=12,marcus=9 (totals only)	marcus	4	"ha, go make tea baldy"
+2025-05-21 14:00	alex,stephen,marcus,musa	alex=12,stephen=12,marcus=10,musa=9 (totals only)	musa	4	
+2025-05-21 15:23	marcus,musa,stephen	marcus=11,musa=10,stephen=10 (totals only)	stephen	3	tie broken without a reroll
+2025-05-21 16:16	marcus,stephen,musa	marcus=12,stephen=9,musa=7 (totals only)	musa	3	
+2025-05-22 10:29	stephen,sasha,marcus	stephen=15,sasha=13,marcus=11 (totals only)	marcus	3	
+2025-05-22 14:35	sasha,stephen,marcus,alex	sasha=14,stephen=12,marcus=10,alex=8 (totals only)	alex	4	
+2025-05-23 13:28	sasha,alex	sasha=12,alex=10 (totals only)	alex	2	
+2025-05-23 14:03	musa,marcus	musa=14,marcus=14 (totals only)	marcus	2	tie broken without a reroll
+2025-05-23 14:59	alex,marcus,musa,sasha	alex=18,marcus=12,musa=12,sasha=9 (totals only)	sasha	4	alex rolled 18 - Musa posts :crown:, two months before the KING mechanic existed
+2025-05-27 09:47	stephen,sasha,marcus,alex,jem,musa	stephen=13,sasha=12,marcus=11,alex=9,jem=9,musa=6 (totals only)	musa	6	
+2025-05-27 10:50	stephen,marcus,jem,musa,alex	stephen=16,marcus=15,jem=14,musa=13,alex=4 (totals only)	alex	5	
+2025-05-27 13:45	tim,musa,jem,marcus,stephen	tim=12,musa=10,jem=9,marcus=7,stephen=4 (totals only)	stephen	5	
+2025-05-27 15:54	musa,marcus,stephen	musa=12,marcus=9,stephen=8 (totals only)	stephen	3	
+2025-05-27 17:59	marcus,sasha,musa	marcus=17,sasha=10,musa=7 (totals only)	musa	3	
+2025-05-28 10:02	jem(offered),alex,musa,marcus	-	jem	4	"ot" offered tea
+2025-05-28 11:16	jem(offered),sasha,marcus	-	jem	3	"ot" offered tea
+2025-05-28 13:52	marcus,alex,musa,jem	marcus=15,alex=9,musa=6,jem=5 (totals only)	jem	4	
+2025-05-28 14:28	sasha,stephen,jem,marcus	sasha=13,stephen=13,jem=12,marcus=12 (totals only)	marcus	4	tie jem/marcus at 12 broken without a reroll
+2025-05-28 16:34	stephen,marcus,musa	stephen=12,marcus=10,musa=9 (totals only)	musa	3	
+2025-05-29 10:45	marcus,jem	marcus=12,jem=12 (totals only)	jem	2	tie at 12 broken without a reroll
+2025-05-29 11:08	alex,sasha,marcus	alex=12,sasha=12,marcus=8 (totals only)	marcus	3	"ha, go make tea baldy"
+2025-05-29 12:36	jem,alex,stephen,musa,marcus	jem=13,alex=12,stephen=11,musa=10,marcus=6 (totals only)	marcus	5	"ha, go make tea baldy"
+2025-05-29 13:45	jem(offered),stephen,marcus,musa	-	jem	4	"ot" offered tea
+2025-05-29 13:58	tim (no takers)	-	tim	1	selfish tea
+2025-05-29 14:17	sasha,musa,stephen,marcus,tim	sasha=15,musa=12,stephen=11,marcus=8,tim=7 (totals only)	tim	5	
+2025-05-29 15:12	alex,stephen,jem	alex=13,stephen=11,jem=10 (totals only)	jem	3	
+2025-05-29 16:31	marcus,jem,stephen	marcus=12,jem=10,stephen=9 (totals only)	stephen	3	
+2025-05-30 11:40	marcus,sasha,alex	marcus=15,sasha=14,alex=10 (totals only)	alex	3	
+2025-05-30 13:51	sasha,marcus,stephen	sasha=16,marcus=15,stephen=13 (totals only)	stephen	3	
+2025-05-30 14:39	marcus,stephen,tim,sasha,alex,musa	marcus=15,stephen=12,tim=8,sasha=8,alex=8,musa=7 (totals only)	musa	6	
+2025-05-30 15:59	musa (no takers)	-	musa	1	selfish tea
+2025-06-02 11:00	marcus,alex,sasha,musa	marcus=15,alex=13,sasha=12,musa=7 (totals only)	musa	4	
+2025-06-02 14:15	sasha,marcus	sasha=9,marcus=9 (totals only)	marcus	2	tie at 9 broken without a reroll (early bot); "ha, go make tea baldy"
+2025-06-04 12:33	musa,stephen,tim,sasha,marcus,jem	musa=15,stephen=14,tim=13,sasha=9,marcus=8,jem=5 (totals only)	jem	6	
+2025-06-04 13:49	stephen,musa,jem,marcus	stephen=17,musa=15,jem=13,marcus=9 (totals only)	marcus	4	"ha, go make tea baldy"
+2025-06-04 14:42	musa,stephen	musa=11,stephen=11 (totals only)	stephen	2	tie at 11 broken without a reroll (early bot)
+2025-06-04 14:44	musa,stephen	musa=17,stephen=9 (totals only)	stephen	2	
+2025-06-05 10:09	jem(offered),tim,musa	-	jem	2	"ot" offered tea
+2025-06-05 11:49	sasha,marcus,jem,musa	sasha=12,marcus=11,jem=9,musa=8 (totals only)	musa	4	
+2025-06-05 14:47	marcus,jem,musa	marcus=16,jem=14,musa=12 (totals only)	musa	3	
+2025-06-05 16:08	tim,marcus,sasha,musa,jem	tim=11,marcus=11,sasha=11,musa=8,jem=8 (totals only)	jem	5	tie musa/jem at 8 broken without a reroll (early bot)
+2025-06-09 14:06	marcus,stephen,jem,musa	marcus=15,stephen=13,jem=8,musa=5 (totals only)	musa	4	
+2025-06-09 15:07	stephen,jem,marcus	stephen=11,jem=10,marcus=8 (totals only)	marcus	3	"ha, go make tea baldy"
+2025-06-09 15:52	stephen,musa	stephen=13,musa=7 (totals only)	musa	2	FIRST RECORDED BOT ROUND. Join window was 10 seconds and the brew timer 1 minute at this point.
+2025-06-09 16:07	tim,sasha,stephen,marcus,jem,musa	tim=14,sasha=13,stephen=13,marcus=13,jem=12,musa=8 (totals only)	musa	6	Sasha had to type "promise" to accept standard tea
+2025-06-09 17:23	jem(offered),musa,stephen,marcus	-	jem	4	"ot" offered tea
+2025-06-10 12:18	marcus (bot did not respond)	-	-	-	"deadbot"
+2025-06-10 12:19	musa,marcus,jem	musa=15,marcus=8,jem=5 (totals only)	jem	3	
+2025-06-10 14:09	jem,musa,marcus,stephen	jem=13,musa=12,marcus=11,stephen=11 | REROLL stephen=10,marcus=5	marcus	4	bot ad-libbed "ha, go make tea baldy"
+2025-06-10 14:51	musa,tim,jem,marcus	musa=14,tim=14,jem=8,marcus=8 | REROLL jem=13,marcus=13 | REROLL2 jem=13,marcus=7	marcus	4	tie survived two rerolls
+2025-06-10 14:56	jem (offered)	-	jem	-	cancelled
+2025-06-10 16:02	marcus,stephen,jem,musa	marcus=11,stephen=11,jem=11,musa=9 (totals only)	musa	4	
+2025-06-11 13:12	marcus (offer declined)	-	marcus	1	lonely tea
+2025-06-11 14:37	tim,musa,jem,marcus	tim=15,musa=8,jem=6,marcus=5 (totals only)	marcus	4	
+2025-06-11 15:18	marcus,musa	marcus=11,musa=10 (totals only)	musa	2	
+2025-06-11 15:25	alex (offer declined)	-	alex	-	lonely tea; jem then offered, cancelled. Alex: "broken tea"
+2025-06-11 17:05	alex(offered),stephen,tim,musa	-	alex	4	"ot" offered tea
+2025-06-12 09:55	jem(offered),stephen,alex,marcus,tim,musa	-	jem	6	"ot" offered tea
+2025-06-12 10:34	stephen(offered),sasha,musa,alex,jem,marcus	-	stephen	6	"ot" offered tea; lemon special
+2025-06-12 11:15	marcus,musa,alex,stephen	marcus=13,musa=11,alex=8,stephen=6 (totals only)	stephen	4	
+2025-06-12 13:56	marcus,musa,stephen	marcus=11,musa=10,stephen=9 (totals only)	stephen	3	
+2025-06-12 15:22	jem,sasha,marcus,musa,stephen	jem=12,sasha=10,marcus=8,musa=7,stephen=5 (totals only)	stephen	5	lemon special
+2025-06-12 16:11	musa,stephen	musa=15,stephen=14 (totals only)	stephen	2	
+2025-06-12 17:38	sasha,musa	sasha=12,musa=10 (totals only)	musa	2	lemon special
+2025-06-13 10:31	alex,sasha	alex=11,sasha=10 (totals only)	sasha	2	lemon special
+2025-06-13 11:06	sasha,alex	sasha=8,alex=6 (totals only)	alex	2	Marcus: "he's fucking hacked it i swear"; lemon special
+2025-06-13 12:12	alex (no takers)	-	alex	1	selfish tea
+2025-06-13 14:35	sasha,musa,jem,alex	sasha=13,musa=12,jem=9,alex=6 (totals only)	alex	4	lemon special
+2025-06-13 15:55	sasha,jem,musa	sasha=12,jem=12,musa=10 (totals only)	musa	3	lemon special
+2025-06-14 11:47	jem,musa	jem=2+2+6=10,musa=3+5+2=10 | REROLL musa=1+5+1=7,jem=3+2+4=9	musa	2	tie at 10, rerolled
+2025-06-16 10:20	alex,sasha,jem,musa,marcus	alex=6+4+3=13,sasha=5+2+3=10,jem=1+3+2=6,musa=5+2+5=12,marcus=4+1+2=7	jem	5	lemon special
+2025-06-16 11:27	jem,alex,marcus,musa	jem=5+2+4=11,alex=1+1+4=6,marcus=2+5+1=8,musa=6+5+1=12	alex	4	
+2025-06-16 13:50	marcus,musa	marcus=5+5+6=16,musa=3+4+1=8	musa	2	
+2025-06-16 15:25	sasha,musa,marcus	sasha=5+2+4=11,musa=1+3+3=7,marcus=6+3+1=10	musa	3	lemon special
+2025-06-17 09:47	alex,marcus	alex=1+2+5=8,marcus=5+2+3=10	alex	2	
+2025-06-17 10:39	sasha,jem,jem(dupe)	sasha=2+2+6=10,jem=4+3+3=10,jem_dupe=4+3+3+5+6+4=25	sasha	3	BOT BUG: jem entered twice, duplicate rolled six dice (=25); no tie reroll happened. Sasha: "wtf ... this screwed up my stats lol". Cancelled and replayed a minute later.
+2025-06-17 10:41	marcus,jem,sasha	marcus=5+3+2=10,jem=6+4+2=12,sasha=2+1+5=8	sasha	3	lemon special
+2025-06-17 12:08	jem,marcus,tim	jem=4+1+5=10,marcus=5+3+2=10,tim=5+6+6=17 | REROLL jem=4+4+2=10,marcus=3+2+2=7	marcus	3	tie jem/marcus at 10, rerolled
+2025-06-17 13:57	musa,marcus	musa=4+6+2=12,marcus=4+4+1=9	marcus	2	
+2025-06-17 15:38	sasha (no takers)	-	sasha	1	selfish tea
+2025-06-17 17:07	alex,musa	alex=6+3+6=15,musa=6+1+5=12	musa	2	
+2025-06-18 10:01	musa (no takers)	-	musa	-	selfish tea; cancelled. Bot had just come back from an outage ("deadbot")
+2025-06-18 13:30	sasha,marcus	sasha=6+6+1=13,marcus=2+2+3=7	marcus	2	lemon special
+2025-06-18 14:10	marcus,tim	marcus=6+5+3=14,tim=1+4+6=11	tim	2	
+2025-06-19 10:28	sasha,jem,tim,musa	sasha=1+6+2=9,jem=4+6+3=13,tim=3+4+2=9,musa=6+4+1=11 | REROLL sasha=6+2+2=10,tim=5+6+3=14	sasha	4	tie sasha/tim at 9, rerolled; lemon special
+2025-06-19 11:48	marcus,musa	marcus=4+1+5=10,musa=5+1+3=9	musa	2	
+2025-06-19 13:35	jem(offered),alex,musa,marcus	-	jem	4	"ot" offered tea; Marcus: "can the record reflect that wasn't a true ot"
+2025-06-19 14:40	musa,alex,marcus,sasha	musa=1+2+6=9,alex=2+5+2=9,marcus=1+5+6=12,sasha=6+1+2=9 | REROLL sasha=5+6+3=14,musa=4+6+2=12,alex=3+4+1=8	alex	4	three-way tie at 9, rerolled; lemon special
+2025-06-20 11:14	jem,sasha	jem=3+5+5=13,sasha=5+4+1=10	sasha	2	lemon special
+2025-06-20 14:35	jem,sasha	jem=2+4+1=7,sasha=3+6+4=13	jem	2	lemon special
+2025-06-23 10:57	jem,alex,musa,sasha	jem=4+2+3=9,alex=5+6+3=14,musa=3+3+3=9,sasha=6+2+6=14 | REROLL musa=1+2+2=5,jem=2+1+6=9	musa	4	tie jem/musa at 9, rerolled; lemon special
+2025-06-23 14:07	alex,jem,stephen,sasha,musa	alex=4+4+2=10,jem=3+1+5=9,stephen=5+5+5=15,sasha=1+1+1=3,musa=1+3+5=9	sasha	5	BITCH: sasha rolled 1-1-1=3 (and stephen rolled 5-5-5 in the same round); lemon special
+2025-06-23 15:02	sasha(offered),stephen	-	sasha	2	"ot" offered tea; lemon special
+2025-06-23 16:45	sasha(offered),alex,musa,stephen	-	sasha	4	"ot" offered tea; lemon special
+2025-06-23 18:06	sasha(offered),musa,alex	-	sasha	3	"ot" offered tea; lemon special
+2025-06-24 11:00	jem,stephen,musa,sasha	jem=1+2+1=4,stephen=6+1+6=13,musa=2+4+2=8,sasha=4+5+3=12	jem	4	lemon special
+2025-06-24 14:28	musa,alex,sasha	musa=4+3+5=12,alex=5+5+2=12,sasha=6+4+1=11	sasha	3	lemon special
+2025-06-24 15:26	musa(offered),stephen,alex	-	musa	3	"ot" offered tea
+2025-06-24 16:56	musa,alex,stephen	musa=2+6+6=14,alex=6+3+5=14,stephen=3+2+1=6	stephen	3	
+2025-06-24 17:45	jem,stephen,alex,musa	jem=1+3+4=8,stephen=6+5+5=16,alex=1+2+4=7,musa=2+2+3=7 | REROLL musa=4+4+4=12,alex=5+2+6=13	musa	4	tie alex/musa at 7, rerolled
+2025-06-25 14:55	sasha,alex	sasha=2+5+2=9,alex=3+2+3=8	alex	2	lemon special
+2025-06-25 16:52	alex,sasha,musa	alex=3+4+4=11,sasha=4+2+3=9,musa=1+5+2=8	musa	3	lemon special
+2025-06-26 10:07	musa (no takers)	-	musa	-	selfish tea; cancelled
+2025-06-26 10:09	jem (no takers)	-	jem	-	selfish tea; cancelled
+2025-06-26 10:10	jem,stephen,tim,musa	jem=6+3+5=14,stephen=6+5+1=12,tim=6+1+2=9,musa=5+1+4=10	tim	4	
+2025-06-26 11:40	musa,laurence,jem,alex,stephen	musa=3+3+3=9,laurence=1+3+4=8,jem=5+5+1=11,alex=6+2+2=10,stephen=5+4+1=10	laurence	5	laurence's first round, 80 minutes after joining the channel
+2025-06-26 14:50	jem,musa,stephen	jem=1+2+5=8,musa=4+5+6=15,stephen=6+1+1=8 | REROLL stephen=5+4+3=12,jem=3+5+5=13	stephen	3	tie jem/stephen at 8, rerolled
+2025-06-26 15:47	stephen,alex,sasha	stephen=2+6+3=11,alex=6+2+1=9,sasha=3+5+1=9 | REROLL alex=2+6+2=10,sasha=5+4+3=12	alex	3	tie alex/sasha at 9, rerolled; lemon special
+2025-06-26 16:23	laurence,alex,musa	laurence=1+6+6=13,alex=3+4+3=10,musa=2+2+4=8	musa	3	
+2025-06-26 17:14	musa,stephen	musa=6+2+4=12,stephen=3+1+3=7	stephen	2	
+2025-06-27 10:11	sasha,jem,alex	sasha=3+3+3=9,jem=1+6+5=12,alex=4+2+4=10	sasha	3	lemon special
+2025-06-27 13:18	jem,tim,laurence,alex	jem=2+4+1=7,tim=2+4+2=8,laurence=2+6+4=12,alex=3+5+4=12	jem	4	
+2025-06-27 13:18	alex (no takers)	-	alex	-	selfish tea; cancelled
+2025-06-27 14:45	sasha (no takers)	-	sasha	-	selfish tea; cancelled
+2025-06-27 14:47	jem,alex,stephen,sasha	jem=5+4+3=12,alex=1+3+4=8,stephen=1+4+3=8,sasha=3+2+2=7	sasha	4	lemon special
+2025-06-30 11:05	laurence,jem,sasha	laurence=1+5+2=8,jem=1+3+1=5,sasha=5+6+5=16	jem	3	lemon special
+2025-06-30 14:41	jem,musa,sasha,sasha(dupe)	jem=6+3+2=11,musa=2+6+4=12,sasha=5+3+4=12,sasha_dupe=5+3+4+5+6+1=24	jem	4	BOT BUG: sasha entered twice, duplicate rolled six dice (=24); lemon special
+2025-06-30 15:36	musa (offer declined)	-	musa	1	lonely tea
+2025-07-07 11:17	alex,marcus	alex=1+4+6=11,marcus=3+4+1=8	marcus	2	
+2025-07-07 13:50	marcus,sasha,musa	marcus=6+1+3=10,sasha=5+6+4=15,musa=3+3+5=11	marcus	3	lemon special
+2025-07-07 16:19	marcus,jem,musa	marcus=4+3+5=12,jem=1+3+5=9,musa=2+5+6=13	jem	3	
+2025-07-07 17:32	musa,alex,stephen	musa=2+2+2=6,alex=3+3+6=12,stephen=1+4+5=10	musa	3	
+2025-07-08 09:40	marcus,alex,tim,alex(dupe)	marcus=6+4+2=12,alex=6+2+5=13,tim=6+3+1=10,alex_dupe=6+2+5+6+4+1=24	tim	4	BOT BUG: alex entered twice, duplicate rolled six dice (=24)
+2025-07-08 10:28	sasha,stephen,jem	sasha=6+2+5=13,stephen=3+5+2=10,jem=2+3+4=9	jem	3	lemon special
+2025-07-08 14:39	marcus,sasha,alex,musa,stephen,jem,laurence	marcus=6+2+1=9,sasha=1+5+2=8,alex=5+3+2=10,musa=5+6+1=12,stephen=2+6+2=10,jem=4+4+6=14,laurence=6+3+2=11	sasha	7	lemon special
+2025-07-08 16:08	musa,sasha,marcus,stephen	musa=4+2+3=9,sasha=4+2+2=8,marcus=4+4+2=10,stephen=4+2+6=12	sasha	4	lemon special
+2025-07-08 17:20	jem,alex,musa	jem=4+2+1=7,alex=1+4+5=10,musa=6+5+5=16	jem	3	
+2025-07-09 09:54	alex,marcus	alex=5+3+6=14,marcus=3+3+5=11	marcus	2	
+2025-07-09 11:01	alex,marcus,tim,stephen	alex=5+3+2=10,marcus=4+1+2=7,tim=1+2+5=8,stephen=3+6+1=10	marcus	4	
+2025-07-09 12:07	jem,stephen	jem=4+6+6=16,stephen=1+6+2=9	stephen	2	
+2025-07-09 13:11	laurence,musa	laurence=5+4+3=12,musa=2+4+6=12 | REROLL musa=4+2+2=8,laurence=5+6+3=14	musa	2	tie at 12, rerolled
+2025-07-09 14:54	musa (no takers)	-	musa	1	selfish tea
+2025-07-09 15:53	musa,alex,tim,jem	musa=6+1+4=11,alex=3+3+2=8,tim=2+2+3=7,jem=3+3+6=12	tim	4	
+2025-07-10 12:01	alex(offered),jem	-	alex	2	bot did not register the offer; Musa hand-edited the stats JSON to credit it
+2025-07-10 12:12	laurence (no takers)	-	laurence	1	selfish tea
+2025-07-10 15:25	laurence,musa,alex,jem,tim,alex(dupe)	laurence=2+5+6=13,musa=6+4+3=13,alex=4+2+4=10,jem=3+3+6=12,tim=5+3+4=12,alex_dupe=4+2+4+4+2+2=18	jem	6	BOT BUG: alex entered twice, duplicate rolled SIX dice summing to exactly 18 and falsely crowned him KING; the real lowest roll (alex, 10) was then exempt and jem took it on a tie the bot never rerolled
+2025-07-11 16:00	alex(offered),jem,musa	-	alex	3	"ot" offered tea
+2025-07-14 11:01	laurence (no takers)	-	laurence	-	selfish tea; cancelled
+2025-07-14 12:15	musa,laurence	musa=4+1+6=11,laurence=3+6+2=11 | REROLL laurence=6+5+2=13,musa=3+6+1=10	musa	2	tie at 11, rerolled
+2025-07-14 12:37	jem,alex,tim	jem=5+3+1=9,alex=3+5+2=10,tim=3+4+1=8	tim	3	
+2025-07-14 13:05	jem(offered),alex	-	jem	2	"ot" offered tea
+2025-07-14 13:55	jem,musa	jem=3+6+3=12,musa=5+1+5=11	musa	2	
+2025-07-14 15:49	musa (no takers)	-	musa	1	selfish tea
+2025-07-14 16:52	jem,alex	jem=6+5+5=16,alex=2+3+2=7	alex	2	
+2025-07-15 09:32	marcus,sasha,alex	marcus=3+5+1=9,sasha=1+1+5=7,alex=6+3+4=13	sasha	3	lemon special
+2025-07-15 10:32	musa,alex	musa=5+1+5=11,alex=5+2+4=11 | REROLL alex=4+5+5=14,musa=6+3+1=10	musa	2	tie at 11, rerolled
+2025-07-15 13:29	stephen,marcus,musa	stephen=1+4+6=11,marcus=4+2+4=10,musa=5+3+2=10 | REROLL musa=2+4+4=10,marcus=4+4+6=14	musa	3	tie musa/marcus at 10, rerolled
+2025-07-15 14:45	alex (no takers)	-	alex	1	selfish tea
+2025-07-15 15:13	alex,stephen,musa	alex=5+5+5=15,stephen=5+2+1=8,musa=4+5+5=14	stephen	3	
+2025-07-15 17:25	jem,alex,musa,stephen,sasha	jem=2+6+3=11,alex=3+4+1=8,musa=5+2+6=13,stephen=5+5+3=13,sasha=5+6+6=17	alex	5	lemon special
+2025-07-16 09:59	jem,sasha,musa	jem=1+5+4=10,sasha=6+2+3=11,musa=2+6+4=12	jem	3	lemon special
+2025-07-16 10:50	musa,alex,marcus	musa=4+4+4=12,alex=5+1+2=8,marcus=5+1+2=8 | REROLL alex=2+5+5=12,marcus=3+6+4=13	alex	3	alex and marcus rolled identical dice (5-1-2); rerolled
+2025-07-16 11:53	marcus,stephen,musa,tim	marcus=4+3+6=13,stephen=6+4+3=13,musa=5+4+5=14,tim=2+4+1=7	tim	4	
+2025-07-16 13:36	jem,stephen	jem=2+5+1=8,stephen=6+6+3=15	jem	2	
+2025-07-16 14:20	alex,stephen,musa,sasha	alex=1+1+5=7,stephen=4+5+5=14,musa=4+1+5=10,sasha=5+3+5=13	alex	4	lemon special
+2025-07-16 16:02	marcus,stephen	marcus=3+4+1=8,stephen=4+3+4=11	marcus	2	
+2025-07-17 10:46	musa,stephen,marcus	musa=4+2+1=7,stephen=4+3+3=10,marcus=4+5+3=12	musa	3	
+2025-07-17 11:50	stephen,musa,jem	stephen=6+4+3=13,musa=5+4+1=10,jem=4+4+2=10 | REROLL musa=2+1+2=5,jem=1+6+6=13	musa	3	tie musa/jem at 10, rerolled
+2025-07-17 13:26	alex,marcus,musa,stephen	alex=1+6+3=10,marcus=5+2+1=8,musa=4+1+6=11,stephen=6+4+3=13	marcus	4	
+2025-07-17 14:59	stephen,musa,sasha	stephen=6+6+4=16,musa=5+4+4=13,sasha=2+3+1=6	sasha	3	lemon special
+2025-07-17 16:20	stephen,sasha,musa	stephen=6+6+6=18,sasha=3+3+1=7,musa=6+5+5=16	sasha	3	KING: stephen rolled 18; lemon special
+2025-07-18 10:59	sasha,stephen,alex	sasha=6+6+3=15,stephen=4+2+6=12,alex=6+2+2=10	alex	3	lemon special
+2025-07-18 11:42	jem,stephen,alex	jem=1+1+2=4,stephen=6+5+1=12,alex=4+5+6=15	jem	3	
+2025-07-18 13:50	alex,stephen,tim	alex=3+6+2=11,stephen=6+3+2=11,tim=5+1+4=10	tim	3	
+2025-07-18 14:14	sasha,jem	sasha=5+3+3=11,jem=6+2+2=10	jem	2	lemon special
+2025-07-18 15:33	jem,alex,stephen,sasha	jem=6+3+6=15,alex=6+6+6=18,stephen=4+3+2=9,sasha=2+4+4=10	stephen	4	KING: alex rolled 18; lemon special
+2025-07-18 17:40	sasha(offered),marcus,jem,alex	-	sasha	4	"ot" offered tea; lemon special
+2025-07-21 10:06	musa,alex,sasha,jem	musa=4+3+1=8,alex=6+4+2=12,sasha=4+4+3=11,jem=4+5+2=11	musa	4	lemon special
+2025-07-21 14:25	jem(offered),stephen,sasha,musa	-	jem	4	"ot" offered tea; lemon special
+2025-07-21 15:30	musa(offered),tim,stephen,alex	-	musa	4	"ot" offered tea
+2025-07-21 16:44	jem (offer declined)	-	jem	-	lonely tea; cancelled
+2025-07-21 16:45	jem(offered),alex,musa	-	jem	3	"ot" offered tea
+2025-07-22 11:07	stephen,sasha,jem,marcus	stephen=1+6+1=8,sasha=2+6+2=10,jem=4+6+2=12,marcus=2+3+4=9	stephen	4	lemon special
+2025-07-22 14:29	tim,alex,musa,marcus	tim=3+6+2=11,alex=1+1+3=5,musa=2+4+3=9,marcus=4+5+3=12	alex	4	
+2025-07-22 17:15	musa,stephen	musa=5+2+3=10,stephen=5+4+3=12	musa	2	
+2025-07-23 08:37	marcus (offer declined)	-	marcus	1	lonely tea
+2025-07-23 10:49	sasha,musa,stephen,marcus	sasha=2+6+5=13,musa=5+1+1=7,stephen=5+5+2=12,marcus=6+4+2=12	musa	4	lemon special
+2025-07-23 13:11	stephen (no takers)	-	stephen	-	selfish tea; cancelled
+2025-07-23 13:12	marcus,jem,tim,stephen,musa	marcus=2+1+5=8,jem=1+1+4=6,tim=3+4+2=9,stephen=4+5+6=15,musa=5+5+1=11	jem	5	
+2025-07-23 14:51	marcus(offered),stephen,jem	-	marcus	3	"ot" offered tea
+2025-07-23 16:01	stephen(offered),sasha,alex,marcus,musa,jem	-	stephen	6	"ot" offered tea; lemon special
+2025-07-24 10:29	laurence,marcus,jem,sasha,tim,stephen	laurence=3+1+4=8,marcus=4+5+5=14,jem=3+1+5=9,sasha=1+3+5=9,tim=3+6+6=15,stephen=2+5+3=10	laurence	6	lemon special
+2025-07-24 11:26	marcus,stephen	marcus=1+2+5=8,stephen=4+4+1=9	marcus	2	
+2025-07-24 14:01	jem,alex,marcus,sasha,stephen	jem=3+3+1=7,alex=3+3+6=12,marcus=6+6+6=18,sasha=2+2+1=5,stephen=3+5+5=13	sasha	5	KING: marcus rolled 6-6-6=18 and was exempt for the day; lemon special
+2025-07-24 16:24	jem (no takers)	-	jem	-	selfish tea; cancelled
+2025-07-24 16:25	jem(offered),alex,stephen	-	jem	3	"ot" offered tea; bot double-fired (2 cups then 3)
+2025-07-25 10:44	jem(offered),sasha,musa	-	jem	3	"ot" offered tea; last round before the stats reset; lemon special
+2025-07-25 12:23	alex (no takers)	-	alex	-	selfish tea; cancelled
+2025-07-25 15:22	sasha (no takers)	-	sasha	-	selfish tea; cancelled
+2025-07-25 15:23	alex,jem,musa,sasha	alex=3+6+5=14,jem=4+5+6=15,musa=2+2+2=6,sasha=6+5+4=15	musa	4	first round after the stats reset; lemon special
+2025-07-28 08:10	tim (offer declined)	-	tim	1	lonely tea
+2025-07-28 10:34	musa,sasha,jem,stephen	musa=4+4+1=9,sasha=2+1+6=9,jem=3+3+5=11,stephen=1+1+2=4	stephen	4	lemon special
+2025-07-28 11:56	stephen,musa,tim,jem	stephen=6+4+3=13,musa=4+2+1=7,tim=5+4+4=13,jem=3+4+4=11	musa	4	
+2025-07-28 14:09	stephen,musa	stephen=1+2+6=9,musa=4+3+1=8	musa	2	
+2025-07-28 15:36	stephen,musa,jem	stephen=1+4+1=6,musa=2+6+3=11,jem=5+5+5=15	stephen	3	
+2025-07-28 16:39	jem,stephen	jem=4+6+6=16,stephen=4+1+3=8	stephen	2	
+2025-07-29 10:02	jem (no takers)	-	jem	-	selfish tea; cancelled
+2025-07-29 10:03	stephen,sasha,marcus,jem	stephen=6+2+2=10,sasha=6+2+3=11,marcus=6+4+2=12,jem=6+4+6=16	stephen	4	lemon special
+2025-07-29 11:49	musa,stephen,jem,marcus,tim	musa=4+6+3=13,stephen=1+5+1=7,jem=4+5+1=10,marcus=2+6+2=10,tim=4+5+3=12	stephen	5	
+2025-07-29 14:55	marcus,stephen	marcus=3+3+6=12,stephen=6+1+2=9	stephen	2	cancelled seconds later
+2025-07-29 14:56	stephen,jem,sasha,musa	stephen=4+3+2=9,jem=1+5+5=11,sasha=4+5+4=13,musa=3+5+3=11	stephen	4	lemon special
+2025-07-29 16:41	jem,musa	jem=3+6+3=12,musa=1+6+4=11	musa	2	
+2025-07-30 10:43	musa,jem,sasha	musa=3+5+3=11,jem=2+2+1=5,sasha=4+2+5=11	jem	3	lemon special
+2025-07-30 13:55	jem,marcus,tim,stephen	jem=4+1+3=8,marcus=5+4+3=12,tim=2+2+6=10,stephen=1+6+5=12	jem	4	
+2025-07-30 14:50	stephen,sasha,marcus	stephen=5+6+6=17,sasha=2+4+6=12,marcus=1+3+5=9	marcus	3	lemon special
+2025-07-30 15:59	sasha,musa,marcus,stephen,jem	sasha=2+1+2=5,musa=1+4+2=7,marcus=6+4+6=16,stephen=2+5+6=13,jem=3+5+1=9	sasha	5	lemon special
+2025-07-31 10:33	musa(offered),stephen,jem,sasha	-	musa	4	"ot" offered tea; lemon special
+2025-07-31 13:21	marcus,musa,sasha,stephen	marcus=3+4+4=11,musa=1+2+5=8,sasha=4+6+5=15,stephen=4+1+3=8 | REROLL stephen=5+1+1=7,musa=2+6+6=14	stephen	4	tie stephen/musa at 8, rerolled; lemon special
+2025-07-31 14:51	jem,musa,stephen,marcus	jem=6+4+3=13,musa=3+6+1=10,stephen=3+3+4=10,marcus=1+1+5=7	marcus	4	
+2025-07-31 16:00	marcus,musa,stephen,sasha	marcus=4+1+5=10,musa=3+1+2=6,stephen=3+1+3=7,sasha=2+6+4=12	musa	4	lemon special
+2025-07-31 16:38	stephen,marcus,musa	stephen=2+4+1=7,marcus=3+3+1=7,musa=2+3+2=7 | REROLL musa=1+5+6=12,stephen=1+5+1=7,marcus=1+1+5=7 | REROLL2 marcus=1+3+4=8,stephen=3+1+1=5	stephen	3	THREE-WAY TIE at 7, then a further tie at 7; took three rolls to resolve
+2025-07-31 16:39	stephen,marcus	stephen=3+1+1=5,marcus=1+3+4=8	stephen	3	
+2025-08-01 11:43	sasha(offered),jem	-	sasha	2	"ot" offered tea; lemon special
+2025-08-01 13:16	jem(offered),sasha	-	jem	2	"ot" offered tea; lemon special
+2025-08-01 16:38	sasha(offered),jem	-	sasha	2	"ot" offered tea; lemon special
+2025-08-04 10:44	stephen(offered),musa,sasha,jem	-	stephen	4	"ot" offered tea; lemon special
+2025-08-04 14:21	sasha,tim,musa,stephen	sasha=5+1+6=12,tim=3+1+1=5,musa=3+3+6=12,stephen=1+3+6=10	tim	4	lemon special
+2025-08-04 15:20	stephen,musa,jem	stephen=2+2+4=8,musa=1+6+1=8,jem=1+3+6=10 | REROLL musa=5+2+3=10,stephen=2+3+1=6	stephen	3	tie stephen/musa at 8, rerolled
+2025-08-05 11:21	stephen (no takers)	-	stephen	-	selfish tea; cancelled
+2025-08-05 11:22	jem,stephen,sasha	jem=4+3+1=8,stephen=4+5+4=13,sasha=4+6+6=16	jem	3	lemon special
+2025-08-05 14:50	stephen,jem,sasha	stephen=2+4+6=12,jem=5+3+2=10,sasha=1+5+1=7	sasha	3	lemon special
+2025-08-05 17:11	stephen,jem	stephen=1+3+1=5,jem=4+4+6=14	stephen	2	
+2025-08-06 11:30	musa,sasha	musa=2+6+4=12,sasha=5+3+1=9	sasha	2	lemon special
+2025-08-07 10:21	musa,tim,sasha	musa=3+5+5=13,tim=3+4+5=12,sasha=3+2+1=6	sasha	3	lemon special
+2025-08-07 10:22	jem (offer declined)	-	jem	1	lonely tea
+2025-08-07 13:14	jem(offered),musa	-	jem	2	"ot" offered tea
+2025-08-07 16:07	musa,jem,sasha	musa=2+2+3=7,jem=5+6+2=13,sasha=2+2+1=5	sasha	3	lemon special
+2025-08-08 10:01	jem (no takers)	-	jem	1	selfish tea
+2025-08-08 11:27	jem,musa,sasha	jem=5+2+4=11,musa=2+4+6=12,sasha=6+2+2=10	sasha	3	lemon special
+2025-08-08 15:01	sasha(offered),musa	-	sasha	2	"ot" offered tea; lemon special
+2025-08-11 10:15	marcus,jem	marcus=5+6+5=16,jem=2+4+5=11	jem	2	
+2025-08-11 11:43	jem,musa,sasha	jem=3+6+6=15,musa=5+6+4=15,sasha=1+4+5=10	sasha	3	lemon special
+2025-08-11 13:55	stephen,laurence,musa,sasha,marcus,tim,musa(dupe)	stephen=3+4+4=11,laurence=1+3+4=8,musa=6+6+4=16,sasha=5+3+3=11,marcus=2+6+6=14,tim=3+4+4=11,musa_dupe=6+6+4+1+2+2=21	laurence	7	BOT BUG: musa entered twice; duplicate entry rolled SIX dice (=21). Laurence's biggest ever loss; lemon special
+2025-08-11 13:55	musa (no takers)	-	musa	-	selfish tea; cancelled
+2025-08-11 14:52	musa,stephen	musa=3+1+2=6,stephen=5+6+1=12	musa	2	
+2025-08-11 16:27	musa(offered),stephen,jem	-	musa	3	"ot" offered tea
+2025-08-12 09:08	marcus (offer declined)	-	marcus	1	lonely tea
+2025-08-12 10:43	stephen,jem,sasha,marcus	stephen=3+6+6=15,jem=2+1+6=9,sasha=3+1+1=5,marcus=4+3+6=13	sasha	4	lemon special
+2025-08-12 11:34	stephen (no takers)	-	stephen	1	selfish tea
+2025-08-12 15:07	sasha,jem,stephen,tim	sasha=4+3+1=8,jem=3+5+2=10,stephen=5+6+3=14,tim=4+1+2=7	tim	4	lemon special
+2025-08-13 11:37	tim,jem,sasha,marcus,stephen	tim=3+5+5=13,jem=6+3+3=12,sasha=5+4+6=15,marcus=5+5+3=13,stephen=4+2+4=10	stephen	5	lemon special
+2025-08-13 12:14	stephen (offer declined)	-	stephen	1	lonely tea
+2025-08-13 13:44	stephen(offered),marcus,musa,sasha	-	stephen	4	"ot" offered tea; lemon special
+2025-08-13 15:46	sasha,musa,stephen,marcus	sasha=3+6+5=14,musa=5+1+4=10,stephen=6+1+2=9,marcus=1+4+1=6	marcus	4	lemon special
+2025-08-13 17:16	musa,stephen	musa=4+2+3=9,stephen=4+1+5=10	musa	2	
+2025-08-14 08:56	marcus (offer declined)	-	marcus	1	lonely tea
+2025-08-14 14:42	musa,sasha	musa=2+1+1=4,sasha=6+1+6=13	musa	2	lemon special
+2025-08-14 14:55	marcus (no takers)	-	marcus	1	selfish tea
+2025-08-14 16:35	stephen,sasha,marcus	stephen=1+4+5=10,sasha=5+5+6=16,marcus=4+2+4=10 | REROLL marcus=4+2+3=9,stephen=2+6+4=12	marcus	3	tie stephen/marcus at 10, rerolled; lemon special
+2025-08-15 09:43	stephen(offered),marcus	-	stephen	2	"ot" offered tea
+2025-08-15 11:00	sasha,marcus,jem,stephen	sasha=4+5+2=11,marcus=2+1+4=7,jem=4+6+5=15,stephen=2+6+2=10	marcus	4	lemon special
+2025-08-15 13:44	stephen (no takers)	-	stephen	-	selfish tea; cancelled
+2025-08-15 13:46	stephen,marcus,sasha	stephen=6+4+2=12,marcus=1+4+2=7,sasha=2+1+3=6	sasha	3	lemon special
+2025-08-15 15:55	jem,marcus,stephen,musa,sasha,marcus(dupe)	jem=6+5+6=17,marcus=2+6+5=13,stephen=6+4+2=12,musa=6+6+3=15,sasha=3+5+4=12,marcus_dupe=2+6+5+2+3+6=24 | REROLL sasha=1+6+6=13,stephen=1+6+5=12	stephen	6	BOT BUG: marcus entered twice; his duplicate entry was rolled SIX dice (=24) instead of three; lemon special
+2025-08-18 16:05	marcus,alex,musa,jem	marcus=5+3+3=11,alex=3+2+3=8,musa=4+5+1=10,jem=6+1+4=11	alex	4	
+2025-08-20 10:47	marcus,jem,stephen	marcus=6+3+5=14,jem=5+4+1=10,stephen=5+3+2=10 | REROLL jem=1+2+1=4,stephen=6+1+1=8	jem	3	tie jem/stephen at 10, rerolled
+2025-08-20 16:37	musa,stephen,marcus,sasha	musa=3+2+6=11,stephen=6+4+3=13,marcus=5+6+1=12,sasha=4+6+3=13	musa	4	lemon special
+2025-08-20 18:02	stephen,musa,alex	stephen=2+3+5=10,musa=4+2+2=8,alex=6+5+5=16	musa	3	
+2025-08-21 11:06	marcus,musa,tim,sasha,alex	marcus=1+2+2=5,musa=3+6+5=14,tim=3+1+5=9,sasha=3+3+2=8,alex=1+2+5=8	marcus	5	round A of a double-fire caused by rt/t spam; lemon special
+2025-08-21 11:06	sasha,tim,musa,alex,marcus	sasha=5+2+1=8,tim=6+6+3=15,musa=3+2+6=11,alex=4+5+3=12,marcus=5+4+6=15 | REROLL sasha=4+2+3=9,marcus=5+4+6=15	sasha	5	round B of the same double-fire; lemon special
+2025-08-21 14:58	musa,sasha,stephen,marcus,tim,alex	musa=6+5+3=14,sasha=3+6+4=13,stephen=6+3+2=11,marcus=3+2+2=7,tim=2+3+1=6,alex=4+5+2=11	tim	6	lemon special
+2025-08-21 14:58	marcus (no takers)	-	marcus	-	selfish tea; cancelled
+2025-08-22 11:30	musa(offered),alex,stephen	-	musa	3	"ot" offered tea
+2025-08-26 10:25	marcus,stephen	marcus=2+3+2=7,stephen=5+2+4=11	marcus	2	
+2025-08-26 10:27	tania,marcus,stephen	tania=1+6+4=11,marcus=1+4+6=11,stephen=3+3+4=10	stephen	3	
+2025-08-26 11:43	marcus,musa,stephen,tim	marcus=3+5+2=10,musa=1+3+1=5,stephen=1+5+6=12,tim=1+6+4=11	musa	4	
+2025-08-26 14:28	stephen (bot did not respond)	-	-	-	bot failure; stephen's "rt" got no reply
+2025-08-26 15:15	tania,stephen,marcus	tania=3+4+3=10,stephen=4+5+5=14,marcus=2+3+1=6	marcus	3	
+2025-08-26 16:28	musa,jem,tania,stephen,marcus	musa=6+5+6=17,jem=5+5+1=11,tania=1+5+6=12,stephen=1+6+6=13,marcus=3+1+5=9	marcus	5	
+2025-08-27 10:04	marcus,alex	marcus=4+1+5=10,alex=1+6+1=8	alex	2	
+2025-08-27 10:04	alex (no takers)	-	alex	-	selfish tea; cancelled
+2025-08-27 13:42	alex,marcus	alex=6+5+5=16,marcus=4+3+1=8	marcus	2	
+2025-08-27 14:05	tim,alex	tim=4+6+5=15,alex=5+2+3=10	alex	2	
+2025-08-28 11:20	marcus,tim,musa,alex,stephen	marcus=4+2+2=8,tim=4+1+5=10,musa=4+5+3=12,alex=5+1+3=9,stephen=2+6+2=10	marcus	5	
+2025-08-28 15:02	alex,stephen,marcus,musa	alex=6+5+5=16,stephen=3+2+5=10,marcus=1+5+1=7,musa=1+6+1=8	marcus	4	cancelled 8s after the result
+2025-09-01 10:23	musa,alex	musa=3+3+1=7,alex=5+4+2=11	musa	2	
+2025-09-02 16:07	musa (no takers)	-	musa	-	selfish tea; cancelled
+2025-09-03 16:23	alex,sasha,jem	alex=2+5+2=9,sasha=2+4+4=10,jem=4+5+5=14	alex	3	lemon special
+2025-09-04 11:29	marcus,musa,tania	marcus=6+1+3=10,musa=5+1+2=8,tania=4+4+6=14	musa	3	
+2025-09-04 11:57	jem,tim	jem=3+5+6=14,tim=2+6+2=10	tim	2	
+2025-09-04 12:34	tim(offered),alex,marcus	-	tim	3	"ot" offered tea
+2025-09-04 14:49	musa,marcus,jem,sasha	musa=2+6+2=10,marcus=3+5+1=9,jem=4+1+2=7,sasha=6+5+6=17	jem	4	lemon special
+2025-09-04 15:08	laurence (no takers)	-	laurence	-	selfish tea; cancelled
+2025-09-04 16:11	musa (offer declined)	-	musa	-	lonely tea; cancelled
+2025-09-04 16:39	laurence (no takers)	-	laurence	1	selfish tea
+2025-09-05 13:25	sasha,marcus,alex	sasha=3+3+6=12,marcus=4+6+6=16,alex=6+4+3=13	sasha	3	lemon special
+2025-09-05 15:17	jem,marcus,musa,tania,alex,sasha	jem=6+5+2=13,marcus=3+4+1=8,musa=1+1+6=8,tania=3+1+5=9,alex=4+4+5=13,sasha=1+6+2=9 | REROLL marcus=3+2+2=7,musa=2+5+2=9	marcus	6	tie marcus/musa at 8, rerolled; lemon special
+2025-09-09 10:50	musa (no takers)	-	musa	1	selfish tea
+2025-09-10 16:10	tim (no takers)	-	tim	1	selfish tea
+2025-09-11 13:30	tim (no takers)	-	tim	1	selfish tea
+2025-09-11 13:34	tim (no takers)	-	tim	-	selfish tea; cancelled
+2025-09-11 13:36	jem,tim	jem=6+2+3=11,tim=2+6+3=11 | REROLL tim=5+5+3=13,jem=2+3+6=11	jem	2	tie at 11, rerolled
+2025-09-15 15:20	stephen (no takers)	-	stephen	-	selfish tea; cancelled
+2025-09-15 15:33	tim (no takers)	-	tim	1	selfish tea
+2025-09-17 15:47	stephen(offered),musa	-	stephen	2	"ot" offered tea
+2025-09-18 13:38	stephen (no takers)	-	stephen	-	selfish tea; cancelled
+2025-09-18 13:39	sasha,stephen,jem	sasha=4+2+4=10,stephen=6+6+1=13,jem=6+1+2=9	jem	3	lemon special
+2025-09-22 13:29	jem,sasha	jem=6+5+2=13,sasha=3+3+4=10	sasha	2	lemon special
+2025-09-29 14:37	musa,alex	musa=4+3+3=10,alex=3+5+5=13	musa	2	
+2025-09-30 11:34	martyn,musa	martyn=6+3+3=12,musa=6+3+3=12 | REROLL martyn=5+6+2=13,musa=6+6+1=13 | REROLL2 martyn=4+1+2=7,musa=4+3+1=8	martyn	2	DOUBLE TIE: identical totals twice in a row before resolving; martyn's first ever round (joined 3 min earlier)
+2025-09-30 15:40	tim (no takers)	-	tim	-	selfish tea; cancelled
+2025-10-01 11:50	alex(offered),musa	-	alex	2	"ot" offered tea
+2025-10-01 15:17	alex(offered),musa	-	alex	2	"ot" offered tea
+2025-10-01 16:42	martyn(offered),alex,musa	-	martyn	3	"ot" offered tea
+2025-10-02 09:03	martyn (offer declined)	-	martyn	1	lonely tea
+2025-10-02 14:09	alex,tim,martyn	alex=5+5+6=16,tim=3+1+4=8,martyn=5+3+1=9	tim	3	
+2025-10-03 08:54	martyn (offer declined)	-	martyn	1	lonely tea
+2025-10-03 10:30	martyn(offered),alex,sasha,tim	-	martyn	4	"ot" offered tea; lemon special
+2025-10-07 10:59	musa,marcus	musa=4+5+6=15,marcus=6+4+4=14	marcus	2	
+2025-10-07 15:48	marcus (no takers)	-	marcus	-	selfish tea; cancelled
+2025-10-07 15:49	marcus,stephen	marcus=2+3+1=6,stephen=6+2+5=13	marcus	2	
+2025-10-08 10:27	martyn(offered),alex,stephen,sasha	-	martyn	4	"ot" offered tea; lemon special
+2025-10-08 13:26	martyn(offered),alex,stephen	-	martyn	3	"ot" offered tea
+2025-10-09 10:36	sasha,alex,martyn,marcus	sasha=3+2+5=10,alex=1+1+6=8,martyn=5+4+1=10,marcus=6+6+4=16	alex	4	lemon special
+2025-10-09 14:02	martyn(offered),alex,marcus,stephen	-	martyn	4	bot failed to register the round; martyn honoured it manually
+2025-10-10 13:56	stephen,marcus	stephen=1+2+4=7,marcus=4+1+3=8	stephen	2	
+2025-10-10 16:14	martyn(offered),alex,marcus,sasha	-	martyn	4	"ot" offered tea; lemon special
+2025-10-13 11:36	martyn(offered),musa,marcus,stephen,sasha,tim	-	martyn	6	"ot" offered tea; lemon special
+2025-10-13 14:31	musa,marcus	musa=1+4+5=10,marcus=3+5+1=9	marcus	2	
+2025-10-14 10:13	musa (offer declined)	-	musa	1	lonely tea
+2025-10-14 10:13	martyn(offered),sasha,musa	-	martyn	3	"ot" offered tea; lemon special
+2025-10-14 14:45	stephen,martyn,sasha,marcus	stephen=5+6+3=14,martyn=1+5+5=11,sasha=3+4+2=9,marcus=5+3+1=9 | REROLL marcus=1+1+5=7,sasha=3+4+2=9	marcus	4	tie sasha/marcus at 9, rerolled; lemon special
+2025-10-15 09:51	stephen(offered),marcus,martyn	-	stephen	3	"ot" offered tea
+2025-10-15 11:30	alex,martyn,sasha,musa	alex=1+3+5=9,martyn=3+2+4=9,sasha=2+2+6=10,musa=2+1+2=5	musa	4	lemon special
+2025-10-15 13:45	alex,tim,marcus,musa,stephen	alex=3+2+3=8,tim=1+4+1=6,marcus=5+2+6=13,musa=2+3+1=6,stephen=2+6+5=13 | REROLL tim=2+6+1=9,musa=1+5+6=12	tim	5	tie tim/musa at 6, rerolled
+2025-10-15 15:05	musa,alex,marcus,stephen,martyn	musa=6+1+6=13,alex=3+3+1=7,marcus=5+3+5=13,stephen=5+1+3=9,martyn=1+2+4=7 | REROLL alex=6+5+1=12,martyn=1+6+1=8	martyn	5	tie alex/martyn at 7, rerolled
+2025-10-16 14:15	alex,sasha	alex=1+4+4=9,sasha=1+4+1=6	sasha	2	lemon special
+2025-10-17 09:49	stephen(offered),martyn,alex	-	stephen	3	"ot" offered tea
+2025-10-17 11:14	stephen,martyn,alex	stephen=6+3+4=13,martyn=2+1+2=5,alex=4+3+3=10	martyn	3	
+2025-10-17 14:25	marcus,stephen	marcus=4+1+1=6,stephen=2+5+1=8	marcus	2	
+2025-10-17 16:03	martyn,musa	martyn=2+2+5=9,musa=2+3+6=11	martyn	2	
+2025-10-20 11:07	martyn(offered),marcus,jem,alex,musa,sasha	-	martyn	6	"ot" offered tea; lemon special
+2025-10-20 13:07	musa (no takers)	-	musa	1	selfish tea
+2025-10-20 13:16	jem,sasha,alex,marcus,musa	jem=4+5+3=12,sasha=2+5+2=9,alex=4+2+2=8,marcus=3+5+1=9,musa=6+1+6=13	alex	5	lemon special
+2025-10-20 15:04	jem,marcus,alex,musa,martyn,sasha	jem=1+3+2=6,marcus=1+2+1=4,alex=2+2+6=10,musa=4+3+1=8,martyn=4+4+3=11,sasha=6+6+5=17	marcus	6	lemon special
+2025-10-21 14:47	martyn(offered),sasha,marcus,alex	-	martyn	4	"ot" offered tea; lemon special
+2025-10-22 10:13	martyn(offered),musa,marcus,jem	-	martyn	4	"ot" offered tea
+2025-10-22 13:22	musa(offered),marcus	-	musa	2	"ot" offered tea
+2025-10-22 13:32	jem (no takers)	-	jem	-	selfish tea; cancelled
+2025-10-22 15:57	jem(offered),martyn	-	jem	2	"ot" offered tea
+2025-10-23 12:15	marcus,musa,martyn,alex,jem	marcus=5+4+5=14,musa=2+5+6=13,martyn=2+4+4=10,alex=4+6+4=14,jem=4+2+5=11	martyn	5	
+2025-10-23 13:51	alex,musa,jem	alex=2+5+6=13,musa=1+4+2=7,jem=1+2+1=4	jem	3	
+2025-10-23 14:24	musa (no takers)	-	musa	-	selfish tea; cancelled
+2025-10-23 14:54	martyn(offered),marcus,alex,musa	-	martyn	4	"ot" offered tea
+2025-10-23 16:36	martyn(offered),marcus,jem,alex	-	martyn	4	"ot" offered tea
+2025-10-23 18:54	musa (offer declined)	-	musa	1	lonely tea
+2025-10-24 09:54	jem(offered),stephen	-	jem	2	"ot" offered tea
+2025-10-24 10:51	martyn(offered),marcus,alex	-	martyn	3	"ot" offered tea
+2025-10-24 15:41	alex,jem,stephen,marcus	alex=6+3+2=11,jem=3+3+2=8,stephen=6+4+3=13,marcus=3+5+5=13	jem	4	
+2025-10-27 09:52	musa,marcus,alex,jem	musa=2+2+2=6,marcus=5+2+2=9,alex=2+1+2=5,jem=4+3+4=11	alex	4	
+2025-10-27 11:09	martyn,stephen,jem,marcus,alex,musa	martyn=1+4+6=11,stephen=3+5+6=14,jem=3+4+6=13,marcus=5+1+6=12,alex=4+5+4=13,musa=2+5+3=10	musa	6	
+2025-10-27 14:07	jem,marcus,martyn,sasha,alex	jem=3+5+4=12,marcus=4+2+1=7,martyn=5+1+3=9,sasha=3+1+6=10,alex=1+5+3=9	marcus	5	lemon special
+2025-10-27 15:18	musa,jem,stephen,marcus,alex	musa=3+3+4=10,jem=4+3+2=9,stephen=5+2+5=12,marcus=5+3+3=11,alex=1+5+3=9 | REROLL jem=4+1+4=9,alex=4+2+6=12	jem	5	tie jem/alex at 9, rerolled
+2025-10-27 16:33	martyn(offered),sasha,musa,alex,stephen	-	martyn	4	"ot" offered tea; lemon special
+2025-10-28 13:04	stephen (no takers)	-	stephen	-	selfish tea; cancelled
+2025-10-28 13:05	stephen,sasha,alex	stephen=4+5+6=15,sasha=6+2+2=10,alex=4+5+6=15	sasha	3	lemon special
+2025-10-28 15:39	stephen,musa	stephen=6+3+4=13,musa=4+1+3=8	musa	2	
+2025-10-29 10:29	martyn(offered),sasha	-	martyn	2	"ot" offered tea; lemon special
+2025-10-29 15:27	martyn(offered),musa,jem	-	martyn	3	"ot" offered tea
+2025-10-30 11:08	martyn(offered),musa	-	martyn	2	"ot" offered tea
+2025-10-30 13:38	musa,stephen,tim	musa=5+4+1=10,stephen=6+4+5=15,tim=5+6+5=16	musa	3	
+2025-10-30 16:33	martyn,musa,alex,sasha,stephen	martyn=1+6+5=12,musa=5+3+4=12,alex=4+4+5=13,sasha=5+5+5=15,stephen=4+4+5=13 | REROLL martyn=6+4+3=13,musa=3+1+6=10	musa	5	tie martyn/musa at 12, rerolled; lemon special
+2025-10-31 10:18	sasha,stephen,alex	sasha=1+2+1=4,stephen=6+2+5=13,alex=1+2+6=9	sasha	3	lemon special
+2025-11-03 11:28	jem,marcus,stephen,martyn,sasha	jem=5+6+1=12,marcus=3+2+5=10,stephen=2+4+6=12,martyn=1+3+5=9,sasha=2+6+2=10	martyn	5	lemon special
+2025-11-03 14:13	martyn,jem,musa,alex,marcus	martyn=5+5+4=14,jem=4+6+6=16,musa=2+6+1=9,alex=1+3+5=9,marcus=5+5+1=11 | REROLL alex=1+2+6=9,musa=6+2+2=10	alex	5	tie musa/alex at 9, rerolled
+2025-11-03 15:45	stephen(offered),musa,marcus,alex	-	stephen	4	"ot" offered tea
+2025-11-04 11:03	martyn(offered),marcus,sasha,musa,alex	-	martyn	5	"ot" offered tea; lemon special
+2025-11-04 13:53	stephen,marcus,alex,musa,tim	stephen=2+2+6=10,marcus=2+1+5=8,alex=4+1+3=8,musa=4+5+4=13,tim=6+2+3=11 | REROLL marcus=2+2+4=8,alex=5+5+5=15	marcus	5	tie marcus/alex at 8, rerolled
+2025-11-04 15:17	martyn(offered),alex,musa,stephen	-	martyn	4	"ot" offered tea
+2025-11-05 13:30	stephen,marcus	stephen=2+5+1=8,marcus=2+2+3=7	marcus	2	
+2025-11-05 14:36	stephen (no takers)	-	stephen	1	selfish tea
+2025-11-05 15:44	jem,musa,sasha,stephen,marcus	jem=5+6+5=16,musa=4+1+1=6,sasha=2+5+3=10,stephen=4+1+1=6,marcus=3+4+2=9 | REROLL musa=1+1+1=3,stephen=6+2+4=12	musa	5	BITCH: musa rolled 1-1-1=3 and became bitch for the day (make ALL the teas); lemon special
+2025-11-06 10:32	martyn(offered),musa,marcus,stephen	-	martyn	4	"ot" offered tea
+2025-11-06 11:22	stephen,alex,sasha,marcus,martyn,tim,musa	stephen=1+5+5=11,alex=4+1+4=9,sasha=3+6+3=12,marcus=2+1+1=4,martyn=6+5+1=12,tim=2+2+6=10,musa=2+2+1=5	marcus	7	lemon special
+2025-11-06 13:14	musa,laurence,marcus,stephen,alex	musa=2+3+5=10,laurence=6+2+2=10,marcus=3+4+4=11,stephen=5+2+3=10,alex=5+2+3=10 | REROLL stephen=2+1+2=5,musa=1+5+1=7,laurence=4+1+6=11,alex=2+2+6=10	stephen	5	four-way tie at 10, rerolled
+2025-11-07 11:24	jem,martyn,marcus	jem=1+6+6=13,martyn=2+1+4=7,marcus=1+6+6=13	martyn	3	duplicate "rt" fired two simultaneous rounds; this is round A
+2025-11-07 11:24	jem,martyn,marcus	jem=3+1+1=5,martyn=5+6+6=17,marcus=3+2+1=6	jem	3	round B of the same double-fire; both were credited
+2025-11-07 14:15	musa,alex,jem,marcus	musa=6+6+3=15,alex=2+2+5=9,jem=3+1+5=9,marcus=3+2+6=11 | REROLL alex=4+1+2=7,jem=5+3+3=11	alex	4	tie alex/jem at 9, rerolled
+2025-11-07 15:05	alex,jem,musa,marcus	alex=3+1+4=8,jem=6+5+2=13,musa=6+5+5=16,marcus=3+4+2=9	alex	4	
+2025-11-07 16:33	jem,martyn,alex,musa	jem=5+5+5=15,martyn=2+6+6=14,alex=6+5+2=13,musa=3+4+1=8	musa	5	
+2025-11-09 15:21	alex (no takers)	-	alex	1	selfish tea; demo
+2025-11-10 10:11	martyn(offered),alex,stephen,musa,sasha,marcus	-	martyn	6	"ot" offered tea; lemon special
+2025-11-10 12:32	musa(offered),martyn,marcus,alex,stephen,jem	-	musa	6	"ot" not announced by bot; not credited on Teaderboard
+2025-11-10 13:47	stephen(offered),martyn	-	stephen	2	"ot" offered tea
+2025-11-10 13:47	stephen (no takers)	-	stephen	-	selfish tea; cancelled
+2025-11-10 14:51	jem (offer declined)	-	jem	1	"No one accepted the tea offer" -> lonely tea
+2025-11-10 15:56	musa,sasha	musa=2+3+2=7,sasha=6+2+6=14	musa	2	lemon special
+2025-11-11 10:37	alex,marcus,musa,stephen	alex=6+6+3=15,marcus=5+2+3=10,musa=5+4+5=14,stephen=3+5+1=9	stephen	4	
+2025-11-12 10:08	martyn (no takers)	-	martyn	-	selfish tea; re-requested a minute later
+2025-11-12 10:09	martyn,marcus,alex,jem	martyn=3+1+3=7,marcus=4+2+2=8,alex=4+6+6=16,jem=6+1+1=8	martyn	4	
+2025-11-12 14:30	sasha,alex,marcus	sasha=3+2+6=11,alex=5+5+2=12,marcus=6+6+3=15	sasha	3	lemon special
+2025-11-12 15:42	stephen(offered),martyn,musa,alex	-	stephen	4	"ot" offered tea
+2025-11-13 13:31	alex,marcus,musa	alex=2+2+2=6,marcus=2+4+4=10,musa=6+5+3=14	alex	3	
+2025-11-13 13:47	sasha (no takers)	-	sasha	1	selfish tea
+2025-11-13 15:55	marcus,sasha,tim	marcus=2+2+5=9,sasha=2+6+4=12,tim=5+2+5=12	marcus	3	lemon special
+2025-11-14 14:02	martyn,alex,marcus,sasha,tim	martyn=4+4+2=10,alex=4+4+3=11,marcus=2+3+3=8,sasha=3+6+4=13,tim=4+3+6=13	marcus	5	lemon special
+2025-11-14 14:03	martyn,sasha,marcus,jem,alex,tim	martyn=6+5+4=15,sasha=5+2+1=8,marcus=3+3+2=8,jem=4+5+4=13,alex=3+5+2=10,tim=3+4+1=8 | REROLL marcus=5+5+1=11,tim=3+4+1=8... see note	sasha	6	3-way tie at 8 (marcus,tim,sasha); rerolled -> sasha=2+1+5=8 lowest; lemon special
+2025-11-17 11:38	alex,musa	alex=6+3+1=10,musa=4+3+2=9	musa	2	
+2025-11-18 10:11	alex,sasha	alex=2+4+3=9,sasha=6+5+4=15	alex	2	lemon special
+2025-11-18 12:07	alex (no takers)	-	alex	1	selfish tea
+2025-11-18 12:08	musa (no takers)	-	musa	1	selfish tea
+2025-11-18 12:10	alex,musa	alex=5+5+6=16,musa=4+1+3=8	musa	2	
+2025-11-18 14:48	jem(offered),alex,musa	-	jem	3	"ot" offered tea
+2025-11-18 16:40	alex (no takers)	-	alex	-	selfish tea; cancelled
+2025-11-19 12:53	martyn,jem,sasha,musa	martyn=1+4+5=10,jem=5+2+1=8,sasha=1+6+3=10,musa=2+2+6=10	jem	4	lemon special
+2025-11-19 14:55	musa,martyn,alex,jem,sasha	musa=1+4+5=10,martyn=5+6+4=15,alex=1+5+5=11,jem=5+5+2=12,sasha=4+5+4=13	musa	5	lemon special
+2025-11-20 10:05	martyn(offered),sasha,alex	-	martyn	3	"ot" offered tea; lemon special
+2025-11-20 10:40	alex,musa	alex=3+2+5=10,musa=3+5+6=14	alex	2	
+2025-11-20 12:50	martyn (no takers)	-	martyn	1	selfish tea
+2025-11-20 13:36	sasha,musa	sasha=5+1+6=12,musa=4+6+6=16	sasha	2	BOT BUG: "ot" round also rolled dice; bot posted both an offer result and a roll result
+2025-11-20 16:02	musa,alex	musa=3+3+3=9,alex=6+1+3=10	musa	2	
+2025-11-20 16:40	sasha,alex,musa	sasha=4+6+2=12,alex=3+4+1=8,musa=6+1+6=13	alex	3	lemon special
+2025-11-21 10:33	alex,marcus,martyn	alex=4+3+4=11,marcus=3+2+3=8,martyn=3+4+4=11	marcus	3	
+2025-11-21 10:37	jem(offered),marcus,alex,martyn	-	jem	3	"ot" not announced by bot; not credited on Teaderboard
+2025-11-21 10:41	martyn(offered),alex,marcus	-	martyn	3	"ot" offered tea
+2025-11-24 10:14	martyn(offered),musa,alex	-	martyn	3	"ot" offered tea
+2025-11-24 11:14	sasha,stephen,alex,tim,marcus	sasha=6+5+6=17,stephen=3+3+3=9,alex=6+3+3=12,tim=2+2+1=5,marcus=5+6+4=15	tim	5	lemon special
+2025-11-24 14:57	alex,marcus,sasha,stephen,musa,martyn	alex=6+6+1=13,marcus=2+4+1=7,sasha=3+1+3=7,stephen=2+5+2=9,musa=2+3+3=8,martyn=6+6+1=13 | REROLL marcus=1+2+2=5,sasha=4+6+1=11	marcus	6	tie marcus/sasha at 7, rerolled; lemon special
+2025-11-25 10:15	marcus(offered),musa	-	marcus	2	"ot" offered tea
+2025-11-25 10:19	martyn (offered)	-	martyn	-	cancelled 8s later
+2025-11-25 11:14	musa(offered),tim,stephen,marcus,sasha,martyn	-	musa	6	"ot" offered tea; lemon special
+2025-11-25 15:13	sasha(offered),marcus,martyn,stephen,musa	-	sasha	5	"ot" offered tea; lemon special
+2025-11-25 17:14	jem(offered),stephen,martyn,marcus	-	jem	4	"ot" offered tea
+2025-11-26 11:28	musa,martyn	musa=4+6+4=14,martyn=2+2+1=5	martyn	2	
+2025-11-26 13:46	sasha,martyn,marcus,stephen,tim,alex	sasha=1+3+5=9,martyn=2+4+1=7,marcus=4+1+6=11,stephen=1+5+6=12,tim=2+5+5=12,alex=2+3+1=6	alex	6	lemon special
+2025-11-26 16:26	musa(offered),martyn	-	musa	2	"ot" offered tea
+2025-11-27 11:35	sasha,alex,musa,marcus	sasha=4+3+2=9,alex=5+2+1=8,musa=6+3+6=15,marcus=1+4+4=9	alex	4	lemon special
+2025-11-27 14:04	martyn (no takers)	-	martyn	-	selfish tea; cancelled
+2025-11-27 14:05	martyn,marcus,sasha,jem	martyn=3+1+1=5,marcus=3+1+6=10,sasha=2+3+2=7,jem=3+6+5=14	martyn	4	lemon special
+2025-11-27 14:20	tim (no takers)	-	tim	-	selfish tea; cancelled
+2025-11-27 16:20	martyn,marcus	martyn=1+2+4=7,marcus=4+4+3=11	martyn	2	
+2025-12-01 11:35	marcus,musa	marcus=4+2+4=10,musa=2+3+2=7	musa	2	demo round
+2025-12-01 11:36	marcus,sasha,stephen	marcus=6+5+6=17,sasha=5+3+5=13,stephen=3+1+5=9	stephen	3	lemon special
+2025-12-01 14:19	marcus,tim,stephen,martyn	marcus=6+2+1=9,tim=2+2+4=8,stephen=6+3+3=12,martyn=2+6+3=11	tim	4	
+2025-12-02 13:56	jem,alex,sasha,marcus	jem=1+1+3=5,alex=6+1+4=11,sasha=6+4+4=14,marcus=3+6+2=11	jem	4	lemon special
+2025-12-02 15:57	alex,sasha,marcus,stephen	alex=6+3+4=13,sasha=6+5+6=17,marcus=5+3+4=12,stephen=4+4+3=11	stephen	4	lemon special
+2025-12-03 09:37	marcus(offered),tim,musa,martyn	-	marcus	4	"ot" offered tea
+2025-12-03 11:02	stephen,sasha,marcus,musa	stephen=4+1+5=10,sasha=1+3+5=9,marcus=2+4+3=9,musa=2+2+3=7	musa	4	lemon special
+2025-12-03 14:01	stephen (no takers)	-	stephen	-	selfish tea; cancelled
+2025-12-03 14:02	sasha,musa,marcus,martyn,stephen,tim,megan	sasha=6+3+4=13,musa=2+3+1=6,marcus=4+1+4=9,martyn=6+6+1=13,stephen=6+6+3=15,tim=5+2+3=10,megan=1+6+4=11	musa	7	lemon special
+2025-12-04 10:47	stephen,martyn,megan,marcus,musa	stephen=5+1+2=8,martyn=5+5+6=16,megan=2+4+5=11,marcus=2+5+4=11,musa=5+2+1=8 | REROLL musa=5+2+3=10,stephen=4+2+3=9	stephen	5	tie musa/stephen at 8, rerolled
+2025-12-04 11:41	musa,marcus,alex,tim	musa=6+4+6=16,marcus=3+3+3=9,alex=5+6+5=16,tim=5+5+4=14	marcus	4	
+2025-12-05 11:33	musa (no takers)	-	musa	-	selfish tea
+2025-12-05 11:44	musa,sasha,marcus	marcus=6+2+4=12,sasha=3+4+4=11,musa=3+2+5=10	musa	3	lemon special for sasha
+2025-12-05 14:12	sasha (no takers)	-	sasha	-	selfish tea; cancelled
+2025-12-05 14:13	jem,marcus,musa,sasha	sasha=3+1+6=10,musa=3+4+1=8,marcus=5+5+2=12,jem=1+4+1=6	jem	4	lemon special for sasha
+2025-12-05 16:00	musa (no takers)	-	musa	-	selfish tea; cancelled
+2025-12-08 09:30	megan,stephen	-	stephen	2	"ot" = stephen generously OFFERED tea
+2025-12-08 10:18	musa,alex	alex=6+6+5=17,musa=4+4+4=12	musa	2	
+2025-12-08 11:08	alex,marcus,stephen,sasha	sasha=5+5+2=12,stephen=3+4+5=12,marcus=3+4+2=9,alex=4+5+4=13	marcus	4	lemon special for sasha
+2025-12-08 13:21	sasha,stephen,marcus	marcus=4+5+5=14,stephen=4+5+1=10,sasha=1+2+4=7	sasha	3	lemon special for sasha
+2025-12-08 14:42	marcus,tim,martyn	martyn=5+5+5=15,tim=6+2+6=14,marcus=4+3+5=12	marcus	3	
+2025-12-08 15:47	musa,megan,stephen,alex	musa=6+2+5=13,megan=2+2+2=6,stephen=2+5+1=8,alex=3+3+3=9	megan	4	
+2025-12-08 15:48	aatif (no takers)	-	aatif	-	no one accepted; jem joined then cancelled
+2025-12-09 11:09	musa,stephen,marcus,alex	musa=3+6+1=10,stephen=4+6+6=16,marcus=1+4+3=8,alex=2+1+2=5	alex	4	last roll-only round before bidding

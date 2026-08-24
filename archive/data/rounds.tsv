@@ -1,0 +1,622 @@
+# datetime	bids	rolls	loser	loser_bid	cups	penalty	payments	teaderboard_after
+2025-12-09 13:46	megan=9,stephen=6,alex=3,aatif=2,musa=1,marcus=0.9,sasha=0.2,martyn=0.1	-	martyn	0.1	8	(none)	megan->sasha 2.943;stephen->musa 2.029;megan->martyn 3.057;stephen->marcus 1.029;stephen->aatif 0.629;megan->marcus 1.114;alex->aatif 0.257	FIRST BIDDING ROUND
+2025-12-09 14:42	musa=1,stephen=0.6,martyn=0.5,tim=0.4,sasha=0.4	tim=3+3+2=8,sasha=3+5+4=12	tim	0.4	5	(none)	musa->tim 0.225;stephen->martyn 0.025;musa->martyn 0.075;musa->sasha 0.225	-
+2025-12-09 14:45	alex=0.6,tim=0.6,sasha=0.5,martyn=0.4,musa=0.4,jem=0.3,stephen=0.2,marcus=0.2	stephen=6+5+4=15,marcus=5+1+5=11	stephen	0.2	8	(none)	alex->marcus 0.229;tim->stephen 0.229;sasha->jem 0.114	-
+2025-12-09 15:31	stephen=0.4,musa=0.3,alex=0.3,jem=0.2	-	jem	0.2	4	(none)	-	-
+2025-12-09 15:50	marcus=5,stephen=0.8,jem=0.4,martyn=0.3,sasha=0.3	martyn=4+4+1=9,sasha=1+6+4=11	martyn	0.3	5	(none)	-	-
+2025-12-09 16:49	musa=2,marcus=2	musa=3+2+5=10,marcus=3+2+3=8	marcus	2	2	(none)	-	-
+2025-12-09 17:16	marcus=3,jem=3,stephen=2,martyn=2,sasha=2,tim=1	-	tim	1	6	(none)	TRANSFER FAILED: erc20 insufficient allowance	-
+2025-12-09 17:32	jem=5,sasha=1	-	sasha	1	2	(none)	sasha+4.0,jem-4.0	-
+2025-12-09 17:50	jem=2,martyn=1,musa=0	-	musa	0	3	(none)	-	-
+2025-12-09 17:55	stephen=2,martyn=1,sasha=0,jem=0	sasha=6+4+2=12,jem=3+6+3=12	sasha	0	4	(none)	-	-
+2025-12-10 11:28	martyn=1,megan=1,jem=1,alex=0	-	alex	0	4	(none)	-	-
+2025-12-10 12:25	megan=3,stephen=2,alex=1	-	alex	1	3	(none)	-	-
+2025-12-10 14:57	tim=3,stephen=1,martyn=1	stephen=3+4+5=12,martyn=3+4+1=8	martyn	1	3	(none)	-	-
+2025-12-10 15:49	megan=2,stephen=2	megan=2+5+1=8,stephen=3+5+3=11	megan	2	2	(none)	-	-
+2025-12-10 17:05	stephen=1,martyn=0	-	martyn	0	2	(none)	-	-
+2025-12-11 09:31	marcus=1,alex=1	marcus=6+2+6=14,alex=1+4+2=7	alex	1	2	(none)	-	-
+2025-12-11 09:48	musa=3,alex=1,martyn=0	-	martyn	0	3	(none)	-	-
+2025-12-11 10:40	tim=2,alex=1,musa=1	alex=6+2+4=12,musa=4+2+6=12;REROLL alex=3+2+1=6,musa=6+3+5=14	alex	1	3	(none)	alex+0.5,musa+0.5,tim-1.0	-
+2025-12-11 12:26	(none - tim alone)	-	tim	-	1	-	-	-
+2025-12-11 13:33	alex=2,musa=2,tim=1	-	tim	1	3	(none)	-	-
+2025-12-11 13:34	(none - martyn alone)	-	martyn	-	1	-	-	-
+2025-12-11 14:54	(none - alex alone)	-	alex	-	1	-	-	-
+2025-12-12 10:19	musa=3,alex=2,martyn=0	-	martyn	0	3	(none)	-	-
+2025-12-12 10:20	alex=4,jem=0,martyn=0,musa=0	jem=6+3+1=10,martyn=2+4+5=11,musa=4+6+1=11	jem	0	4	(none)	-	-
+2025-12-12 10:21	(none - tim alone)	-	tim	-	1	-	-	-
+2025-12-12 14:43	alex=1,martyn=0	-	martyn	0	2	(none)	-	-
+2025-12-12 21:11	jem=1,musa=1,alex=0	-	alex	0	3	(none)	-	-
+2025-12-15 10:20	jem=0,musa=0,marcus=0	jem=5+3+5=13,musa=4+5+5=14,marcus=6+5+6=17	jem	0	3	(none)	-	-
+2025-12-15 13:56	(none - stephen alone)	-	stephen	-	1	-	-	-
+2025-12-15 13:58	tim=2,marcus=2,sasha=1,martyn=1,stephen=1,jem=1	sasha=5+1+5=11,martyn=6+4+3=13,stephen=3+4+2=9,jem=3+4+2=9;REROLL stephen=2+2+4=8,jem=2+1+6=9	stephen	1	6	(none)	stephen+0.4,martyn+0.4,sasha+0.4,jem+0.4,tim-0.8,marcus-0.8	-
+2025-12-15 14:41	(none - stephen alone)	-	stephen	-	1	-	-	-
+2025-12-15 14:42	marcus=2,stephen=2	marcus=4+2+1=7,stephen=6+6+1=13	marcus	2	2	(none)	-	-
+2025-12-15 14:43	marcus=4,stephen=0	-	stephen	0	2	(none)	-	-
+2025-12-15 15:07	stephen=3,musa=2,megan=0,jem=0	megan=4+5+6=15,jem=2+1+5=8	jem	0	4	(none)	-	-
+2025-12-15 16:25	marcus=2,alex=1,stephen=1,musa=0	-	musa	0	4	(none)	-	-
+2025-12-16 10:01	musa=2,tim=2,stephen=1,sasha=1,martyn=0,jem=0	martyn=3+3+6=12,jem=6+5+5=16	martyn	0	6	(none)	-	-
+2025-12-16 13:35	martyn=1,marcus=1,stephen=0	-	stephen	0	3	(none)	-	-
+2025-12-16 14:05	marcus=2,musa=1	-	musa	1	2	(none)	-	-
+2025-12-16 16:27	tim=3,musa=1	-	musa	1	2	(none)	-	-
+2025-12-17 12:34	stephen=3,marcus=2	-	marcus	2	2	(none)	-	-
+2025-12-17 13:43	stephen=2,marcus=2	stephen=5+3+4=12,marcus=5+6+6=17	stephen	2	2	(none)	-	-
+2025-12-17 14:39	stephen=3,musa=2,martyn=1,jem=1,megan=0	-	megan	0	5	(none)	-	-
+2025-12-18 11:48	marcus=2,alex=2,jem=2,martyn=1,sasha=0,musa=0	sasha=6+4+5=15,musa=4+1+5=10	musa	0	6	(none)	-	-
+2025-12-18 16:22	stephen=3,megan=2,martyn=1,jem=1,marcus=1,musa=0,alex=0	musa=6+2+3=11,alex=2+4+1=7	alex	0	7	(none)	-	-
+2025-12-18 17:05	alex=1,musa=0	-	musa	0	2	(none)	-	-
+2025-12-22 11:16	marcus=2,alex=1,martyn=1	alex=2+3+4=9,martyn=1+2+2=5	martyn	1	3	(none)	-	-
+2025-12-22 13:56	alex=3,martyn=2,stephen=2,marcus=1,musa=1,sasha=0	-	sasha	0	6	(none)	-	-
+2025-12-22 15:05	marcus=2,musa=1,stephen=0	-	stephen	0	3	(none)	-	-
+2025-12-23 13:28	(none - sasha alone)	-	sasha	-	1	-	-	-
+2025-12-30 10:08	alex=2,marcus=2	alex=6+1+6=13,marcus=1+4+4=9	marcus	2	2	(none)	-	-
+2025-12-31 14:50	tim=2,alex=2	tim=3+2+5=10,alex=4+6+2=12	tim	2	2	(none)	-	-
+2026-01-05 12:10	(none - musa alone)	-	musa	-	1	-	-	-
+2026-01-05 13:20	tim=3,martyn=2,alex=2	martyn=3+2+6=11,alex=6+3+6=15	martyn	2	3	(none)	-	-
+2026-01-05 14:38	(none - musa alone)	-	musa	-	1	-	-	-
+2026-01-05 15:43	(none - stephen alone)	-	stephen	-	1	-	-	-
+2026-01-06 13:26	alex=3,stephen=2,tim=2,martyn=2,sasha=1,musa=0	-	musa	0	6	(none)	-	-
+2026-01-06 15:50	martyn=2,stephen=2	martyn=6+6+5=17,stephen=6+4+3=13	stephen	2	2	(none)	-	-
+2026-01-07 11:19	stephen=3,tim=2,alex=2,musa=1,sasha=0	-	sasha	0	5	(none)	-	-
+2026-01-07 15:09	alex=2,musa=1,sasha=1	musa=4+3+1=8,sasha=1+3+2=6	sasha	1	3	(none)	-	-
+2026-01-08 13:40	martyn=2,sasha=0,musa=0	sasha=5+1+4=10,musa=4+1+4=9	musa	0	3	(none)	-	-
+2026-01-09 11:20	musa=3,alex=2,martyn=1,sasha=0	-	sasha	0	4	(none)	sasha+2.0,martyn+0.7,alex-0.7,musa-2.0	-
+2026-01-09 14:22	alex=2,martyn=0,musa=0	martyn=3+4+4=11,musa=2+4+1=7	musa	0	3	(none)	-	-
+2026-01-12 14:37	martyn=2,jem=1,musa=1	jem=6+4+2=12,musa=4+4+6=14	jem	1	3	(none)	-	-
+2026-01-12 16:35	sasha=1,musa=0	-	musa	0	2	(none)	-	-
+2026-01-13 09:45	(none - jem alone)	-	jem	-	1	-	-	-
+2026-01-13 14:15	tim=4,marcus=2,jem=2,martyn=2	marcus=2+1+5=8,jem=2+4+3=9,martyn=1+5+2=8;REROLL marcus=1+5+5=11,martyn=1+2+3=6	martyn	2	4	(none)	-	-
+2026-01-13 15:01	(none - musa alone)	-	musa	-	1	-	-	-
+2026-01-13 15:30	marcus=3,alex=3,martyn=3,jem=2,stephen=2,musa=2	jem=2+3+3=8,stephen=4+6+6=16,musa=2+3+3=8;REROLL jem=2+6+4=12,musa=1+3+4=8	musa	2	6	(none)	-	-
+2026-01-14 12:24	(none - jem alone)	-	jem	-	1	-	-	-
+2026-01-14 13:40	marcus=3,alex=3,jem=2,martyn=2,sasha=1	-	sasha	1	5	(none)	-	-
+2026-01-14 14:48	(none - stephen alone)	-	stephen	-	1	-	-	-
+2026-01-14 14:49	stephen=3,jem=0,marcus=0	jem=3+3+4=10,marcus=6+5+3=14	jem	0	3	(none)	-	-
+2026-01-14 16:43	stephen=2,martyn=2,marcus=1	-	marcus	1	3	(none)	-	-
+2026-01-15 09:49	(none - jem alone)	-	jem	-	1	-	-	-
+2026-01-15 10:48	alex=4,marcus=2,musa=0	-	musa	0	3	(none)	-	-
+2026-01-15 13:39	stephen=3,megan=2,marcus=2,jem=1,musa=1	jem=4+2+3=9,musa=5+4+3=12	jem	1	5	(none)	-	-
+2026-01-15 15:02	martyn=2,stephen=2,sasha=1,musa=1,marcus=0	-	marcus	0	5	(none)	-	-
+2026-01-16 09:48	alex=2,stephen=1,sasha=0	-	sasha	0	3	(none)	-	-
+2026-01-16 13:17	(none - stephen alone)	-	stephen	-	1	-	-	-
+2026-01-16 14:36	musa=2,alex=1,sasha=1,marcus=1,martyn=0	-	martyn	0	5	(none)	-	-
+2026-01-19 13:50	tim=3,alex=2,stephen=2,marcus=0	-	marcus	0	4	(none)	-	-
+2026-01-20 10:30	jem=2,musa=2,stephen=2,marcus=1	-	marcus	1	4	(none)	-	-
+2026-01-20 13:52	alex=2,stephen=1,marcus=0,sasha=0	marcus=1+6+2=9,sasha=6+5+3=14	marcus	0	4	(none)	-	-
+2026-01-20 16:21	alex=1,stephen=1,tim=0,marcus=0	tim=3+6+1=10,marcus=5+6+3=14	tim	0	4	(none)	-	-
+2026-01-21 10:48	alex=1,musa=1,marcus=0,sasha=0	marcus=5+6+4=15,sasha=2+3+4=9	sasha	0	4	(none)	-	-
+2026-01-21 10:49	(none - jem alone)	-	jem	-	1	-	-	-
+2026-01-21 13:30	tim=2,alex=1,stephen=1,marcus=0	-	marcus	0	4	(none)	-	-
+2026-01-21 14:16	stephen=1,megan=1,marcus=0	-	marcus	0	3	(none)	-	-
+2026-01-21 15:17	stephen=1,marcus=0	-	marcus	0	2	(none)	-	-
+2026-01-22 10:26	stephen=1,musa=1,megan=1,marcus=0	-	marcus	0	4	(none)	-	-
+2026-01-22 10:27	(none - alex alone)	-	alex	-	1	-	-	-
+2026-01-22 11:02	alex=1,marcus=0,jem=0,sasha=0,musa=0	marcus=4+5+1=10,jem=1+2+1=4,sasha=6+2+1=9,musa=1+4+4=9	jem	0	5	(none)	-	-
+2026-01-22 15:19	tim=3,musa=2,alex=1,marcus=0,sasha=0,stephen=0	marcus=2+1+1=4,sasha=4+3+4=11,stephen=1+3+4=8	marcus	0	6	(none)	-	-
+2026-01-23 10:32	musa=1,stephen=1,alex=1,marcus=0,sasha=0	marcus=1+6+1=8,sasha=3+5+1=9	marcus	0	5	(none)	-	-
+2026-01-23 13:59	tim=3,megan=1,marcus=1,stephen=0,sasha=0,alex=0,musa=0	stephen=4+6+4=14,sasha=2+5+4=11,alex=4+2+5=11,musa=1+5+3=9	musa	0	7	(none)	-	-
+2026-01-23 15:49	alex=1,musa=1,marcus=0	-	marcus	0	3	(none)	-	-
+2026-01-26 09:48	stephen=1,marcus=0	-	marcus	0	2	(none)	-	-
+2026-01-26 14:41	megan=1,musa=0,stephen=0,marcus=0	musa=5+2+1=8,stephen=5+5+3=13,marcus=3+5+5=13	musa	0	4	(none)	-	-
+2026-01-26 15:35	martyn=1,marcus=0,stephen=0	marcus=2+4+2=8,stephen=2+4+4=10	marcus	0	3	(none)	-	-
+2026-01-27 10:20	tim=2,marcus=0,sasha=0,stephen=0	marcus=3+3+2=8,sasha=6+5+2=13,stephen=1+5+1=7	stephen	0	4	(none)	-	-
+2026-01-27 14:31	martyn=0,sasha=0,marcus=0	martyn=3+2+3=8,sasha=4+5+1=10,marcus=5+1+1=7	marcus	0	3	(none)	-	-
+2026-01-28 11:03	tim=3,martyn=1,marcus=0,sasha=0	marcus=5+3+3=11,sasha=3+5+3=11;REROLL marcus=5+2+2=9,sasha=5+5+6=16	marcus	0	4	(none)	-	-
+2026-01-28 14:19	stephen=2,sasha=0,alex=0,marcus=0	sasha=1+5+2=8,alex=5+1+5=11,marcus=4+2+3=9	sasha	0	4	(none)	-	-
+2026-01-29 10:39	martyn=1,musa=0,sasha=0,marcus=0,stephen=0	musa=6+4+3=13,sasha=2+4+4=10,marcus=4+3+4=11,stephen=6+3+3=12	sasha	0	5	(none)	-	-
+2026-01-29 13:27	musa=0,marcus=0,martyn=0	musa=5+2+3=10,marcus=6+1+2=9,martyn=3+2+3=8	martyn	0	3	(none)	-	-
+2026-01-29 14:29	martyn=40,musa=0	-	musa	0	2	(none)	musa+40.0,martyn-40.0	-
+2026-01-29 15:45	(none - stephen alone)	-	stephen	-	1	-	-	-
+2026-01-29 16:37	musa=4,stephen=1,martyn=0,sasha=0,jem=0	martyn=5+4+2=11,sasha=4+3+5=12,jem=4+5+3=12	martyn	0	5	(none)	-	-
+2026-01-30 13:28	tim=3,marcus=2,martyn=1,jem=0,sasha=0,alex=0	jem=4+6+5=15,sasha=5+5+6=16,alex=5+5+3=13	alex	0	6	(none)	-	-
+2026-01-30 15:12	marcus=1,alex=1,stephen=1,martyn=0	-	martyn	0	4	(none)	-	-
+2026-02-02 10:26	martyn=4,musa=2,marcus=1	-	marcus	1	3	(none)	-	-
+2026-02-02 14:02	musa=2,martyn=1	-	martyn	1	2	(none)	-	-
+2026-02-02 15:47	martyn=3,marcus=3,tim=1,sasha=0	-	sasha	0	4	(none)	-	-
+2026-02-02 15:48	alex=1,jem=0	-	jem	0	2	(none)	-	-
+2026-02-02 16:36	musa=2,marcus=2,stephen=1	-	stephen	1	3	(none)	-	-
+2026-02-02 17:32	(none - jem alone)	-	jem	-	1	-	-	-
+2026-02-03 10:54	tim=2,marcus=2,musa=1,stephen=1,sasha=0,jem=0	sasha=3+1+6=10,jem=6+2+5=13	sasha	0	6	(none)	-	-
+2026-02-03 12:13	musa=2,stephen=1,marcus=1,martyn=1	stephen=2+3+3=8,marcus=2+5+4=11,martyn=6+6+6=18(KING)	stephen	1	4	(none)	-	-
+2026-02-03 14:56	(none - marcus alone)	-	marcus	-	1	-	-	-
+2026-02-04 10:45	marcus=2,musa=2,martyn=0	-	martyn	0	3	(none)	-	-
+2026-02-04 13:47	marcus=2,sasha=1,martyn=0	-	martyn	0	3	(none)	-	-
+2026-02-04 13:48	marcus=3,tim=2,stephen=1,martyn=0,jem=0,sasha=0	martyn=2+2+5=9,jem=3+1+2=6,sasha=4+2+6=12	jem	0	6	(none)	-	-
+2026-02-05 14:11	tim=2,megan=1,musa=1,martyn=0	-	martyn	0	4	(none)	-	-
+2026-02-05 14:42	musa=2,martyn=0,jem=0	martyn=4+4+1=9,jem=6+5+2=13	martyn	0	3	(none)	-	-
+2026-02-05 15:18	musa=1,sasha=1,alex=1,jem=0,martyn=0	jem=1+6+1=8,martyn=2+6+5=13	jem	0	5	(none)	-	-
+2026-02-06 10:35	marcus=2,alex=1	-	alex	1	2	(none)	-	-
+2026-02-06 12:58	marcus=1,martyn=1,sasha=0,musa=0	sasha=5+2+3=10,musa=1+6+5=12	sasha	0	4	(none)	-	-
+2026-02-06 18:37	musa=2,alex=0,aatif=0	alex=6+4+1=11,aatif=3+2+2=7	aatif	0	3	(none)	-	-
+2026-02-09 09:54	(none - jem alone)	-	jem	-	1	-	-	-
+2026-02-09 09:55	marcus=1,martyn=1,jem=0	-	jem	0	3	(none)	-	-
+2026-02-09 14:07	marcus=2,sasha=1,alex=0	-	alex	0	3	(none)	-	-
+2026-02-09 16:13	martyn=1,marcus=1,jem=0	-	jem	0	3	(none)	-	-
+2026-02-10 09:38	marcus=2,martyn=1	-	martyn	1	2	(none)	-	-
+2026-02-10 14:37	marcus=2,martyn=1,alex=0	-	alex	0	3	(none)	-	-
+2026-02-11 11:57	alex=2,marcus=1,stephen=1,sasha=0	-	sasha	0	4	(none)	-	-
+2026-02-11 14:09	marcus=2,stephen=1,martyn=1,megan=1	stephen=3+2+2=7,martyn=6+6+3=15,megan=2+4+4=10	stephen	1	4	(none)	-	-
+2026-02-12 10:04	martyn=1,marcus=1	martyn=4+2+5=11,marcus=2+6+3=11;REROLL martyn=6+4+1=11,marcus=1+2+3=6	marcus	1	2	(none)	-	-
+2026-02-12 15:00	marcus=2,martyn=1,sasha=0,alex=0	sasha=6+3+2=11,alex=1+3+5=9	alex	0	4	(none)	-	-
+2026-02-13 10:17	martyn=1,stephen=1,marcus=1	martyn=6+4+4=14,stephen=1+2+6=9,marcus=4+6+4=14	stephen	1	3	(none)	-	-
+2026-02-13 15:15	martyn=1,sasha=1,stephen=1,marcus=1	martyn=4+3+6=13,sasha=2+1+4=7,stephen=4+3+6=13,marcus=3+3+3=9	sasha	1	4	(none)	-	-
+2026-02-16 14:10	alex=2,marcus=1,stephen=1	marcus=2+6+6=14,stephen=6+4+1=11	stephen	1	3	(none)	-	-
+2026-02-16 15:58	marcus=2,stephen=2,megan=1,alex=1	megan=6+5+2=13,alex=2+5+5=12	alex	1	4	(none)	-	-
+2026-02-17 10:23	marcus=1,stephen=1	marcus=1+3+1=5,stephen=5+1+4=10	marcus	1	2	(none)	-	-
+2026-02-17 13:51	musa=2,megan=1,stephen=1,marcus=1	megan=5+2+5=12,stephen=5+5+2=12,marcus=3+3+1=7	marcus	1	4	(none)	-	-
+2026-02-17 16:18	(none - stephen alone)	-	stephen	-	1	-	-	-
+2026-02-18 09:43	martyn=1,stephen=1	martyn=4+1+2=7,stephen=3+4+1=8	martyn	1	2	(none)	-	-
+2026-02-18 14:38	stephen=1,martyn=1,marcus=1	stephen=6+5+2=13,martyn=2+5+4=11,marcus=4+3+6=13	martyn	1	3	(none)	-	-
+2026-02-18 16:15	marcus=1,alex=1,stephen=1,martyn=1,jem=0	-	jem	0	5	(none)	-	-
+2026-02-19 13:44	marcus=2,stephen=1,alex=1	stephen=4+6+1=11,alex=2+6+5=13	stephen	1	3	(none)	-	-
+2026-02-19 15:05	marcus=2,stephen=1,martyn=1	stephen=3+4+2=9,martyn=6+4+3=13	stephen	1	3	(none)	-	-
+2026-02-20 14:03	(none - marcus alone)	-	marcus	-	1	-	-	-
+2026-02-23 11:38	(none - martyn alone)	-	martyn	-	1	-	-	-
+2026-02-23 11:39	tim=2,martyn=2,marcus=1,stephen=1,alex=1,jem=0	-	jem	0	6	(none)	-	-
+2026-02-23 15:19	alex=2,marcus=2,martyn=1,stephen=1	martyn=5+4+6=15,stephen=5+3+1=9	stephen	1	4	(none)	-	-
+2026-02-24 09:46	marcus=2,martyn=2,alex=1	-	alex	1	3	(none)	-	-
+2026-02-24 14:10	megan=2,alex=2,martyn=1,stephen=1,marcus=1,tim=0	-	tim	0	6	(none)	-	-
+2026-02-24 16:23	marcus=1,alex=1,stephen=1	marcus=4+6+5=15,alex=6+6+4=16,stephen=2+6+2=10	stephen	1	3	(none)	-	-
+2026-02-25 10:24	alex=2,marcus=1,stephen=1,martyn=1	marcus=1+6+2=9,stephen=2+3+1=6,martyn=1+2+3=6;REROLL stephen=3+4+2=9,martyn=3+2+3=8	martyn	1	4	(none)	-	-
+2026-02-26 15:06	alex=1,marcus=1	alex=1+2+2=5,marcus=2+3+1=6	alex	1	2	(none)	-	-
+2026-02-27 13:27	sasha=0,tim=0,alex=0	sasha=1+4+6=11,tim=1+2+4=7,alex=2+1+6=9	tim	0	3	(none)	-	-
+2026-03-02 14:01	stephen=1,tim=0	-	tim	0	2	(none)	-	-
+2026-03-02 15:29	martyn=1,stephen=1,sasha=0	-	sasha	0	3	(none)	-	-
+2026-03-03 11:16	stephen=1,marcus=1,sasha=0	-	sasha	0	3	(none)	-	-
+2026-03-03 14:37	marcus=1,sasha=1,alex=1,stephen=1,tim=0	-	tim	0	5	(none)	-	-
+2026-03-04 10:06	martyn=1,stephen=1,alex=1,marcus=1	martyn=2+6+6=14,stephen=5+1+3=9,alex=6+5+1=12,marcus=5+1+3=9;REROLL stephen=6+6+6=18(KING),marcus=4+5+1=10	marcus	1	4	(none)	-	-
+2026-03-04 14:09	tim=3,martyn=2,stephen=1	-	stephen	1	3	(none)	-	-
+2026-03-05 10:04	stephen=2,martyn=1,marcus=1	martyn=1+3+2=6,marcus=3+5+2=10	martyn	1	3	(none)	-	-
+2026-03-05 11:01	(none - alex alone)	-	alex	-	1	-	-	-
+2026-03-05 11:02	alex=1,marcus=1,sasha=0	-	sasha	0	3	(none)	-	-
+2026-03-05 15:12	stephen=1,alex=0	-	alex	0	2	(none)	-	-
+2026-03-05 15:21	megan=2,tim=0	-	tim	0	2	(none)	-	-
+2026-03-05 16:53	(none - stephen alone)	-	stephen	-	1	-	-	-
+2026-03-05 16:54	(none - alex alone)	-	alex	-	1	-	-	-
+2026-03-06 11:44	alex=1,sasha=0,stephen=0	sasha=5+3+5=13,stephen=5+1+4=10	stephen	0	3	(none)	-	-
+2026-03-06 13:51	martyn=1,stephen=1	martyn=2+4+5=11,stephen=4+5+1=10	stephen	1	2	(none)	-	-
+2026-03-06 15:52	martyn=1,sasha=0,alex=0	sasha=4+1+4=9,alex=1+1+2=4	alex	0	3	(none)	-	-
+2026-03-09 11:13	megan=1,stephen=1,marcus=1,sasha=0	-	sasha	0	4	(none)	-	-
+2026-03-09 14:14	martyn=1,marcus=1,stephen=1,tim=1	martyn=1+6+6=13,marcus=3+2+5=10,stephen=4+6+3=13,tim=4+3+4=11	marcus	1	4	(none)	-	-
+2026-03-09 16:06	martyn=1,sasha=1,marcus=1,stephen=0	-	stephen	0	4	(none)	-	-
+2026-03-10 13:48	stephen=2,tim=2,marcus=2,martyn=1,megan=1,alex=0,sasha=0	alex=3+6+6=15,sasha=3+1+5=9	sasha	0	7	(none)	-	-
+2026-03-11 10:32	martyn=1,alex=1	martyn=3+1+6=10,alex=2+5+2=9	alex	1	2	(none)	-	-
+2026-03-11 14:35	marcus=1,alex=1,martyn=0	-	martyn	0	3	(none)	-	-
+2026-03-12 10:14	marcus=2,stephen=1,martyn=1,alex=1	stephen=3+2+4=9,martyn=4+1+5=10,alex=1+5+3=9;REROLL stephen=6+4+1=11,alex=5+5+4=14	stephen	1	4	(none)	-	-
+2026-03-12 14:08	alex=1,marcus=1,stephen=1,sasha=0	-	sasha	0	4	(none)	-	-
+2026-03-12 16:03	tim=2,stephen=1,marcus=1,alex=1,martyn=1	stephen=1+1+4=6,marcus=3+2+1=6,alex=4+3+3=10,martyn=5+4+5=14;REROLL stephen=1+4+3=8,marcus=5+2+1=8;REROLL2 stephen=4+1+5=10,marcus=3+4+5=12	stephen	1	5	(none)	-	-
+2026-03-13 11:00	tim=2,sasha=1,marcus=1,martyn=1,stephen=1	sasha=2+3+3=8,marcus=6+6+2=14,martyn=6+4+4=14,stephen=6+2+5=13	sasha	1	5	(none)	-	-
+2026-03-13 12:41	marcus=2,stephen=0	-	stephen	0	2	(none)	-	-
+2026-03-13 14:04	stephen=1,sasha=1,marcus=0	-	marcus	0	3	(none)	-	-
+2026-03-13 15:24	stephen=1,marcus=1,martyn=0	-	martyn	0	3	(none)	-	-
+2026-03-13 17:00	(none - sasha alone)	-	sasha	-	1	-	-	-
+2026-03-16 09:07	alex=1,tim=1	alex=4+5+1=10,tim=2+2+1=5	tim	1	2	(none)	-	-
+2026-03-16 13:45	alex=2,marcus=1,martyn=1,stephen=1	marcus=2+1+2=5,martyn=3+6+5=14,stephen=3+5+6=14	marcus	1	4	(none)	-	-
+2026-03-17 15:09	marcus=2,stephen=2,martyn=1	-	martyn	1	3	(none)	-	-
+2026-03-17 16:39	stephen=1,martyn=1	stephen=2+4+6=12,martyn=3+5+3=11	martyn	1	2	(none)	-	-
+2026-03-18 14:13	marcus=3,tim=2,stephen=0	-	stephen	0	3	(none)	-	-
+2026-03-18 15:45	martyn=0,marcus=0,sasha=0	martyn=3+5+3=11,marcus=4+5+6=15,sasha=4+1+5=10	sasha	0	3	(none)	-	-
+2026-03-18 16:05	(none - stephen alone)	-	stephen	-	1	-	-	-
+2026-03-19 11:57	marcus=1,stephen=1	marcus=5+1+2=8,stephen=4+4+4=12	marcus	1	2	(none)	-	-
+2026-03-19 14:12	marcus=2,stephen=1	-	stephen	1	2	(none)	-	-
+2026-03-19 15:02	stephen=1,alex=1,martyn=0,marcus=0	martyn=3+3+5=11,marcus=5+6+5=16	martyn	0	4	(none)	-	-
+2026-03-20 10:46	alex=1,sasha=0,marcus=0	sasha=3+3+4=10,marcus=6+1+5=12	sasha	0	3	(none)	-	-
+2026-03-20 14:05	marcus=1,stephen=1,alex=1	marcus=3+1+4=8,stephen=2+5+6=13,alex=4+2+6=12	marcus	1	3	(none)	-	-
+2026-03-20 15:28	stephen=2,marcus=1,alex=0	-	alex	0	3	(none)	-	-
+2026-03-23 09:52	alex=1,martyn=0,marcus=0	martyn=3+6+1=10,marcus=6+6+1=13	martyn	0	3	(none)	-	-
+2026-03-23 09:54	musa=0,martyn=0	musa=1+2+6=9,martyn=4+1+5=10	musa	0	2	(none)	-	-
+2026-03-23 12:15	stephen=2,megan=1,musa=1,alex=1,marcus=1	megan=3+5+5=13,musa=5+1+2=8,alex=6+1+4=11,marcus=6+3+6=15	musa	1	5	(none)	-	-
+2026-03-23 13:42	(none - musa alone)	-	musa	-	1	-	-	-
+2026-03-23 14:10	musa=2,stephen=1,marcus=1	stephen=2+6+5=13,marcus=4+6+6=16	stephen	1	3	(none)	-	-
+2026-03-23 16:23	marcus=1,alex=1,stephen=1,martyn=0,sasha=0	martyn=6+2+4=12,sasha=1+5+5=11	sasha	0	5	(none)	-	-
+2026-03-24 09:47	megan=1,alex=1,stephen=1	megan=4+5+2=11,alex=2+2+5=9,stephen=2+1+3=6	stephen	1	3	(none)	-	-
+2026-03-25 11:33	stephen=1,musa=1,marcus=1	stephen=6+2+2=10,musa=6+2+2=10,marcus=6+5+3=14;REROLL stephen=1+1+2=4,musa=6+5+1=12	stephen	1	3	(none)	-	-
+2026-03-25 13:40	martyn=1,marcus=1,sasha=0	-	sasha	0	3	(none)	-	-
+2026-03-25 14:24	marcus=2,musa=1	-	musa	1	2	(none)	-	-
+2026-03-25 15:48	alex=2,sasha=1,stephen=1	sasha=6+1+4=11,stephen=2+1+4=7	stephen	1	3	(none)	-	-
+2026-03-26 13:37	marcus=2,alex=1,sasha=1,musa=1,stephen=1	alex=1+6+1=8,sasha=3+5+2=10,musa=6+5+5=16,stephen=3+5+6=14	alex	1	5	(none - pre-penalty)	-	-
+2026-03-26 14:35	martyn=4,aatif=4,musa=3,sasha=3,stephen=3,marcus=1,megan=1	marcus=6+1+4=11,megan=2+2+2=6	megan	1	7	(none - pre-penalty)	marcus+3.3,sasha+1.0,musa+1.0,stephen+1.0,martyn-0.2,aatif-0.2,megan-6.0	-
+2026-03-27 15:32	alex=3,aatif=3,sasha=2	-	sasha	2	3	(none - pre-penalty)	alex+2.5,aatif+2.5,sasha-5.0	-
+2026-04-07 11:33	aatif=3,stephen=3,musa=3,tim=2,martyn=2,megan=1	-	megan	1	6	d2=2	-	-
+2026-04-08 13:32	martyn=3,marcus=3,musa=2	-	musa	2	3	d2=2	-	-
+2026-04-08 13:33	alex=4,aatif=2	-	aatif	2	2	d5=5	-	-
+2026-04-08 15:16	marcus=4,musa=4,martyn=4,stephen=3	-	stephen	3	4	d2=2	-	-
+2026-04-09 11:00	marcus=5,martyn=5,alex=3,tim=2	-	tim	2	4	d3=3	-	-
+2026-04-09 14:04	(none - alex alone)	-	alex	-	1	-	-	-
+2026-04-09 14:08	stephen=5,tim=4,alex=4,martyn=4,musa=4,marcus=4	tim=3+5+2=10,alex=1+4+6=11,martyn=4+3+4=11,musa=3+6+4=13,marcus=3+3+1=7	marcus	4	6	d2=2	-	-
+2026-04-09 16:26	marcus=5,stephen=4,alex=4,martyn=0	-	martyn	0	4	d6=6	-	-
+2026-04-10 14:08	martyn=5,alex=4,tim=4	alex=2+6+5=13,tim=5+4+5=14	alex	4	3	d3=3	-	-
+2026-04-13 10:22	musa=6,marcus=5,tim=4,martyn=4	tim=5+6+4=15,martyn=1+4+3=8	martyn	4	4	d4=4	-	-
+2026-04-13 14:04	jem=10,musa=6,marcus=6,tim=5,martyn=5,alex=4,aatif=3	-	aatif	3	7	d1=1	-	-
+2026-04-13 15:34	marcus=7,musa=5,martyn=0	-	martyn	0	3	d6=6	-	-
+2026-04-13 16:53	(none - musa alone)	-	musa	-	1	-	-	-
+2026-04-14 09:54	martyn=5,alex=4	-	alex	4	2	d2=2	-	-
+2026-04-14 14:51	marcus=7,martyn=6,alex=5,aatif=4,musa=0	-	musa	0	5	d3=3	-	-
+2026-04-14 16:18	alex=6,musa=5,jem=5,martyn=4,stephen=3,marcus=0	-	marcus	0	6	d2=2	-	-
+2026-04-15 10:29	musa=56,martyn=5,stephen=4,alex=4,sasha=4	stephen=5+2+2=9,alex=6+5+6=17,sasha=6+5+3=14	stephen	4	5	d6=6	sasha+14.8,alex+14.8,martyn+13.5,stephen+7.2,musa-50.2	-
+2026-04-15 12:17	alex=5,martyn=4,musa=4,marcus=4	martyn=1+1+2=4,musa=3+1+5=9,marcus=1+6+5=12	martyn	4	4	d2=2	-	-
+2026-04-15 15:08	sasha=5,stephen=5,alex=4,martyn=4	alex=5+1+2=8,martyn=2+5+4=11	alex	4	4	d1=1	-	-
+2026-04-16 14:31	sasha=5,marcus=5,martyn=4,stephen=4,alex=4	martyn=5+1+5=11,stephen=6+5+1=12,alex=6+4+1=11;REROLL martyn=3+3+3=9,alex=3+4+6=13	martyn	4	5	d5=5	-	-
+2026-04-16 15:21	martyn=6,marcus=5,musa=5,alex=5,stephen=5,tim=4	-	tim	4	6	d6=6	-	-
+2026-04-17 11:17	marcus=6,sasha=6,musa=6,alex=5	-	alex	5	4	d3=3	-	-
+2026-04-20 08:41	alex=4,tim=2	-	tim	2	2	d4=4	-	-
+2026-04-20 10:22	alex=6,martyn=4	-	martyn	4	2	d4=4	-	-
+2026-04-20 13:26	(none - musa alone)	-	musa	-	1	-	-	-
+2026-04-20 13:29	sasha=7,musa=7,martyn=6	-	martyn	6	3	d2=2	-	-
+2026-04-20 14:23	martyn=7,marcus=6,stephen=5,musa=0	-	musa	0	4	d5=5	-	-
+2026-04-20 15:48	musa=6,stephen=6,marcus=4	-	marcus	4	3	d4=4	-	-
+2026-04-21 09:37	marcus=8,martyn=6,alex=6	martyn=4+2+4=10,alex=6+2+2=10;REROLL martyn=5+3+3=11,alex=6+1+3=10	alex	6	3	d6=6	-	-
+2026-04-21 11:26	alex=7,marcus=7,sasha=7,musa=7,aatif=7,martyn=6,stephen=6,tim=5,jem=5	tim=3+1+2=6,jem=1+4+3=8	tim	5	9	d6=6	-	-
+2026-04-21 15:15	musa=8,aatif=7,alex=7,marcus=0	-	marcus	0	4	d2=2	-	-
+2026-04-21 16:08	stephen=7,musa=5	-	musa	5	2	d3=3	-	-
+2026-04-22 11:31	alex=8,tim=7,aatif=7,marcus=6,musa=6	marcus=4+3+2=9,musa=6+1+4=11	marcus	6	5	d4=4	-	-
+2026-04-22 11:32	sasha=8,martyn=1,marcus=0	-	marcus	0	3	d5=5	-	-
+2026-04-22 11:32	(none - jem alone)	-	jem	-	1	-	-	-
+2026-04-22 11:34	marcus=0,jem=0	marcus=5+2+5=12,jem=6+1+2=9	jem	0	2	d1=1	-	-
+2026-04-22 14:34	marcus=9,tim=8,musa=7,stephen=7,martyn=6	-	martyn	6	5	d4=4	-	-
+2026-04-22 17:22	alex=7,stephen=7	alex=4+6+3=13,stephen=2+5+5=12	stephen	7	2	d5=5	-	-
+2026-04-22 17:23	marcus=7,sasha=2,martyn=1,jem=1	martyn=5+6+4=15,jem=1+6+4=11	jem	1	4	d4=4	-	-
+2026-04-23 10:57	alex=7,martyn=6,aatif=0	-	aatif	0	3	d4=4	-	-
+2026-04-23 12:34	tim=8,alex=7,megan=5,aatif=0	-	aatif	0	4	d5=5	aatif+1.7,megan+1.7,alex-1.0,tim-2.3	(see balances_daily.tsv)
+2026-04-23 15:17	martyn=2,aatif=1,sasha=1,alex=0	-	alex	0	4	d5=5	aatif+1.7,sasha+1.7,martyn+0.3,alex-3.7	(see balances_daily.tsv)
+2026-04-24 12:17	(none - aatif alone)	-	aatif	-	1	-	-	-
+2026-04-24 13:38	alex=7,tim=6,jem=2,musa=2,sasha=2,martyn=1,aatif=0	-	aatif	0	7	d6=6	martyn+3.2,musa+2.0,sasha+2.0,jem+2.0,tim-2.7,aatif-2.7,alex-3.8	(see balances_daily.tsv)
+2026-04-24 15:04	tim=7,alex=5,jem=4,musa=4	jem=1+4+4=9,musa=2+1+1=4	musa	4	4	d6=6	jem+3.3,alex+2.0,tim-0.7,musa-4.7	(see balances_daily.tsv)
+2026-04-27 14:10	stephen=6,sasha=4	-	sasha	4	2	d4=4	stephen+2.0,sasha-2.0	(see balances_daily.tsv)
+2026-04-27 14:11	(none - jem alone)	-	jem	-	1	-	-	-
+2026-04-27 14:17	martyn=9,jem=2	-	jem	2	2	d4=4	jem+3.0,martyn-3.0	(see balances_daily.tsv)
+2026-04-29 13:41	alex=4,sasha=4,musa=3,martyn=2	-	martyn	2	4	d4=4	musa+1.7,alex+0.3,sasha+0.3,martyn-2.3	sasha135.1,musa83.5,martyn81.8,aatif77.8,stephen74.2,alex70.8,jem66.1,marcus55.6,megan54.1,tim36.8
+2026-04-29 16:57	alex=4,aatif=3,martyn=3,sasha=3	aatif=2+6+4=12,martyn=3+4+1=8,sasha=4+6+1=11	martyn	3	4	d5=5	aatif+2.0,sasha+2.0,alex+0.7,martyn-4.7	sasha137.1,musa83.5,aatif79.8,martyn77.2,stephen74.2,alex71.5,jem66.1,marcus55.6,megan54.1,tim36.8
+2026-04-30 10:43	marcus=6,stephen=4,aatif=3	-	aatif	3	3	d6=6	stephen+3.5,marcus+0.5,aatif-4.0	sasha137.1,musa83.5,stephen77.7,martyn77.2,aatif75.8,alex71.5,jem66.1,marcus56.1,megan54.1,tim36.8
+2026-04-30 13:34	marcus=6,stephen=5,sasha=4,musa=3,aatif=3	musa=2+6+1=9,aatif=2+6+4=12	musa	3	5	d4=4	aatif+2.5,sasha+1.2,stephen+0.0,marcus-1.2,musa-2.5	sasha138.3,musa81.0,aatif78.3,stephen77.7,martyn77.2,alex71.5,jem66.1,marcus54.9,megan54.1,tim36.8
+2026-04-30 14:39	alex=5,tim=5,stephen=5,marcus=4	-	marcus	4	4	d5=5	tim+1.3,stephen+1.3,alex+1.3,marcus-4.0	sasha138.3,musa81.0,stephen79.0,aatif78.3,martyn77.2,alex72.8,jem66.1,megan54.1,marcus50.9,tim38.1
+2026-04-30 16:03	alex=6,sasha=6,stephen=5,musa=5,marcus=4,martyn=2,jem=2	martyn=3+5+5=13,jem=3+4+6=13;REROLL martyn=4+2+3=9,jem=5+2+5=12	martyn	2	7	d2=2	jem+3.0,martyn+0.7,marcus+0.7,musa-0.5,stephen-0.5,alex-1.7,sasha-1.7	sasha136.7,musa80.5,stephen78.5,aatif78.3,martyn77.8,alex71.2,jem69.1,megan54.1,marcus51.6,tim38.1
+2026-04-30 17:41	musa=6,alex=4	-	alex	4	2	d6=6	musa+4.0,alex-4.0	sasha136.7,musa84.5,stephen78.5,aatif78.3,martyn77.8,jem69.1,alex67.2,megan54.1,marcus51.6,tim38.1
+2026-05-01 10:57	tim=6,marcus=5,alex=5,aatif=4,musa=4	aatif=4+4+2=10,musa=1+1+1=3	musa	4	5	d5=5	aatif+2.2,alex+1.0,marcus+1.0,tim-0.2,musa-4.0	sasha136.7,aatif80.6,musa80.5,stephen78.5,martyn77.8,jem69.1,alex68.2,megan54.1,marcus52.6,tim37.9
+2026-05-01 10:58	(none - jem alone)	-	jem	-	1	-	-	-
+2026-05-01 13:57	(none - jem alone)	-	jem	-	1	-	-	-
+2026-05-05 11:26	tim=6,stephen=5,musa=0	-	musa	0	3	d5=5	stephen+0.5,musa+0.5,tim-1.0	sasha136.7,musa81.0,aatif80.6,stephen79.0,martyn77.8,jem69.1,alex68.2,megan54.1,marcus52.6,tim36.9
+2026-05-05 11:27	alex=5,jem=1	-	jem	1	2	d1=1	jem+3.0,alex-3.0	sasha136.7,musa81.0,aatif80.6,stephen79.0,martyn77.8,jem72.1,alex65.2,megan54.1,marcus52.6,tim36.9
+2026-05-05 14:23	marcus=6,sasha=5,musa=4,stephen=4,aatif=3,alex=3,martyn=0	-	martyn	0	7	d2=2	martyn+2.2,aatif+1.0,alex+1.0,stephen-0.2,musa-0.2,sasha-1.3,marcus-2.5	sasha135.3,aatif81.6,musa80.8,martyn80.0,stephen78.9,jem72.1,alex66.2,megan54.1,marcus50.1,tim36.9
+2026-05-05 15:16	stephen=5,tim=5,alex=4,aatif=4,marcus=4,martyn=3,musa=2,jem=2	musa=3+1+3=7,jem=2+6+2=10	musa	2	8	d6=6	jem+2.7,martyn+1.6,alex+0.4,aatif+0.4,marcus+0.4,stephen-0.7,tim-0.7,musa-4.1	sasha135.3,aatif82.0,martyn81.6,stephen78.1,musa76.7,jem74.8,alex66.6,megan54.1,marcus50.5,tim36.2
+2026-05-05 16:52	aatif=4,stephen=4,alex=3,martyn=3,jem=3,musa=0	-	musa	0	6	d4=4	martyn+0.6,alex+0.6,jem+0.6,stephen-0.6,aatif-0.6,musa-0.6	sasha135.3,martyn82.2,aatif81.4,stephen77.5,musa76.1,jem75.4,alex67.2,megan54.1,marcus50.5,tim36.2
+2026-05-06 10:02	marcus=4,aatif=4,alex=4,martyn=3	-	martyn	3	4	d5=5	marcus+1.3,aatif+1.3,alex+1.3,martyn-4.0	sasha135.3,aatif82.7,martyn78.2,stephen77.5,musa76.1,jem75.4,alex68.5,megan54.1,marcus51.8,tim36.2
+2026-05-06 10:58	musa=6,alex=4,aatif=4,martyn=4	alex=2+2+4=8,aatif=1+4+4=9,martyn=6+6+2=14	alex	4	4	d6=6	aatif+2.7,martyn+2.7,musa+0.0,alex-5.3	sasha135.3,aatif85.4,martyn80.8,stephen77.5,musa76.1,jem75.4,alex63.2,megan54.1,marcus51.8,tim36.2
+2026-05-06 14:21	marcus=6,sasha=5,jem=4,martyn=4,alex=3,tim=3	alex=1+6+1=8,tim=3+3+5=11	alex	3	6	d2=2	tim+1.8,martyn+0.6,jem+0.6,alex-0.6,sasha-0.6,marcus-1.8	sasha134.8,aatif85.4,martyn81.4,stephen77.5,musa76.1,jem76.0,alex62.6,megan54.1,marcus50.0,tim38.0
+2026-05-06 15:37	musa=5,stephen=4,martyn=4	stephen=2+5+3=10,martyn=4+2+5=11	stephen	4	3	d2=2	martyn+1.5,musa+0.0,stephen-1.5	sasha134.8,aatif85.4,martyn82.9,musa76.1,stephen76.0,jem76.0,alex62.6,megan54.1,marcus50.0,tim38.0
+2026-05-06 16:54	musa=4,aatif=4,martyn=1	-	martyn	1	3	d3=3	(no transfers)	sasha134.8,aatif85.4,martyn82.9,musa76.1,stephen76.0,jem76.0,alex62.6,megan54.1,marcus50.0,tim38.0
+2026-05-07 09:55	alex=5,marcus=4,martyn=4	marcus=5+1+4=10,martyn=1+2+4=7	martyn	4	3	d6=6	marcus+3.5,alex+2.0,martyn-5.5	sasha134.8,aatif85.4,martyn77.4,musa76.1,stephen76.0,jem76.0,alex64.6,megan54.1,marcus53.5,tim38.0
+2026-05-07 11:27	martyn=5,alex=5,musa=4,stephen=4	musa=2+4+4=10,stephen=2+6+5=13	musa	4	4	d2=2	stephen+1.3,martyn-0.0,alex-0.0,musa-1.3	sasha134.8,jem106.0,aatif85.4,martyn77.4,stephen77.4,musa74.7,alex64.6,megan54.1,marcus53.5,tim38.0
+2026-05-07 13:31	stephen=5,sasha=5,megan=4,aatif=4,musa=0	-	musa	0	5	d4=4	aatif+0.5,musa+0.5,megan+0.5,stephen-0.8,sasha-0.8	sasha134.0,jem106.0,aatif85.9,martyn77.4,stephen76.6,musa75.2,alex64.6,megan54.6,marcus53.5,tim38.0
+2026-05-07 14:27	musa=6,aatif=5,sasha=5,alex=5,jem=4,stephen=4,martyn=4	jem=3+2+1=6,stephen=1+6+1=8,martyn=1+1+2=4	martyn	4	7	d3=3	stephen+1.3,jem+1.3,aatif+0.2,sasha+0.2,alex+0.2,musa-1.0,martyn-2.2	sasha134.2,jem107.3,aatif86.1,stephen78.0,martyn75.3,musa74.2,alex64.8,megan54.6,marcus53.5,tim38.0
+2026-05-07 16:05	martyn=5,stephen=5,megan=5,musa=4,aatif=3,jem=3	aatif=5+3+5=13,jem=3+4+6=13;REROLL aatif=6+2+4=12,jem=2+6+1=9	jem	3	6	d3=3	aatif+2.0,musa+0.8,stephen-0.4,megan-0.4,martyn-0.4,jem-1.6	sasha134.2,jem105.7,aatif88.1,stephen77.6,musa75.0,martyn74.9,alex64.8,megan54.2,marcus53.5,tim38.0
+2026-05-07 16:32	tim=5,alex=5,martyn=4,musa=4,jem=4,sasha=4,aatif=4,stephen=3	-	stephen	3	8	d4=4	sasha+0.7,aatif+0.7,musa+0.7,jem+0.7,martyn+0.7,alex-0.4,tim-0.4,stephen-2.7	sasha134.9,jem106.4,aatif88.8,musa75.7,martyn75.6,stephen74.8,alex64.3,megan54.2,marcus53.5,tim37.5
+2026-05-07 16:54	alex=5,musa=4,aatif=4,jem=4,stephen=4,martyn=4,tim=4,sasha=4,marcus=3	-	marcus	3	9	d4=4	musa+0.5,martyn+0.5,stephen+0.5,aatif+0.5,jem+0.5,tim+0.5,sasha+0.5,alex-0.6,marcus-2.9	sasha135.4,jem106.9,aatif89.3,musa76.2,martyn76.1,stephen75.3,alex63.7,megan54.2,marcus50.6,tim38.0
+2026-05-08 10:25	martyn=5,sasha=5,musa=4,marcus=4,tim=3	-	tim	3	5	d5=5	musa+1.5,marcus+1.5,sasha+0.2,martyn+0.2,tim-3.5	sasha135.6,jem106.9,aatif89.3,musa77.7,martyn76.3,stephen75.3,alex63.7,megan54.2,marcus52.1,tim34.5
+2026-05-08 13:35	tim=5,marcus=5,sasha=5,martyn=4,aatif=4,musa=0	-	musa	0	6	d4=4	aatif+0.6,martyn+0.6,musa+0.6,marcus-0.6,tim-0.6,sasha-0.6	sasha135.0,jem106.9,aatif89.9,musa78.3,martyn76.9,stephen75.3,alex63.7,megan54.2,marcus51.5,tim33.9
+2026-05-08 15:22	musa=6,marcus=5,sasha=5,aatif=4	-	aatif	4	4	d3=3	sasha+1.0,marcus+1.0,musa-0.3,aatif-1.7	sasha136.0,jem106.9,aatif88.2,musa78.0,martyn76.9,stephen75.3,alex63.7,megan54.2,marcus52.5,tim33.9
+2026-05-11 11:39	tim=5,stephen=5,marcus=5,aatif=4,musa=4	aatif=2+3+4=9,musa=5+2+2=9;REROLL aatif=4+1+3=8,musa=3+2+4=9	aatif	4	5	d4=4	musa+1.8,tim+0.5,stephen+0.5,marcus+0.5,aatif-3.2	sasha136.0,jem106.9,aatif85.0,musa79.8,martyn76.9,stephen75.8,alex63.7,megan54.2,marcus53.0,tim34.4
+2026-05-11 13:34	marcus=5,tim=5,musa=5	marcus=1+1+2=4,tim=4+1+2=7,musa=6+2+5=13	marcus	5	3	d3=3	musa+1.5,tim+1.5,marcus-3.0	sasha136.0,jem106.9,aatif85.0,musa81.3,martyn76.9,stephen75.8,alex63.7,megan54.2,marcus50.0,tim35.9
+2026-05-11 14:25	musa=6,marcus=6,aatif=5,stephen=5,jem=3	-	jem	3	5	d4=4	stephen+1.0,aatif+1.0,musa-0.2,marcus-0.2,jem-1.5	sasha136.0,jem105.4,aatif86.0,musa81.0,martyn76.9,stephen76.8,alex63.7,megan54.2,marcus49.8,tim35.9
+2026-05-11 15:42	stephen=6,aatif=5,sasha=5	aatif=2+4+5=11,sasha=4+2+4=10	sasha	5	3	d2=2	aatif+1.5,stephen+0.0,sasha-1.5	sasha134.5,jem105.4,aatif87.5,musa81.0,martyn76.9,stephen76.8,alex63.7,megan54.2,marcus49.8,tim35.9
+2026-05-12 10:09	jem=5,aatif=4,marcus=4,megan=4,stephen=2,alex=1	-	alex	1	6	d1=1	stephen+1.8,alex+1.8,aatif-0.6,marcus-0.6,megan-0.6,jem-1.8	sasha134.5,jem103.6,aatif86.9,musa81.0,stephen78.6,martyn76.9,alex65.5,megan53.6,marcus49.2,tim35.9
+2026-05-12 11:03	stephen=5,musa=5,megan=3,aatif=3	megan=2+6+6=14,aatif=3+3+6=12	aatif	3	4	d5=5	megan+3.0,stephen+0.3,musa+0.3,aatif-3.7	sasha134.5,jem103.6,aatif83.2,musa81.3,stephen79.0,martyn76.9,alex65.5,megan56.6,marcus49.2,tim35.9
+2026-05-12 12:59	alex=4,sasha=4,stephen=4,aatif=0,musa=0	aatif=3+4+4=11,musa=3+3+6=12	aatif	0	5	d1=1	musa+3.2,aatif+2.0,alex-1.8,stephen-1.8,sasha-1.8	sasha132.8,jem103.6,aatif85.2,musa84.6,stephen77.2,martyn76.9,alex63.8,megan56.6,marcus49.2,tim35.9
+2026-05-12 14:10	musa=5,stephen=4,jem=2,aatif=1	-	aatif	1	4	d1=1	jem+1.7,aatif+1.7,stephen-1.0,musa-2.3	sasha132.8,jem105.3,aatif86.9,musa82.3,martyn76.9,stephen76.2,alex63.8,megan56.6,marcus49.2,tim35.9
+2026-05-12 14:47	alex=5,aatif=4,marcus=3,musa=3	marcus=3+3+5=11,musa=1+2+5=8	musa	3	4	d6=6	marcus+3.0,aatif+1.7,alex+0.3,musa-5.0	sasha132.8,jem105.3,aatif88.5,musa77.3,martyn76.9,stephen76.2,alex64.1,megan56.6,marcus52.2,tim35.9
+2026-05-13 10:24	martyn=5,musa=4,jem=3,sasha=1,marcus=1,aatif=0	-	aatif	0	6	d4=4	sasha+2.4,marcus+2.4,jem+0.0,musa-1.2,aatif-1.2,martyn-2.4	sasha135.2,jem105.3,aatif87.3,stephen76.2,musa76.1,martyn74.5,alex64.1,megan56.6,marcus54.6,tim35.9
+2026-05-13 13:29	marcus=5,stephen=4,musa=4,martyn=4,sasha=3,jem=3,aatif=3	sasha=5+4+4=13,jem=1+6+4=11,aatif=5+3+5=13	jem	3	7	d3=3	sasha+1.3,aatif+1.3,stephen+0.2,martyn+0.2,musa+0.2,marcus-1.0,jem-2.2	sasha136.5,jem103.1,aatif88.7,stephen76.4,musa76.2,martyn74.7,alex64.1,megan56.6,marcus53.6,tim35.9
+2026-05-13 14:43	aatif=4,martyn=4,musa=4,tim=3,marcus=3,stephen=3	tim=6+6+1=13,marcus=2+2+3=7,stephen=4+6+4=14	marcus	3	6	d1=1	stephen+0.8,tim+0.8,marcus-0.4,musa-0.4,aatif-0.4,martyn-0.4	sasha136.5,jem103.1,aatif88.3,stephen77.2,musa75.8,martyn74.3,alex64.1,megan56.6,marcus53.2,tim36.7
+2026-05-14 10:16	stephen=5,musa=4,martyn=3	-	martyn	3	3	d4=4	musa+2.0,stephen+0.5,martyn-2.5	sasha136.5,jem103.1,aatif88.3,musa77.8,stephen77.7,martyn71.8,alex64.1,megan56.6,marcus53.2,tim36.7
+2026-05-14 11:20	stephen=5,martyn=4,musa=3	-	musa	3	3	d3=3	martyn+1.5,stephen+0.0,musa-1.5	sasha136.5,jem103.1,aatif88.3,stephen77.7,musa76.3,martyn73.3,alex64.1,megan56.6,marcus53.2,tim36.7
+2026-05-14 13:23	musa=4,martyn=4,sasha=3,aatif=3,jem=2	-	jem	2	5	d3=3	sasha+1.0,aatif+1.0,martyn-0.2,musa-0.2,jem-1.5	sasha137.5,jem101.6,aatif89.3,stephen77.7,musa76.1,martyn73.1,alex64.1,megan56.6,marcus53.2,tim36.7
+2026-05-14 16:21	alex=5,martyn=4,sasha=4,stephen=4,musa=4,aatif=3,jem=3	aatif=6+3+1=10,jem=4+2+5=11	aatif	3	7	d4=4	jem+1.7,sasha+0.5,musa+0.5,martyn+0.5,stephen+0.5,alex-0.7,aatif-3.0	sasha138.0,jem103.3,aatif86.3,stephen78.2,musa76.6,martyn73.6,alex63.4,megan56.6,marcus53.2,tim36.7
+2026-05-15 09:37	martyn=5,alex=4,marcus=3	-	marcus	3	3	d1=1	marcus+0.5,alex+0.5,martyn-1.0	sasha138.0,jem103.3,aatif86.3,stephen78.2,musa76.6,martyn72.6,alex63.9,megan56.6,marcus53.7,tim36.7
+2026-05-15 10:46	alex=5,martyn=4,musa=4,tim=4,marcus=2	-	marcus	2	5	d1=1	marcus+1.2,musa+0.0,tim+0.0,martyn+0.0,alex-1.2	sasha138.0,jem103.3,aatif86.3,stephen78.2,musa76.6,martyn72.6,alex62.7,megan56.6,marcus54.9,tim36.7
+2026-05-15 13:50	stephen=5,alex=4,martyn=4,musa=3	-	musa	3	4	d3=3	alex+1.0,martyn+1.0,stephen-0.3,musa-1.7	sasha138.0,jem103.3,aatif86.3,stephen77.9,musa74.9,martyn73.6,alex63.7,megan56.6,marcus54.9,tim36.7
+2026-05-15 15:01	musa=5,marcus=4,stephen=4,sasha=0	-	sasha	0	4	d3=3	sasha+1.3,marcus+0.0,stephen+0.0,musa-1.3	sasha139.3,jem103.3,aatif86.3,stephen77.9,musa73.6,martyn73.6,alex63.7,megan56.6,marcus54.9,tim36.7
+2026-05-15 16:42	(none - musa alone)	-	musa	-	1	-	-	-
+2026-05-18 09:12	martyn=5,alex=4	-	alex	4	2	d5=5	martyn+4.0,alex-4.0	sasha139.3,jem103.3,aatif86.3,stephen77.9,martyn77.6,musa73.6,alex59.7,megan56.6,marcus54.9,tim36.7
+2026-05-18 11:10	stephen=6,alex=5,marcus=4,musa=4,martyn=4,sasha=0	-	sasha	0	6	d5=5	martyn+0.8,musa+0.8,marcus+0.8,alex-0.4,sasha-0.4,stephen-1.6	sasha138.9,jem103.3,aatif86.3,martyn78.4,stephen76.3,musa74.4,alex59.3,megan56.6,marcus55.7,tim36.7
+2026-05-18 14:01	alex=6,marcus=6,sasha=4,musa=2	-	musa	2	4	d6=6	sasha+2.7,marcus+0.0,alex+0.0,musa-2.7	sasha141.6,jem103.3,aatif86.3,martyn78.4,stephen76.3,musa71.7,alex59.3,megan56.6,marcus55.7,tim36.7
+2026-05-18 14:35	stephen=7,megan=4	-	megan	4	2	d4=4	stephen+1.0,megan-1.0	sasha141.6,jem103.3,aatif86.3,martyn78.4,stephen77.3,musa71.7,alex59.3,marcus55.7,megan55.6,tim36.7
+2026-05-18 15:40	martyn=4,marcus=1	-	marcus	1	2	d6=6	martyn+3.0,marcus-3.0	sasha141.6,jem103.3,aatif86.3,martyn81.4,stephen77.3,musa71.7,alex59.3,megan55.6,marcus52.7,tim36.7
+2026-05-18 16:00	tim=5,musa=4,sasha=0	-	sasha	0	3	d1=1	sasha+3.5,musa-1.0,tim-2.5	sasha145.1,jem103.3,aatif86.3,martyn81.4,stephen77.3,musa70.7,alex59.3,megan55.6,marcus52.7,tim34.2
+2026-05-19 09:20	martyn=4,alex=4	martyn=4+4+2=10,alex=2+1+2=5	alex	4	2	d4=4	martyn+4.0,alex-4.0	sasha145.1,jem103.3,aatif86.3,martyn85.4,stephen77.3,musa70.7,megan55.6,alex55.3,marcus52.7,tim34.2
+2026-05-19 10:38	musa=5,martyn=5,alex=2,marcus=0	-	marcus	0	4	d1=1	marcus+3.0,alex+1.7,martyn-2.3,musa-2.3	sasha145.1,jem103.3,aatif86.3,martyn83.0,stephen77.3,musa68.4,alex56.9,marcus55.7,megan55.6,tim34.2
+2026-05-19 15:54	alex=6,musa=4,martyn=4,aatif=2,marcus=0	-	marcus	0	5	d5=5	aatif+2.8,musa+0.2,martyn+0.2,marcus-1.0,alex-2.2	sasha145.1,jem103.3,aatif89.0,martyn83.3,stephen77.3,musa68.6,megan55.6,marcus54.7,alex54.7,tim34.2
+2026-05-20 09:41	alex=4,marcus=0	-	marcus	0	2	d5=5	alex+1.0,marcus-1.0	sasha145.1,jem103.3,aatif89.0,martyn83.3,stephen77.3,musa68.6,alex55.7,megan55.6,marcus53.7,tim34.2
+2026-05-20 10:55	martyn=4,alex=1,sasha=0	-	sasha	0	3	d2=2	alex+2.0,sasha+0.5,martyn-2.5	sasha145.6,jem103.3,aatif89.0,martyn80.8,stephen77.3,musa68.6,alex57.7,megan55.6,marcus53.7,tim34.2
+2026-05-20 11:47	tim=3,alex=2,martyn=1	-	martyn	1	3	d3=3	alex+1.5,tim+0.0,martyn-1.5	sasha145.6,jem103.3,aatif89.0,martyn79.3,stephen77.3,musa68.6,alex59.2,megan55.6,marcus53.7,tim34.2
+2026-05-20 15:28	alex=4,martyn=3,sasha=2,marcus=2	sasha=5+5+5=15,marcus=2+6+6=14	marcus	2	4	d1=1	sasha+1.3,marcus+0.0,martyn-0.0,alex-1.3	sasha146.9,jem103.3,aatif89.0,martyn79.3,stephen77.3,musa68.6,alex57.9,megan55.6,marcus53.7,tim34.2
+2026-05-21 11:14	marcus=4,martyn=3,sasha=3,alex=2	-	alex	2	4	d1=1	alex+0.3,martyn+0.3,sasha+0.3,marcus-1.0	sasha147.3,jem103.3,aatif89.0,martyn79.6,stephen77.3,musa68.6,alex58.2,megan55.6,marcus52.7,tim34.2
+2026-05-21 14:31	martyn=3,marcus=0	-	marcus	0	2	d3=3	(no transfers)	sasha147.3,jem103.3,aatif89.0,martyn79.6,stephen77.3,musa68.6,alex58.2,megan55.6,marcus52.7,tim34.2
+2026-05-22 10:36	stephen=5,marcus=0	-	marcus	0	2	d3=3	marcus+2.0,stephen-2.0	sasha147.3,jem103.3,aatif89.0,martyn79.6,stephen75.3,musa68.6,alex58.2,megan55.6,marcus54.7,tim34.2
+2026-05-22 10:37	alex=3,marcus=0	-	marcus	0	2	d5=5	alex+2.0,marcus-2.0	sasha147.3,jem103.3,aatif89.0,martyn79.6,stephen75.3,musa68.6,alex60.2,megan55.6,marcus52.7,tim34.2
+2026-05-26 09:59	stephen=4,alex=1,marcus=0	-	marcus	0	3	d6=6	alex+4.0,stephen-0.5,marcus-3.5	sasha147.3,jem103.3,aatif89.0,martyn79.6,stephen74.8,musa68.6,alex64.2,megan55.6,marcus49.2,tim34.2
+2026-05-26 13:22	alex=4,stephen=3,marcus=1	-	marcus	1	3	d2=2	marcus+0.5,stephen+0.5,alex-1.0	sasha147.3,jem103.3,aatif89.0,martyn79.6,stephen75.3,musa68.6,alex63.2,megan55.6,marcus49.7,tim34.2
+2026-05-26 14:47	(none - stephen alone)	-	stephen	-	1	-	-	-
+2026-05-26 14:48	alex=3,sasha=3,marcus=3,stephen=2	-	stephen	2	4	d1=1	(all 0.0)	sasha147.3,jem103.3,aatif89.0,martyn79.6,stephen75.3,musa68.6,alex63.2,megan55.6,marcus49.7,tim34.2
+2026-05-27 10:32	(none - stephen alone)	-	stephen	-	1	-	-	-
+2026-05-27 10:33	tim=3,stephen=2	-	stephen	2	2	d4=4	tim+3.0,stephen-3.0	sasha147.3,jem103.3,aatif89.0,martyn79.6,stephen72.3,musa68.6,alex63.2,megan55.6,marcus49.7,tim37.2
+2026-05-27 12:50	stephen=4,marcus=3	-	marcus	3	2	d3=3	stephen+2.0,marcus-2.0	sasha147.3,jem103.3,aatif89.0,martyn79.6,stephen74.3,musa68.6,alex63.2,megan55.6,marcus47.7,tim37.2
+2026-05-27 14:54	alex=5,stephen=3,marcus=2	-	marcus	2	3	d4=4	stephen+2.5,alex-0.5,marcus-2.0	sasha147.3,jem103.3,aatif89.0,martyn79.6,stephen76.8,musa68.6,alex62.7,megan55.6,marcus45.7,tim37.2
+2026-05-28 11:49	musa=5,marcus=4,tim=4,sasha=4,stephen=3	-	stephen	3	5	d4=4	tim+1.0,marcus+1.0,sasha+1.0,musa-0.2,stephen-2.8	sasha148.3,jem103.3,aatif89.0,martyn79.6,stephen74.0,musa68.4,alex62.7,megan55.6,marcus46.7,tim38.2
+2026-05-28 11:50	(none - alex alone)	-	alex	-	1	-	-	-
+2026-05-28 13:16	alex=4,stephen=4,marcus=3,musa=1	-	musa	1	4	d2=2	marcus+0.7,musa+0.7,stephen-0.7,alex-0.7	sasha148.3,jem103.3,aatif89.0,martyn79.6,stephen73.3,musa69.0,alex62.0,megan55.6,marcus47.4,tim38.2
+2026-05-28 16:53	(none - musa alone)	-	musa	-	1	-	-	-
+2026-05-29 11:18	stephen=4,marcus=4,tim=3,musa=2	-	musa	2	4	d6=6	tim+2.3,marcus+1.0,stephen+1.0,musa-4.3	sasha148.3,jem103.3,aatif89.0,martyn79.6,stephen74.3,musa64.7,alex62.0,megan55.6,marcus48.4,tim40.6
+2026-05-29 11:19	(none - alex alone)	-	alex	-	1	-	-	-
+2026-05-29 15:08	alex=4,musa=3,sasha=0	-	sasha	0	3	d3=3	sasha+0.5,musa+0.5,alex-1.0	sasha148.8,jem103.3,aatif89.0,martyn79.6,stephen74.3,musa65.2,alex61.0,megan55.6,marcus48.4,tim40.6
+2026-06-01 09:53	stephen=5,alex=4,martyn=4,marcus=4,sasha=3	-	sasha	3	5	d3=3	alex+0.8,martyn+0.8,marcus+0.8,stephen-0.5,sasha-1.8	sasha147.0,jem103.3,aatif89.0,martyn80.4,stephen73.8,musa65.2,alex61.8,megan55.6,marcus49.2,tim40.6
+2026-06-01 13:39	martyn=4,alex=3,stephen=3,marcus=2,musa=1	-	musa	1	5	d4=4	marcus+1.8,alex+0.5,stephen+0.5,martyn-0.8,musa-2.0	sasha147.0,jem103.3,aatif89.0,martyn79.6,stephen74.3,musa63.2,alex62.3,megan55.6,marcus50.9,tim40.6
+2026-06-01 15:06	sasha=4,stephen=4,martyn=3,musa=3,marcus=0	-	marcus	0	5	d5=5	musa+1.0,martyn+1.0,stephen-0.2,sasha-0.2,marcus-1.5	sasha146.8,jem103.3,aatif89.0,martyn80.6,stephen74.1,musa64.2,alex62.3,megan55.6,marcus49.4,tim40.6
+2026-06-01 17:08	martyn=3,musa=3,alex=2	-	alex	2	3	d6=6	martyn+2.5,musa+2.5,alex-5.0	sasha146.8,jem103.3,aatif89.0,martyn83.1,stephen74.1,musa66.7,alex57.3,megan55.6,marcus49.4,tim40.6
+2026-06-02 13:48	musa=4,marcus=4,martyn=2	-	martyn	2	3	d2=2	(no transfers)	sasha146.8,jem103.3,aatif89.0,martyn83.1,stephen74.1,musa66.7,alex57.3,megan55.6,marcus49.4,tim40.6
+2026-06-02 14:15	musa=3,martyn=2,marcus=0,sasha=0	marcus=2+3+1=6,sasha=1+3+6=10	marcus	0	4	d6=6	sasha+3.7,martyn+1.0,musa-0.3,marcus-4.3	sasha150.4,jem103.3,aatif89.0,martyn84.1,stephen74.1,musa66.4,alex57.3,megan55.6,marcus45.1,tim40.6
+2026-06-03 10:52	martyn=3,musa=2,marcus=2	musa=6+6+2=14,marcus=3+5+3=11	marcus	2	3	d5=5	musa+3.0,martyn+1.5,marcus-4.5	sasha150.4,jem103.3,aatif89.0,martyn85.6,stephen74.1,musa69.4,alex57.3,megan55.6,marcus40.6,tim40.6
+2026-06-03 13:41	(none - martyn alone)	-	martyn	-	1	-	-	-
+2026-06-03 14:21	martyn=3,marcus=3,musa=2	-	musa	2	3	d1=1	(no transfers)	sasha150.4,jem103.3,aatif89.0,martyn85.6,stephen74.1,musa69.4,alex57.3,megan55.6,marcus40.6,tim40.6
+2026-06-03 16:05	tim=5,marcus=5,musa=4	-	musa	4	3	d5=5	marcus+2.0,tim+2.0,musa-4.0	sasha150.4,jem103.3,aatif89.0,martyn85.6,stephen74.1,musa65.4,alex57.3,megan55.6,marcus42.6,tim42.6
+2026-06-04 10:43	musa=4,sasha=4,stephen=0	-	stephen	0	3	d5=5	musa+0.5,sasha+0.5,stephen-1.0	sasha150.9,jem103.3,aatif89.0,martyn85.6,stephen73.1,musa65.9,alex57.3,megan55.6,marcus42.6,tim42.6
+2026-06-04 11:33	stephen=4,martyn=3,marcus=3,musa=2	-	musa	2	4	d2=2	martyn+0.7,marcus+0.7,musa-0.7,stephen-0.7	sasha150.9,jem103.3,aatif89.0,martyn86.3,stephen72.4,musa65.2,alex57.3,megan55.6,marcus43.2,tim42.6
+2026-06-04 14:02	musa=5,tim=4,marcus=3,stephen=3,sasha=0	-	sasha	0	5	d4=4	stephen+1.0,marcus+1.0,sasha-0.2,tim-0.2,musa-1.5	sasha150.7,jem103.3,aatif89.0,martyn86.3,stephen73.4,musa63.7,alex57.3,megan55.6,marcus44.2,tim42.3
+2026-06-04 16:12	marcus=4,musa=4,megan=4,stephen=3,martyn=3	stephen=5+1+6=12,martyn=6+5+4=15	stephen	3	5	d2=2	martyn+1.2,marcus+0.0,musa+0.0,megan+0.0,stephen-1.2	sasha150.7,jem103.3,aatif89.0,martyn87.5,stephen72.2,musa63.7,alex57.3,megan55.6,marcus44.2,tim42.3
+2026-06-05 11:07	musa=4,marcus=4,stephen=4,martyn=3	-	martyn	3	4	d5=5	marcus+1.3,stephen+1.3,musa+1.3,martyn-4.0	sasha150.7,jem103.3,aatif89.0,martyn83.5,stephen73.5,musa65.0,alex57.3,megan55.6,marcus45.6,tim42.3
+2026-06-05 14:43	marcus=4,martyn=4,stephen=4,musa=0	-	musa	0	4	d6=6	martyn+0.7,marcus+0.7,stephen+0.7,musa-2.0	sasha150.7,jem103.3,aatif89.0,martyn84.2,stephen74.2,musa63.0,alex57.3,megan55.6,marcus46.2,tim42.3
+2026-06-08 12:17	megan=4,jem=2,aatif=0	-	aatif	0	3	d4=4	jem+2.0,megan-1.0,aatif-1.0	sasha150.7,jem105.3,aatif88.0,martyn84.2,stephen74.2,musa63.0,alex57.3,megan54.6,marcus46.2,tim42.3
+2026-06-08 13:37	tim=4,stephen=4,jem=3,aatif=2,megan=2	aatif=6+3+4=13,megan=1+1+3=5	megan	2	5	d2=2	aatif+1.8,jem+0.5,tim-0.8,megan-0.8,stephen-0.8	sasha150.7,jem105.8,aatif89.8,martyn84.2,stephen73.4,musa63.0,alex57.3,megan53.9,marcus46.2,tim41.6
+2026-06-08 14:44	stephen=4,sasha=3,jem=0	-	jem	0	3	d3=3	sasha+0.5,jem+0.5,stephen-1.0	sasha151.2,jem106.3,aatif89.8,martyn84.2,stephen72.4,musa63.0,alex57.3,megan53.9,marcus46.2,tim41.6
+2026-06-09 13:12	stephen=4,musa=4,megan=3,aatif=3,sasha=0	-	sasha	0	5	d2=2	sasha+1.5,aatif+0.2,megan+0.2,musa-1.0,stephen-1.0	jem106.3,aatif90.0,martyn84.2,sasha83.7,stephen71.4,adam69.0,musa62.0,alex57.3,megan54.1,marcus46.2,tim41.6
+2026-06-09 13:14	adam=4,jem=3,megan=3,sasha=3,musa=2,aatif=0	-	aatif	0	6	d2=2	musa+1.0,aatif+1.0,jem-0.2,megan-0.2,sasha-0.2,adam-1.4	jem106.1,aatif91.0,martyn84.2,sasha83.5,stephen71.4,adam67.6,musa63.0,alex57.3,megan53.9,marcus46.2,tim41.6
+2026-06-09 14:28	musa=4,stephen=3,megan=2	-	megan	2	3	d3=3	stephen+1.5,musa+0.0,megan-1.5	jem106.1,aatif91.0,martyn84.2,sasha83.5,stephen72.9,adam67.6,musa63.0,alex57.3,megan52.4,marcus46.2,tim41.6
+2026-06-09 15:16	tim=4,stephen=4,musa=3,jem=1,sasha=0	-	sasha	0	5	d1=1	sasha+2.0,jem+2.0,musa-0.5,stephen-1.8,tim-1.8	jem108.1,aatif91.0,sasha85.5,martyn84.2,stephen71.2,adam67.6,musa62.5,alex57.3,megan52.4,marcus46.2,tim39.8
+2026-06-09 16:25	megan=4,jem=1,stephen=0	-	stephen	0	3	d6=6	jem+4.0,megan-0.5,stephen-3.5	jem112.1,aatif91.0,sasha85.5,martyn84.2,stephen67.7,adam67.6,musa62.5,alex57.3,megan51.9,marcus46.2,tim39.8
+2026-06-09 16:46	megan=1,jem=1,adam=1,musa=0	-	musa	0	4	d5=5	adam+1.3,jem+1.3,megan+1.3,musa-4.0	jem113.4,aatif91.0,sasha85.5,martyn84.2,adam68.9,stephen67.7,musa58.5,alex57.3,megan53.3,marcus46.2,tim39.8
+2026-06-10 10:16	marcus=4,musa=4,megan=2,aatif=2,adam=2,jem=1	-	jem	1	6	d2=2	adam+1.0,megan+1.0,aatif+1.0,jem-0.2,musa-1.4,marcus-1.4	jem113.2,aatif92.0,sasha85.5,martyn84.2,adam69.9,stephen67.7,alex57.3,musa57.1,megan54.3,marcus44.8,tim39.8
+2026-06-10 11:05	aatif=3,stephen=3,musa=2,jem=2	musa=5+1+3=9,jem=6+2+1=9;REROLL musa=4+2+6=12,jem=3+2+5=10	jem	2	4	d2=2	musa+1.3,stephen+0.0,aatif+0.0,jem-1.3	jem111.9,aatif92.0,sasha85.5,martyn84.2,adam69.9,stephen67.7,musa58.5,alex57.3,megan54.3,marcus44.8,tim39.8
+2026-06-10 12:11	stephen=4,jem=3,musa=2	-	musa	2	3	d1=1	musa+0.5,jem+0.5,stephen-1.0	jem112.4,aatif92.0,sasha85.5,martyn84.2,adam69.9,stephen66.7,musa59.0,alex57.3,megan54.3,marcus44.8,tim39.8
+2026-06-10 14:51	tim=3,musa=3,aatif=2,adam=2	aatif=1+6+5=12,adam=3+1+4=8	adam	2	4	d6=6	aatif+2.7,tim+1.3,musa+1.3,adam-5.3	jem112.4,aatif94.7,sasha85.5,martyn84.2,stephen66.7,adam64.6,musa60.3,alex57.3,megan54.3,marcus44.8,tim41.1
+2026-06-10 16:14	stephen=4,musa=4	stephen=2+2+6=10,musa=6+4+6=16	stephen	4	2	d6=6	musa+6.0,stephen-6.0	jem112.4,aatif94.7,sasha85.5,martyn84.2,musa66.3,adam64.6,stephen60.7,alex57.3,megan54.3,marcus44.8,tim41.1
+2026-06-11 11:07	alex=4,musa=4,stephen=4,megan=3,aatif=3,jem=2	-	jem	2	6	d2=2	megan+0.8,aatif+0.8,stephen-0.4,alex-0.4,musa-0.4,jem-0.4	jem112.0,aatif95.5,sasha85.5,martyn84.2,musa65.9,adam64.6,stephen60.3,alex56.9,megan55.1,marcus44.8,tim41.1
+2026-06-11 12:21	marcus=3,alex=3,jem=3,aatif=3,megan=3,adam=2,stephen=0	-	stephen	0	7	d6=6	adam+1.5,alex+0.3,marcus+0.3,megan+0.3,jem+0.3,aatif+0.3,stephen-3.2	jem112.3,aatif95.8,sasha85.5,martyn84.2,adam66.1,musa65.9,alex57.2,stephen57.1,megan55.4,marcus45.2,tim41.1
+2026-06-11 15:17	musa=3,aatif=3	musa=1+1+2=4,aatif=4+6+5=15	musa	3	2	d1=1	aatif+1.0,musa-1.0	jem112.3,aatif96.8,sasha85.5,martyn84.2,adam66.1,musa64.9,alex57.2,stephen57.1,megan55.4,marcus45.2,tim41.1
+2026-06-11 17:11	aatif=3,musa=3,jem=2	-	jem	2	3	d4=4	aatif+1.5,musa+1.5,jem-3.0	jem109.3,aatif98.3,sasha85.5,martyn84.2,musa66.4,adam66.1,alex57.2,stephen57.1,megan55.4,marcus45.2,tim41.1
+2026-06-12 10:47	aatif=3,marcus=3,musa=3,alex=3	aatif=3+1+2=6,marcus=3+4+2=9,musa=1+5+5=11,alex=5+6+4=15	aatif	3	4	d1=1	alex+0.3,musa+0.3,marcus+0.3,aatif-1.0	jem109.3,aatif97.3,sasha85.5,martyn84.2,musa66.7,adam66.1,alex57.5,stephen57.1,megan55.4,marcus45.5,tim41.1
+2026-06-12 13:30	alex=4,marcus=4,aatif=3,musa=0	-	musa	0	4	d1=1	musa+2.7,aatif-0.0,alex-1.3,marcus-1.3	jem109.3,aatif97.3,sasha85.5,martyn84.2,musa69.4,adam66.1,stephen57.1,alex56.2,megan55.4,marcus44.2,tim41.1
+2026-06-15 11:15	tim=4,jem=3,adam=2,aatif=0,marcus=0	aatif=6+3+1=10,marcus=3+4+5=12	aatif	0	5	d1=1	marcus+2.5,aatif+1.2,adam+0.0,jem-1.2,tim-2.5	jem108.1,aatif98.6,sasha85.5,martyn84.2,musa69.4,adam66.1,stephen57.1,alex56.2,megan55.4,marcus46.7,tim38.6
+2026-06-15 14:20	musa=3,marcus=2,sasha=2,aatif=0	-	aatif	0	4	d2=2	aatif+0.3,sasha+0.3,marcus+0.3,musa-1.0	sasha154.8,jem108.1,aatif98.9,martyn84.2,musa68.4,adam66.1,stephen57.1,alex56.2,megan55.4,marcus47.0,tim38.6
+2026-06-15 16:06	tim=3,musa=2,jem=2,marcus=2,aatif=2	musa=5+3+3=11,jem=4+3+5=12,marcus=3+5+3=11,aatif=3+1+3=7	aatif	2	5	d4=4	musa+1.2,marcus+1.2,jem+1.2,tim+0.0,aatif-3.8	sasha154.8,jem109.3,aatif95.2,martyn84.2,musa69.7,adam66.1,stephen57.1,alex56.2,megan55.4,marcus48.3,tim38.6
+2026-06-16 10:28	musa=3,jem=1,aatif=0	-	aatif	0	3	d5=5	jem+3.0,musa+0.0,aatif-3.0	sasha154.8,jem112.3,aatif92.2,martyn84.2,musa69.7,adam66.1,stephen57.1,alex56.2,megan55.4,marcus48.3,tim38.6
+2026-06-16 16:00	adam=2,musa=2,aatif=0	-	aatif	0	3	d4=4	adam+1.0,musa+1.0,aatif-2.0	sasha154.8,jem112.3,aatif90.2,martyn84.2,musa70.7,adam67.1,stephen57.1,alex56.2,megan55.4,marcus48.3,tim38.6
+2026-06-16 16:27	musa=4,aatif=3,jem=2	-	jem	2	3	d5=5	aatif+2.5,musa+1.0,jem-3.5	sasha154.8,jem108.8,aatif92.7,martyn84.2,musa71.7,adam67.1,stephen57.1,alex56.2,megan55.4,marcus48.3,tim38.6
+2026-06-17 12:09	jem=3,aatif=3,megan=3,marcus=0	-	marcus	0	4	d3=3	(no transfers)	sasha154.8,jem108.8,aatif92.7,martyn84.2,musa71.7,adam67.1,stephen57.1,alex56.2,megan55.4,marcus48.3,tim38.6
+2026-06-17 13:58	musa=3,tim=3,megan=3,adam=2,aatif=0,sasha=0	aatif=6+2+3=11,sasha=1+4+5=10	sasha	0	6	d3=3	aatif+2.8,adam+0.4,sasha-0.8,musa-0.8,megan-0.8,tim-0.8	sasha154.0,jem108.8,aatif95.5,martyn84.2,musa70.9,adam67.5,stephen57.1,alex56.2,megan54.6,marcus48.3,tim37.8
+2026-06-18 11:07	aatif=3,marcus=3,sasha=2	-	sasha	2	3	d6=6	aatif+2.5,marcus+2.5,sasha-5.0	sasha149.0,jem108.8,aatif98.0,martyn84.2,musa70.9,adam67.5,stephen57.1,alex56.2,megan54.6,marcus50.8,tim37.8
+2026-06-18 12:40	aatif=3,musa=0	-	musa	0	2	d1=1	musa+2.0,aatif-2.0	sasha149.0,jem108.8,aatif96.0,martyn84.2,musa72.9,adam67.5,stephen57.1,alex56.2,megan54.6,marcus50.8,tim37.8
+2026-06-18 14:04	marcus=3,musa=3,jem=1,aatif=0	-	aatif	0	4	d5=5	jem+2.7,marcus+0.0,musa+0.0,aatif-2.7	sasha149.0,jem111.5,aatif93.3,martyn84.2,musa72.9,adam67.5,stephen57.1,alex56.2,megan54.6,marcus50.8,tim37.8
+2026-06-18 16:20	adam=3,marcus=3,tim=2,jem=1,musa=0	-	musa	0	5	d4=4	jem+2.0,tim+0.8,adam-0.5,marcus-0.5,musa-1.8	sasha149.0,jem113.5,aatif93.3,martyn84.2,musa71.1,adam67.0,stephen57.1,alex56.2,megan54.6,marcus50.3,tim38.6
+2026-06-19 13:18	sasha=3,megan=2,aatif=2	megan=3+4+1=8,aatif=3+4+3=10	megan	2	3	d1=1	aatif+1.0,megan-0.5,sasha-0.5	sasha148.5,jem113.5,aatif94.3,martyn84.2,musa71.1,adam67.0,stephen57.1,alex56.2,megan54.1,marcus50.3,tim38.6
+2026-06-19 16:46	megan=4,aatif=2,jem=1	-	jem	1	3	d3=3	aatif+2.0,megan-1.0,jem-1.0	sasha148.5,jem112.5,aatif96.3,martyn84.2,musa71.1,adam67.0,stephen57.1,alex56.2,megan53.1,marcus50.3,tim38.6
+2026-06-22 11:32	sasha=4,aatif=3,alex=2	-	alex	2	3	d5=5	aatif+2.5,sasha+1.0,alex-3.5	sasha149.5,jem112.5,aatif98.8,martyn84.2,musa71.1,adam67.0,stephen57.1,megan53.1,alex52.7,marcus50.3,tim38.6
+2026-06-22 13:06	jem=1,musa=0,alex=0,martyn=0,adam=0,sasha=0,tim=0	musa=4+2+1=7,alex=6+4+4=14,martyn=2+6+4=12,adam=2+1+1=4,sasha=6+3+1=10,tim=5+1+4=10	adam	0	7	d1=1	alex+0.3,musa+0.3,martyn+0.3,sasha+0.3,tim+0.3,adam-0.8,jem-0.8	sasha149.9,jem111.7,aatif98.8,martyn84.5,musa71.4,adam66.2,stephen57.1,megan53.1,alex53.0,marcus50.3,tim38.9
+2026-06-22 14:49	musa=2,jem=1	-	jem	1	2	d1=1	(no transfers)	sasha149.9,jem111.7,aatif98.8,martyn84.5,musa71.4,adam66.2,stephen57.1,megan53.1,alex53.0,marcus50.3,tim38.9
+2026-06-22 15:07	alex=3,martyn=3,sasha=3,aatif=3,jem=2,musa=2	jem=2+6+6=14,musa=5+3+2=10	musa	2	6	d6=6	jem+2.0,aatif+0.8,sasha+0.8,alex+0.8,martyn+0.8,musa-5.2	sasha150.7,jem113.7,aatif99.6,martyn85.3,musa66.2,adam66.2,stephen57.1,alex53.8,megan53.1,marcus50.3,tim38.9
+2026-06-23 09:50	alex=4,megan=3,martyn=3,tim=2	-	tim	2	4	d6=6	martyn+2.0,megan+2.0,alex+0.7,tim-4.7	sasha150.7,jem113.7,martyn87.3,musa66.2,adam66.2,stephen57.1,megan55.1,alex54.5,marcus50.3,tim34.3
+2026-06-23 12:54	alex=3,musa=3,jem=1	-	jem	1	3	d2=2	(no transfers)	sasha150.7,jem113.7,martyn87.3,musa66.2,adam66.2,stephen57.1,megan55.1,alex54.5,marcus50.3,tim34.3
+2026-06-23 14:25	megan=3,martyn=3,alex=3,tim=3,adam=2,musa=1	-	musa	1	6	d5=5	adam+1.6,megan+0.4,tim+0.4,martyn+0.4,alex+0.4,musa-3.2	sasha150.7,jem113.7,martyn87.7,adam67.8,musa63.0,stephen57.1,megan55.5,alex54.9,marcus50.3,tim34.7
+2026-06-23 17:03	musa=3,alex=3,sasha=0	-	sasha	0	3	d2=2	sasha+1.0,musa-0.5,alex-0.5	sasha151.7,jem113.7,martyn87.7,adam67.8,musa62.5,stephen57.1,megan55.5,alex54.4,marcus50.3,tim34.7
+2026-06-23 17:09	(none - martyn alone)	-	martyn	-	1	-	-	-
+2026-06-24 15:18	megan=3,musa=3,jem=1	-	jem	1	3	d6=6	megan+2.0,musa+2.0,jem-4.0	sasha151.7,jem109.7,martyn87.7,adam67.8,musa64.5,megan57.5,stephen57.1,alex54.4,marcus50.3,tim34.7
+2026-06-25 10:44	alex=3,musa=3,sasha=3,tim=2,jem=2,adam=2	tim=4+6+4=14,jem=6+3+1=10,adam=6+6+3=15	jem	2	6	d2=2	tim+1.0,adam+1.0,alex-0.2,sasha-0.2,musa-0.2,jem-1.4	sasha151.5,jem108.3,martyn87.7,adam68.8,musa64.3,megan57.5,stephen57.1,alex54.2,marcus50.3,tim35.7
+2026-06-25 12:21	alex=3,musa=3,martyn=3	alex=2+6+6=14,musa=1+6+4=11,martyn=4+1+4=9	martyn	3	3	d6=6	alex+3.0,musa+3.0,martyn-6.0	sasha151.5,jem108.3,martyn81.7,adam68.8,musa67.3,megan57.5,alex57.2,stephen57.1,marcus50.3,tim35.7
+2026-06-25 13:28	martyn=4,alex=3,tim=3,adam=2,jem=0	-	jem	0	5	d3=3	adam+1.2,jem+0.0,tim+0.0,alex+0.0,martyn-1.2	sasha151.5,jem108.3,martyn80.5,adam70.0,musa67.3,megan57.5,alex57.2,stephen57.1,marcus50.3,tim35.7
+2026-06-25 14:45	martyn=3,alex=2,musa=1	-	musa	1	3	d2=2	alex+1.0,martyn-0.5,musa-0.5	sasha151.5,jem108.3,martyn80.0,adam70.0,musa66.8,alex58.2,megan57.5,stephen57.1,marcus50.3,tim35.7
+2026-06-25 15:47	alex=3,megan=3,adam=2,martyn=2,jem=1,sasha=0	-	sasha	0	6	d4=4	jem+1.8,adam+0.6,martyn+0.6,megan-0.6,alex-0.6,sasha-1.8	sasha149.7,jem110.1,martyn80.6,adam70.6,musa66.8,alex57.6,stephen57.1,megan56.9,marcus50.3,tim35.7
+2026-06-25 17:37	alex=2,musa=0	-	musa	0	2	d6=6	alex+4.0,musa-4.0	sasha149.7,jem110.1,martyn80.6,adam70.6,musa62.8,alex61.6,stephen57.1,megan56.9,marcus50.3,tim35.7
+2026-06-26 10:05	alex=4,musa=3,sasha=3,megan=3,martyn=3,adam=2	-	adam	2	6	d1=1	adam+0.2,martyn+0.2,sasha+0.2,musa+0.2,megan+0.2,alex-1.0	sasha149.9,jem110.1,martyn80.8,adam70.8,musa63.0,alex60.6,stephen57.1,megan57.1,marcus50.3,tim35.7
+2026-06-26 11:27	tim=5,alex=4,megan=3,martyn=3,musa=2,adam=1	-	adam	1	6	d6=6	musa+2.4,megan+1.2,martyn+1.2,alex-0.0,tim-1.2,adam-3.6	sasha149.9,jem110.1,martyn82.0,adam67.2,musa65.4,alex60.6,megan58.3,stephen57.1,marcus50.3,tim34.5
+2026-06-26 14:32	sasha=3,tim=1	-	tim	1	2	d1=1	tim+1.0,sasha-1.0	sasha148.9,jem110.1,martyn82.0,adam67.2,musa65.4,alex60.6,megan58.3,stephen57.1,marcus50.3,tim35.5
+2026-06-29 09:56	stephen=4,martyn=4,megan=3,musa=3,alex=3,tim=3,marcus=3,sasha=3	megan=3+1+5=9,musa=6+1+3=10,alex=6+5+1=12,tim=3+2+3=8,marcus=5+4+2=11,sasha=1+1+2=4	sasha	3	8	d6=6	tim+1.1,marcus+1.1,megan+1.1,musa+1.1,alex+1.1,stephen-0.0,martyn-0.0,sasha-5.7	sasha143.2,jem110.1,martyn82.0,adam67.2,musa66.6,alex61.7,megan59.4,stephen57.1,marcus51.4,tim36.6
+2026-06-29 14:06	stephen=5,martyn=4,megan=3	-	megan	3	3	d2=2	martyn+1.0,megan-0.5,stephen-0.5	sasha143.2,jem110.1,martyn83.0,adam67.2,musa66.6,alex61.7,megan58.9,stephen56.6,marcus51.4,tim36.6
+2026-06-29 15:45	megan=4,stephen=4	megan=4+3+5=12,stephen=1+1+3=5	stephen	4	2	d4=4	megan+4.0,stephen-4.0	sasha143.2,jem110.1,martyn83.0,adam67.2,musa66.6,megan62.9,alex61.7,stephen52.6,marcus51.4,tim36.6
+2026-06-29 16:29	(none - martyn alone)	-	martyn	-	1	-	-	-
+2026-06-30 10:03	musa=4,marcus=4,martyn=4,megan=3	-	megan	3	4	d1=1	(all 0.0)	sasha143.2,jem110.1,martyn83.0,adam67.2,musa66.6,megan62.9,alex61.7,stephen52.6,marcus51.4,tim36.6
+2026-06-30 12:27	(none - stephen alone)	-	stephen	-	1	-	-	-
+2026-06-30 13:20	megan=4,martyn=4,sasha=4,stephen=3,marcus=0	-	marcus	0	5	d2=2	marcus+1.8,stephen+0.5,megan-0.8,martyn-0.8,sasha-0.8	sasha142.4,jem110.1,martyn82.2,adam67.2,musa66.6,megan62.2,alex61.7,marcus53.2,stephen53.1,tim36.6
+2026-06-30 14:59	martyn=4,musa=3,megan=3,adam=2,stephen=0	-	stephen	0	5	d1=1	stephen+2.0,adam+0.8,musa-0.5,megan-0.5,martyn-1.8	sasha142.4,jem110.1,martyn80.5,adam68.0,musa66.1,alex61.7,megan61.7,stephen55.1,marcus53.2,tim36.6
+2026-06-30 16:30	stephen=3,musa=2,sasha=0	-	sasha	0	3	d1=1	sasha+1.5,musa+0.0,stephen-1.5	sasha143.9,jem110.1,martyn80.5,adam68.0,musa66.1,alex61.7,megan61.7,stephen53.6,marcus53.2,tim36.6
+2026-06-30 17:56	musa=3,adam=2,stephen=0	-	stephen	0	3	d1=1	stephen+1.5,adam+0.0,musa-1.5	sasha143.9,jem110.1,martyn80.5,adam68.0,musa64.6,alex61.7,megan61.7,stephen55.1,marcus53.2,tim36.6
+2026-07-01 10:42	stephen=3,adam=3,jem=3	stephen=2+1+2=5,adam=4+5+3=12,jem=2+4+2=8	stephen	3	3	d4=4	adam+2.0,jem+2.0,stephen-4.0	sasha143.9,jem112.1,martyn80.5,adam70.0,musa64.6,alex61.7,megan61.7,marcus53.2,stephen51.1,tim36.6
+2026-07-01 13:12	marcus=4,megan=3,stephen=3,adam=2	-	adam	2	4	d2=2	megan+0.7,stephen+0.7,adam-0.7,marcus-0.7	sasha143.9,jem112.1,martyn80.5,adam69.3,musa64.6,megan62.4,alex61.7,marcus52.5,stephen51.8,tim36.6
+2026-07-01 13:55	martyn=3,sasha=3	martyn=2+2+1=5,sasha=4+3+5=12	martyn	3	2	d3=3	sasha+3.0,martyn-3.0	sasha146.9,jem112.1,martyn77.5,adam69.3,musa64.6,megan62.4,alex61.7,marcus52.5,stephen51.8,tim36.6
+2026-07-01 14:46	martyn=3,tim=3,stephen=3,adam=3,jem=1	-	jem	1	5	d2=2	(no transfers)	sasha146.9,jem112.1,martyn77.5,adam69.3,musa64.6,megan62.4,alex61.7,marcus52.5,stephen51.8,tim36.6
+2026-07-02 10:05	stephen=4,aatif=3,tim=3,alex=3,martyn=3,adam=2,musa=0	-	musa	0	7	d2=2	musa+1.0,adam+1.0,tim-0.2,alex-0.2,aatif-0.2,martyn-0.2,stephen-1.3	sasha146.9,jem112.1,aatif99.4,martyn77.3,adam70.3,musa65.6,megan62.4,alex61.6,marcus52.5,stephen50.4,tim36.4
+2026-07-02 13:44	megan=3,stephen=3	megan=3+2+1=6,stephen=4+2+1=7	megan	3	2	d6=6	stephen+6.0,megan-6.0	sasha146.9,jem112.1,aatif99.4,martyn77.3,adam70.3,musa65.6,alex61.6,stephen56.4,megan56.4,marcus52.5,tim36.4
+2026-07-02 14:27	stephen=4,musa=4,megan=4,alex=4,aatif=2,adam=1,jem=1	adam=3+4+3=10,jem=2+6+1=9	jem	1	7	d1=1	adam+2.3,aatif+1.2,jem+1.2,musa-1.2,megan-1.2,alex-1.2,stephen-1.2	sasha146.9,jem113.2,aatif100.6,martyn77.3,adam72.6,musa64.4,alex60.4,stephen55.3,megan55.2,marcus52.5,tim36.4
+2026-07-02 15:35	sasha=3,martyn=3,aatif=3,musa=2,alex=2	musa=3+5+1=9,alex=6+4+2=12	musa	2	5	d3=3	alex+1.5,sasha+0.2,martyn+0.2,aatif+0.2,musa-2.2	sasha147.2,jem113.2,aatif100.8,martyn77.6,adam72.6,musa62.2,alex61.9,stephen55.3,megan55.2,marcus52.5,tim36.4
+2026-07-03 09:38	marcus=3,alex=3	marcus=2+6+2=10,alex=3+5+4=12	marcus	3	2	d4=4	alex+4.0,marcus-4.0	sasha147.2,jem113.2,aatif100.8,martyn77.6,adam72.6,alex65.9,musa62.2,stephen55.3,megan55.2,marcus48.5,tim36.4
+2026-07-03 11:31	marcus=4,musa=3,aatif=3,alex=0	-	alex	0	4	d3=3	aatif+0.3,alex+0.3,musa+0.3,marcus-1.0	sasha147.2,jem113.2,aatif101.2,martyn77.6,adam72.6,alex66.2,musa62.5,stephen55.3,megan55.2,marcus47.5,tim36.4
+2026-07-03 12:48	martyn=3,sasha=0	-	sasha	0	2	d6=6	martyn+3.0,sasha-3.0	sasha144.2,jem113.2,aatif101.2,martyn80.6,adam72.6,alex66.2,musa62.5,stephen55.3,megan55.2,marcus47.5,tim36.4
+2026-07-03 14:09	alex=3,marcus=0,martyn=0	marcus=2+4+3=9,martyn=4+2+1=7	martyn	0	3	d2=2	marcus+2.5,martyn-0.5,alex-2.0	sasha144.2,jem113.2,aatif101.2,martyn80.1,adam72.6,alex64.2,musa62.5,stephen55.3,megan55.2,marcus50.0,tim36.4
+2026-07-03 15:51	sasha=4,alex=3,marcus=1,aatif=1,musa=1,martyn=1	marcus=4+4+3=11,aatif=6+4+2=12,musa=6+2+1=9,martyn=4+5+4=13	musa	1	6	d2=2	martyn+1.4,marcus+1.4,aatif+1.4,alex-1.0,musa-1.0,sasha-2.2	sasha141.9,jem113.2,aatif102.6,martyn81.5,adam72.6,alex63.2,musa61.5,stephen55.3,megan55.2,marcus51.4,tim36.4
+2026-07-06 10:17	marcus=5,alex=4,martyn=4,aatif=4,adam=3,tim=3,jem=1	-	jem	1	7	d5x3=15	tim+3.0,adam+3.0,martyn+1.8,alex+1.8,aatif+1.8,marcus+0.7,jem-12.2	sasha141.9,aatif104.4,jem101.1,martyn83.3,adam75.6,alex65.1,musa61.5,stephen55.3,megan55.2,marcus52.1,tim39.4
+2026-07-06 11:07	alex=5,marcus=5	alex=5+2+1=8,marcus=2+3+5=10	alex	5	2	d4x0.5=2	marcus+2.0,alex-2.0	sasha141.9,aatif104.4,jem101.1,martyn83.3,adam75.6,alex63.1,musa61.5,stephen55.3,megan55.2,marcus54.1,tim39.4
+2026-07-06 12:18	alex=6,martyn=6,aatif=5,sasha=5,stephen=5,marcus=5,musa=4	-	musa	4	7	d3x3=9	sasha+1.7,marcus+1.7,aatif+1.7,stephen+1.7,alex+0.5,martyn+0.5,musa-7.7	sasha143.6,aatif106.1,jem101.1,martyn83.8,adam75.6,alex63.6,stephen56.9,marcus55.7,megan55.2,musa53.8,tim39.4
+2026-07-06 13:30	musa=7,martyn=7,stephen=6,aatif=6,adam=5	-	adam	5	5	d2x2=4	stephen+1.2,aatif+1.2,martyn+0.0,musa+0.0,adam-2.5	sasha143.6,aatif107.3,jem101.1,martyn83.8,adam73.1,alex63.6,stephen58.2,marcus55.7,megan55.2,musa53.8,tim39.4
+2026-07-06 14:14	jem=9,aatif=8,tim=6,stephen=6	tim=6+5+6=17,stephen=4+2+6=12	stephen	6	4	d1x1.5=1.5	tim+2.2,stephen+0.2,aatif-0.5,jem-1.8	sasha143.6,aatif106.8,jem99.2,martyn83.8,adam73.1,alex63.6,stephen58.4,marcus55.7,megan55.2,musa53.8,tim41.6
+2026-07-06 15:22	jem=8,stephen=8,martyn=7,musa=7,aatif=6,sasha=0	-	sasha	0	6	d2x2.5=5	sasha+2.2,aatif+1.0,martyn-0.2,musa-0.2,stephen-1.4,jem-1.4	sasha145.8,aatif107.8,jem97.8,martyn83.6,adam73.1,alex63.6,stephen57.0,marcus55.7,megan55.2,musa53.6,tim41.6
+2026-07-06 16:35	musa=9,jem=8,stephen=7,aatif=7	stephen=1+2+5=8,aatif=5+6+2=13	stephen	7	4	d3x1.5=4.5	aatif+2.5,jem+1.2,musa-0.2,stephen-3.5	sasha145.8,aatif110.3,jem99.0,martyn83.6,adam73.1,alex63.6,marcus55.7,megan55.2,musa53.5,stephen53.5,tim41.6
+2026-07-07 15:02	marcus=8,jem=8,stephen=8,aatif=7,megan=3,adam=0	-	adam	0	6	d1x2.5=2.5	adam+4.3,megan+3.7,aatif-1.1,stephen-2.3,jem-2.3,marcus-2.3	sasha145.8,aatif109.2,jem96.7,martyn83.6,adam77.4,alex63.6,megan58.9,musa53.5,marcus53.4,stephen51.2,tim41.6
+2026-07-07 15:59	jem=9,martyn=8,stephen=7,adam=7,sasha=6	-	sasha	6	5	d1x2=2	stephen+1.0,adam+1.0,martyn-0.2,sasha-0.2,jem-1.5	sasha145.6,aatif109.2,jem95.2,martyn83.3,adam78.4,alex63.6,megan58.9,musa53.5,marcus53.4,stephen52.2,tim41.6
+2026-07-08 10:26	jem=8,alex=7,tim=7,megan=4	-	megan	4	4	d2x1.5=3	tim+0.3,megan+0.3,alex+0.3,jem-1.0	sasha145.6,aatif109.2,jem94.2,martyn83.3,adam78.4,alex63.9,megan59.2,musa53.5,marcus53.4,stephen52.2,tim41.9
+2026-07-08 11:50	adam=8,stephen=8,musa=7,alex=7,jem=7,megan=7,aatif=0	-	aatif	0	7	d1x3=3	aatif+4.3,musa-0.3,alex-0.3,jem-0.3,megan-0.3,adam-1.5,stephen-1.5	sasha145.6,aatif113.5,jem93.9,martyn83.3,adam76.9,alex63.6,megan58.9,marcus53.4,musa53.1,stephen50.7,tim41.9
+2026-07-08 13:33	musa=8,stephen=6,adam=6	stephen=6+4+2=12,adam=1+3+2=6	adam	6	3	d4x1=4	stephen+3.0,musa+0.0,adam-3.0	sasha145.6,aatif113.5,jem93.9,martyn83.3,adam73.9,alex63.6,megan58.9,stephen53.7,marcus53.4,musa53.1,tim41.9
+2026-07-08 13:34	(none - aatif alone)	-	aatif	-	1	-	-	-
+2026-07-08 14:59	musa=8,tim=7,megan=7,stephen=7,alex=6	-	alex	6	5	d1x2=2	megan+0.5,stephen+0.5,tim+0.5,musa-0.8,alex-0.8	sasha145.6,aatif113.5,jem93.9,martyn83.3,adam73.9,alex62.8,megan59.4,stephen54.2,marcus53.4,musa52.4,tim42.4
+2026-07-09 10:04	musa=8,alex=8,stephen=8,martyn=7,megan=7,marcus=7,sasha=0	-	sasha	0	7	d3x3=9	martyn+0.8,marcus+0.8,megan+0.8,musa-0.3,alex-0.3,stephen-0.3,sasha-1.5	sasha144.1,aatif113.5,jem93.9,martyn84.2,adam73.9,alex62.5,megan60.2,marcus54.3,stephen53.8,musa52.0,tim42.4
+2026-07-09 11:48	jem=7,stephen=7,martyn=7,musa=6,adam=5,aatif=0	-	aatif	0	6	d5x2.5=12.5	adam+2.9,musa+1.7,martyn+0.5,jem+0.5,stephen+0.5,aatif-6.1	sasha144.1,aatif107.5,jem94.4,martyn84.7,adam76.8,alex62.5,megan60.2,stephen54.3,marcus54.3,musa53.7,tim42.4
+2026-07-09 13:07	stephen=8,megan=7,alex=6,aatif=1	-	aatif	1	4	d3x1.5=4.5	aatif+1.5,alex+0.8,megan-0.5,stephen-1.8	sasha144.1,aatif109.0,jem94.4,martyn84.7,adam76.8,alex63.3,megan59.7,marcus54.3,musa53.7,stephen52.5,tim42.4
+2026-07-09 14:04	marcus=8,stephen=7,martyn=7,jem=7,megan=6,aatif=1	-	aatif	1	6	d6x2.5=15	megan+3.0,martyn+1.8,jem+1.8,stephen+1.8,marcus+0.6,aatif-9.0	sasha144.1,aatif100.0,jem96.2,martyn86.5,adam76.8,alex63.3,megan62.7,marcus54.9,stephen54.3,musa53.7,tim42.4
+2026-07-09 14:58	stephen=7,martyn=7,musa=6,adam=5,aatif=0	-	aatif	0	5	d4x2=8	adam+2.0,musa+0.8,martyn-0.5,stephen-0.5,aatif-1.8	sasha144.1,aatif98.2,jem96.2,martyn86.0,adam78.8,alex63.3,megan62.7,marcus54.9,musa54.5,stephen53.8,tim42.4
+2026-07-09 15:37	sasha=7,stephen=6,aatif=5,martyn=1	-	martyn	1	4	d1x1.5=1.5	martyn+3.5,aatif+0.2,stephen-1.2,sasha-2.5	sasha141.6,aatif98.4,jem96.2,martyn89.5,adam78.8,alex63.3,megan62.7,marcus54.9,musa54.5,stephen52.6,tim42.4
+2026-07-10 10:15	alex=0,marcus=0	alex=4+4+3=11,marcus=2+1+6=9	marcus	0	2	d1x0.5=0.5	alex+0.5,marcus-0.5	sasha141.6,aatif98.4,jem96.2,martyn89.5,adam78.8,alex63.8,megan62.7,musa54.5,marcus54.4,stephen52.6,tim42.4
+2026-07-10 10:51	martyn=1,aatif=1,alex=0	-	alex	0	3	d5x1=5	martyn+2.0,aatif+2.0,alex-4.0	sasha141.6,aatif100.4,jem96.2,martyn91.5,adam78.8,megan62.7,alex59.8,musa54.5,marcus54.4,stephen52.6,tim42.4
+2026-07-10 14:36	aatif=3,alex=1,martyn=1,marcus=0,adam=0	marcus=6+3+6=15,adam=1+6+3=10	adam	0	5	d2x2=4	marcus+2.2,alex+1.0,martyn+1.0,aatif-1.5,adam-2.8	sasha141.6,aatif98.9,jem96.2,martyn92.5,adam76.1,megan62.7,alex60.8,marcus56.6,musa54.5,stephen52.6,tim42.4
+2026-07-10 15:08	jem=8,sasha=1	-	sasha	1	2	d1x0.5=0.5	sasha+6.5,jem-6.5	sasha148.1,aatif98.9,martyn92.5,jem89.7,adam76.1,megan62.7,alex60.8,marcus56.6,musa54.5,stephen52.6,tim42.4
+2026-07-10 16:00	jem=6,martyn=1,alex=0	-	alex	0	3	d2x1=2	martyn+3.0,alex+1.5,jem-4.5	sasha148.1,aatif98.9,martyn95.5,jem85.2,adam76.1,megan62.7,alex62.3,marcus56.6,musa54.5,stephen52.6,tim42.4
+2026-07-13 09:02	(none - alex alone)	-	alex	-	1	-	-	-
+2026-07-13 09:22	alex=2,jem=0,marcus=0	jem=2+3+1=6,marcus=1+5+1=7	jem	0	3	d1x1=1	marcus+1.5,jem+0.0,alex-1.5	sasha148.1,aatif98.9,martyn95.5,jem85.2,adam76.1,megan62.7,alex60.8,marcus58.1,musa54.5,stephen52.6,tim42.4
+2026-07-13 10:26	martyn=7,musa=6,alex=3,marcus=2,adam=1,stephen=1	adam=5+3+4=12,stephen=4+5+2=11	stephen	1	6	d5x2.5=12.5	adam+5.3,marcus+4.1,alex+2.9,musa-0.7,martyn-1.9,stephen-9.7	sasha148.1,aatif98.9,martyn93.6,jem85.2,adam81.4,alex63.7,megan62.7,marcus62.2,musa53.8,stephen42.9,tim42.4
+2026-07-13 12:13	(none - alex alone)	-	alex	-	1	-	-	-
+2026-07-13 12:17	martyn=1,alex=1	martyn=5+5+5=15,alex=4+2+5=11	alex	1	2	d5x0.5=2.5	martyn+2.5,alex-2.5	sasha148.1,aatif98.9,martyn96.1,jem85.2,adam81.4,megan62.7,marcus62.2,alex61.2,musa53.8,stephen42.9,tim42.4
+2026-07-13 13:55	musa=4,aatif=3,martyn=1	-	martyn	1	3	d5x1=5	aatif+2.0,musa+0.5,martyn-2.5	sasha148.1,aatif100.9,martyn93.6,jem85.2,adam81.4,megan62.7,marcus62.2,alex61.2,musa54.3,stephen42.9,tim42.4
+2026-07-13 13:57	aatif=5,martyn=2,marcus=0	-	marcus	0	3	d6x1=6	martyn+3.5,aatif-1.0,marcus-2.5	sasha148.1,aatif99.9,martyn97.1,jem85.2,adam81.4,megan62.7,alex61.2,marcus59.7,musa54.3,stephen42.9,tim42.4
+2026-07-13 14:00	aatif=6,musa=5,martyn=3,marcus=3,adam=1	-	adam	1	5	d1x2=2	martyn+1.2,marcus+1.2,adam+1.2,musa-1.2,aatif-2.5	sasha148.1,martyn98.3,aatif97.4,jem85.2,adam82.6,megan62.7,alex61.2,marcus61.0,musa53.0,stephen42.9,tim42.4
+2026-07-13 15:37	stephen=6,aatif=4,musa=4,adam=2	-	adam	2	4	d5x1.5=7.5	aatif+2.5,musa+2.5,stephen-0.2,adam-4.8	sasha148.1,aatif99.9,martyn98.3,jem85.2,adam77.8,megan62.7,alex61.2,marcus61.0,musa55.5,stephen42.8,tim42.4
+2026-07-13 16:22	(none - martyn alone)	-	martyn	-	1	-	-	-
+2026-07-13 16:57	musa=4,aatif=3,alex=3,martyn=2	-	martyn	2	4	d6x1.5=9	alex+3.0,aatif+3.0,musa+1.7,martyn-7.7	sasha148.1,aatif102.9,martyn90.7,jem85.2,adam77.8,alex64.2,megan62.7,marcus61.0,musa57.2,stephen42.8,tim42.4
+2026-07-14 10:51	jem=6,megan=5,musa=5,tim=5,alex=2,marcus=0	-	marcus	0	6	d6x2.5=15	alex+5.2,musa+1.6,tim+1.6,megan+1.6,jem+0.4,marcus-10.4	sasha148.1,aatif102.9,martyn90.7,jem85.6,adam77.8,alex69.4,megan64.3,musa58.8,marcus50.6,tim44.0,stephen42.8
+2026-07-14 14:29	aatif=4,marcus=4	aatif=1+5+2=8,marcus=2+5+3=10	aatif	4	2	d2x0.5=1	marcus+1.0,aatif-1.0	sasha148.1,aatif101.9,martyn90.7,jem85.6,adam77.8,alex69.4,megan64.3,musa58.8,marcus51.6,tim44.0,stephen42.8
+2026-07-14 15:33	megan=5,jem=5,musa=4,martyn=4,aatif=2,sasha=0	-	sasha	0	6	d2x2.5=5	aatif+2.6,martyn+0.2,musa+0.2,sasha-1.0,jem-1.0,megan-1.0	sasha147.1,aatif104.5,martyn90.9,jem84.6,adam77.8,alex69.4,megan63.3,musa59.0,marcus51.6,tim44.0,stephen42.8
+2026-07-15 10:03	alex=4,musa=3,aatif=3	musa=5+1+1=7,aatif=3+2+2=7;REROLL musa=3+4+5=12,aatif=5+6+6=17	musa	3	3	d3x1=3	aatif+2.0,alex+0.5,musa-2.5	sasha147.1,aatif106.5,martyn90.9,jem84.6,adam77.8,alex69.9,megan63.3,musa56.5,marcus51.6,tim44.0,stephen42.8
+2026-07-15 11:32	megan=5,stephen=4,aatif=4,sasha=4,martyn=3,alex=2	-	alex	2	6	d4x2.5=10	martyn+2.8,sasha+1.6,aatif+1.6,stephen+1.6,megan+0.4,alex-8.0	sasha148.7,aatif108.1,martyn93.7,jem84.6,adam77.8,megan63.7,alex61.9,musa56.5,marcus51.6,stephen44.4,tim44.0
+2026-07-15 16:36	musa=4,aatif=3,martyn=2	-	martyn	2	3	d6x1=6	aatif+3.0,musa+1.5,martyn-4.5	sasha148.7,aatif111.1,martyn89.2,jem84.6,adam77.8,megan63.7,alex61.9,musa58.0,marcus51.6,stephen44.4,tim44.0
+2026-07-16 09:25	(none - alex alone)	-	alex	-	1	-	-	-
+2026-07-16 11:41	stephen=5,megan=5,alex=4,adam=3	-	adam	3	4	d2x1.5=3	alex+1.3,megan+0.0,stephen+0.0,adam-1.3	sasha148.7,aatif111.1,martyn89.2,jem84.6,adam76.5,megan63.7,alex63.3,musa58.0,marcus51.6,stephen44.4,tim44.0
+2026-07-16 14:17	martyn=4,megan=4,alex=4,aatif=4,adam=4,musa=2	-	musa	2	6	d2x2.5=5	martyn+0.6,adam+0.6,alex+0.6,aatif+0.6,megan+0.6,musa-3.0	sasha148.7,aatif111.7,martyn89.8,jem84.6,adam77.1,megan64.3,alex63.9,musa55.0,marcus51.6,stephen44.4,tim44.0
+2026-07-16 16:38	alex=4,aatif=4,megan=4,jem=4,martyn=4,sasha=4	alex=6+6+6=18(KING),aatif=5+5+6=16,megan=1+4+6=11,jem=3+5+6=14,martyn=6+4+4=14,sasha=2+1+4=7	sasha	4	6	d2x2.5=5	alex+1.0,martyn+1.0,aatif+1.0,jem+1.0,megan+1.0,sasha-5.0	sasha143.7,aatif112.7,martyn90.8,jem85.6,adam77.1,megan65.3,alex64.9,musa55.0,marcus51.6,stephen44.4,tim44.0
+2026-07-17 09:24	alex=0,adam=0	alex=5+3+2=10,adam=6+6+6=18(KING)	alex	0	2	d6x0.5=3	adam+3.0,alex-3.0	sasha143.7,aatif112.7,martyn90.8,jem85.6,adam80.1,megan65.3,alex61.9,musa55.0,marcus51.6,stephen44.4,tim44.0
+2026-07-17 10:36	megan=5,alex=4,stephen=2	-	stephen	2	3	d1x1=1	stephen+1.5,alex+0.0,megan-1.5	sasha143.7,aatif112.7,martyn90.8,jem85.6,adam80.1,megan63.8,alex61.9,musa55.0,marcus51.6,stephen45.9,tim44.0
+2026-07-20 10:34	martyn=5,megan=5,stephen=3,aatif=3,adam=2	-	adam	2	5	d2x2=4	stephen+1.8,aatif+1.8,megan-0.8,martyn-0.8,adam-2.0	sasha143.7,aatif114.4,martyn90.0,jem85.6,adam78.1,megan63.1,alex61.9,musa55.0,marcus51.6,stephen47.6,tim44.0
+2026-07-20 11:44	alex=4,stephen=4,martyn=3,aatif=3	martyn=1+1+2=4,aatif=1+5+3=9	martyn	3	4	d5x1.5=7.5	aatif+3.2,stephen+1.8,alex+1.8,martyn-6.8	sasha143.7,aatif117.6,jem85.6,martyn83.2,adam78.1,alex63.7,megan63.1,musa55.0,marcus51.6,stephen49.4,tim44.0
+2026-07-20 13:59	megan=4,alex=4,tim=4,stephen=3,adam=1	-	adam	1	5	d2x2=4	stephen+1.2,alex+0.0,tim+0.0,megan+0.0,adam-1.2	sasha143.7,aatif117.6,jem85.6,martyn83.2,adam76.8,alex63.7,megan63.1,musa55.0,marcus51.6,stephen50.7,tim44.0
+2026-07-20 15:19	stephen=4,sasha=4,martyn=4,aatif=4,alex=3	-	alex	3	5	d3x2=6	sasha+1.2,martyn+1.2,aatif+1.2,stephen+1.2,alex-5.0	sasha144.9,aatif118.8,jem85.6,martyn84.4,adam76.8,megan63.1,alex58.7,musa55.0,stephen51.9,marcus51.6,tim44.0
+2026-07-21 09:58	(none - alex alone)	-	alex	-	1	-	-	-
+2026-07-21 10:28	martyn=5,alex=4,megan=4,stephen=4,adam=4	alex=2+1+3=6,megan=1+3+4=8,stephen=5+4+5=14,adam=4+1+3=8	alex	4	5	d3x2=6	stephen+1.8,adam+1.8,megan+1.8,martyn+0.5,alex-5.8	sasha144.9,aatif118.8,jem85.6,martyn84.9,adam78.6,megan64.8,musa55.0,stephen53.7,alex52.9,marcus51.6,tim44.0
+2026-07-21 11:20	stephen=5,martyn=4,alex=4,sasha=4	martyn=1+3+2=6,alex=1+3+5=9,sasha=1+4+3=8	martyn	4	4	d6x1.5=9	alex+3.3,sasha+3.3,stephen+2.0,martyn-8.7	sasha148.2,aatif118.8,jem85.6,adam78.6,martyn76.3,megan64.8,alex56.3,stephen55.7,musa55.0,marcus51.6,tim44.0
+2026-07-21 13:16	martyn=5,adam=5,stephen=5,alex=4,megan=3	-	megan	3	5	d3x2=6	alex+2.0,stephen+0.8,adam+0.8,martyn+0.8,megan-4.2	sasha148.2,aatif118.8,jem85.6,adam79.3,martyn77.0,megan60.6,alex58.3,stephen56.4,musa55.0,marcus51.6,tim44.0
+2026-07-21 14:58	stephen=6,martyn=6,megan=5,alex=4,adam=0	-	adam	0	5	d5x2=10	alex+2.8,megan+1.5,stephen+0.2,martyn+0.2,adam-4.8	sasha148.2,aatif118.8,jem85.6,martyn77.3,adam74.6,megan62.1,alex61.0,stephen56.7,musa55.0,marcus51.6,tim44.0
+2026-07-21 16:03	stephen=5,alex=5,sasha=5	stephen=3+5+5=13,alex=6+2+1=9,sasha=3+1+2=6	sasha	5	3	d1x1=1	alex+0.5,stephen+0.5,sasha-1.0	sasha147.2,aatif118.8,jem85.6,martyn77.3,adam74.6,megan62.1,alex61.5,stephen57.2,musa55.0,marcus51.6,tim44.0
+2026-07-22 10:01	stephen=6,martyn=5,musa=4	-	musa	4	3	d3x1=3	martyn+1.5,stephen+0.0,musa-1.5	sasha147.2,aatif118.8,jem85.6,martyn78.8,adam74.6,megan62.1,alex61.5,stephen57.2,musa53.5,marcus51.6,tim44.0
+2026-07-22 11:24	stephen=5,megan=5,adam=4	-	adam	4	3	d5x1=5	stephen+2.0,megan+2.0,adam-4.0	sasha147.2,aatif118.8,jem85.6,martyn78.8,adam70.6,megan64.1,alex61.5,stephen59.2,musa53.5,marcus51.6,tim44.0
+2026-07-22 13:36	martyn=6,musa=5,megan=4	-	megan	4	3	d1x1=1	musa+0.5,megan+0.5,martyn-1.0	sasha147.2,aatif118.8,jem85.6,martyn77.8,adam70.6,megan64.6,alex61.5,stephen59.2,musa54.0,marcus51.6,tim44.0
+2026-07-22 13:53	tim=5,stephen=5,adam=5	tim=5+4+5=14,stephen=6+2+2=10,adam=4+1+2=7	adam	5	3	d3x1=3	tim+1.5,stephen+1.5,adam-3.0	sasha147.2,aatif118.8,jem85.6,martyn77.8,adam67.6,megan64.6,alex61.5,stephen60.7,musa54.0,marcus51.6,tim45.5
+2026-07-22 14:45	martyn=6,stephen=6,megan=5	-	megan	5	3	d1x1=1	(no transfers)	sasha147.2,aatif118.8,jem85.6,martyn77.8,adam67.6,megan64.6,alex61.5,stephen60.7,musa54.0,marcus51.6,tim45.5
+2026-07-22 16:27	stephen=6,megan=5,musa=0	-	musa	0	3	d4x1=4	musa+1.5,megan+0.0,stephen-1.5	sasha147.2,aatif118.8,jem85.6,martyn77.8,adam67.6,megan64.6,alex61.5,stephen59.2,musa55.5,marcus51.6,tim45.5
+2026-07-23 11:44	stephen=6,musa=5,megan=4,aatif=4,adam=0	-	adam	0	5	d5x2=10	aatif+2.2,megan+2.2,musa+1.0,stephen-0.2,adam-5.2	sasha147.2,aatif121.1,jem85.6,martyn77.8,megan66.8,adam62.3,alex61.5,stephen58.9,musa56.5,marcus51.6,tim45.5
+2026-07-23 16:21	stephen=6,alex=6,musa=5,aatif=5,megan=4	-	megan	4	5	d2x2=4	musa+1.2,aatif+1.2,alex+0.0,stephen+0.0,megan-2.5	sasha147.2,aatif122.3,jem85.6,martyn77.8,megan64.3,adam62.3,alex61.5,stephen58.9,musa57.8,marcus51.6,tim45.5
+2026-07-24 14:45	musa=6,alex=6,jem=5,tim=5,aatif=4	-	aatif	4	5	d4x2=8	tim+2.2,jem+2.2,musa+1.0,alex+1.0,aatif-6.5	sasha147.2,aatif115.8,jem87.8,martyn77.8,megan64.3,alex62.5,adam62.3,stephen58.9,musa58.8,marcus51.6,tim47.8
+2026-07-24 16:04	martyn=6,alex=6,jem=6,aatif=6	martyn=5+5+1=11,alex=4+3+3=10,jem=2+4+4=10,aatif=3+6+5=14;REROLL alex=4+4+4=12,jem=2+4+6=12;REROLL2 alex=6+3+1=10,jem=5+1+2=8	jem	6	4	d2x1.5=3	martyn+1.0,aatif+1.0,alex+1.0,jem-3.0	sasha147.2,aatif116.8,jem84.8,martyn78.8,megan64.3,alex63.5,adam62.3,stephen58.9,musa58.8,marcus51.6,tim47.8
+2026-07-27 10:40	(none - martyn alone)	-	martyn	-	1	-	-	-
+2026-07-27 10:43	(none - alex alone)	-	alex	-	1	-	-	-
+2026-07-27 10:44	stephen=8,alex=7,tim=6,aatif=5,adam=5,jem=5,martyn=5	aatif=2+3+2=7,adam=1+3+5=9,jem=4+2+3=9,martyn=5+2+6=13	aatif	5	7	d4x3=12	jem+3.0,martyn+3.0,adam+3.0,tim+1.8,alex+0.7,stephen-0.5,aatif-11.0	sasha147.2,aatif105.8,jem87.8,martyn81.8,adam65.3,megan64.3,alex64.2,musa58.8,stephen58.4,marcus51.6,tim49.6
+2026-07-27 12:23	(none - martyn alone)	-	martyn	-	1	-	-	-
+2026-07-27 12:24	martyn=1,sasha=0	-	sasha	0	2	d1x0.5=0.5	sasha+0.5,martyn-0.5	sasha147.8,aatif105.8,jem87.8,martyn81.3,adam65.3,megan64.3,alex64.2,musa58.8,stephen58.4,marcus51.6,tim49.6
+2026-07-27 14:02	jem=6,aatif=6,martyn=6,adam=5	-	adam	5	4	d1x1.5=1.5	martyn+0.2,aatif+0.2,jem+0.2,adam-0.5	sasha146.8,aatif106.0,jem88.0,martyn82.4,adam64.8,megan64.3,alex64.2,musa58.8,stephen58.4,marcus51.6,tim49.6
+2026-07-28 08:59	alex=6,aatif=6,adam=6	alex=6+3+2=11,aatif=3+3+4=10,adam=1+3+6=10;REROLL aatif=4+3+2=9,adam=2+4+6=12	aatif	6	3	d3x1=3	alex+1.5,adam+1.5,aatif-3.0	sasha146.8,aatif103.0,jem88.0,martyn82.4,adam66.3,alex65.7,megan64.3,musa58.8,stephen58.4,marcus51.6,tim49.6
+2026-07-28 09:55	marcus=7,alex=7,stephen=7,adam=6	-	adam	6	4	d5x1.5=7.5	stephen+2.2,alex+2.2,marcus+2.2,adam-6.5	sasha146.8,aatif103.0,jem88.0,martyn82.4,alex67.9,megan64.3,stephen60.6,adam59.8,musa58.8,marcus53.7,tim49.6
+2026-07-28 11:35	marcus=7,alex=7,megan=6,musa=3	-	musa	3	4	d6x1.5=9	megan+2.7,marcus+1.3,alex+1.3,musa-5.3	sasha146.8,aatif103.0,jem88.0,martyn82.4,alex69.2,megan67.0,stephen60.6,adam59.8,marcus55.1,musa53.4,tim49.6
+2026-07-28 13:04	aatif=7,jem=6,musa=1	-	musa	1	3	d6x1=6	jem+1.0,aatif-0.5,musa-0.5	sasha146.8,aatif102.5,jem89.0,martyn82.4,alex69.2,megan67.0,stephen60.6,adam59.8,marcus55.1,musa52.9,tim49.6
+2026-07-28 13:30	aatif=6,stephen=6,jem=6,megan=5	-	megan	5	4	d5x1.5=7.5	aatif+2.2,stephen+2.2,jem+2.2,megan-6.5	sasha146.8,aatif104.7,jem91.1,martyn82.4,alex69.2,stephen62.8,megan60.5,adam59.8,marcus55.1,musa52.9,tim49.6
+2026-07-28 13:58	megan=6,sasha=0	-	sasha	0	2	d3x0.5=1.5	sasha+4.5,megan-4.5	sasha151.2,aatif104.7,jem91.1,martyn82.4,alex69.2,stephen62.8,adam59.8,megan56.0,marcus55.1,musa52.9,tim49.6
+2026-07-28 13:59	(none - stephen alone)	-	stephen	-	1	-	-	-
+2026-07-28 15:34	musa=7,jem=7,stephen=6,aatif=6,megan=5,tim=4	-	tim	4	6	d1x2.5=2.5	megan+1.5,aatif+0.3,stephen+0.3,tim-0.3,jem-0.9,musa-0.9	sasha151.2,aatif105.0,jem90.2,martyn82.4,alex69.2,stephen63.1,adam59.8,megan57.5,marcus55.1,musa52.0,tim49.3
+2026-07-28 15:50	(none - marcus alone)	-	marcus	-	1	-	-	-
+2026-07-28 16:29	stephen=6,megan=6,musa=5	-	musa	5	3	d5x1=5	megan+2.0,stephen+2.0,musa-4.0	sasha151.2,aatif105.0,jem90.2,martyn82.4,alex69.2,stephen65.1,adam59.8,megan59.5,marcus55.1,tim49.3,musa48.0
+2026-07-29 10:28	adam=7,megan=6,musa=6,aatif=6,alex=6,martyn=6,stephen=6	megan=6+4+3=13,musa=3+3+6=12,aatif=3+2+2=7,alex=4+3+6=13,martyn=5+2+2=9,stephen=2+2+1=5	stephen	6	7	d5x3=15	megan+2.7,alex+2.7,musa+2.7,martyn+2.7,aatif+2.7,adam+1.5,stephen-14.8	sasha151.2,aatif107.6,jem90.2,martyn85.1,alex71.9,megan62.2,adam61.3,marcus55.1,musa50.7,stephen50.2,tim49.3
+2026-07-29 11:28	adam=8,martyn=7,jem=6,stephen=6,megan=6	jem=1+1+4=6,stephen=3+2+5=10,megan=6+4+2=12	jem	6	5	d6x2=12	megan+3.8,stephen+3.8,martyn+2.5,adam+1.2,jem-11.2	sasha151.2,aatif107.6,martyn87.6,jem79.0,alex71.9,megan65.9,adam62.6,marcus55.1,stephen54.0,musa50.7,tim49.3
+2026-07-29 11:30	aatif=1,sasha=0	-	sasha	0	2	d1x0.5=0.5	sasha+0.5,aatif-0.5	sasha151.8,aatif107.1,martyn87.6,jem79.0,alex71.9,megan65.9,adam62.6,marcus55.1,stephen54.0,musa50.7,tim49.3
+2026-07-29 11:30	(none - aatif alone)	-	aatif	-	1	-	-	-
+2026-07-29 12:43	stephen=6,megan=6,sasha=0	-	sasha	0	3	d6x1=6	(no transfers)	sasha151.8,aatif107.1,martyn87.6,jem79.0,alex71.9,megan65.9,adam62.6,marcus55.1,stephen54.0,musa50.7,tim49.3
+2026-07-29 13:20	adam=8,stephen=7,martyn=7	stephen=4+1+6=11,martyn=6+2+1=9	martyn	7	3	d2x1=2	stephen+1.5,adam+0.0,martyn-1.5	sasha151.8,aatif107.1,martyn86.1,jem79.0,alex71.9,megan65.9,adam62.6,stephen55.5,marcus55.1,musa50.7,tim49.3
+2026-07-29 15:56	adam=7,stephen=7,musa=6,aatif=6,marcus=1	-	marcus	1	5	d6x2=12	musa+2.2,aatif+2.2,adam+1.0,stephen+1.0,marcus-6.5	sasha151.8,aatif109.4,martyn86.1,jem79.0,alex71.9,megan65.9,adam63.6,stephen56.5,musa52.9,tim49.3,marcus48.6
+2026-07-29 16:31	sasha=7,alex=6,jem=6	alex=1+2+4=7,jem=1+2+3=6	jem	6	3	d4x1=4	alex+2.5,sasha+1.0,jem-3.5	sasha152.8,aatif109.4,martyn86.1,jem75.5,alex74.4,megan65.9,adam63.6,stephen56.5,musa52.9,tim49.3,marcus48.6
+2026-07-29 16:48	(none - martyn alone)	-	martyn	-	1	-	-	-
+2026-07-29 17:22	musa=7,martyn=7,aatif=6	-	aatif	6	3	d1x1=1	(no transfers)	sasha152.8,aatif109.4,martyn86.1,jem75.5,alex74.4,megan65.9,adam63.6,stephen56.5,musa52.9,tim49.3,marcus48.6
+2026-07-30 09:18	stephen=7,aatif=6,alex=6	aatif=6+6+4=16,alex=2+6+5=13	alex	6	3	d5x1=5	aatif+3.0,stephen+1.5,alex-4.5	sasha152.8,aatif112.4,martyn86.1,jem75.5,alex69.9,megan65.9,adam63.6,stephen58.0,musa52.9,tim49.3,marcus48.6
+2026-07-30 09:50	martyn=7,jem=7,alex=7,stephen=7,megan=6,marcus=0	-	marcus	0	6	d5x2.5=12.5	megan+2.1,alex+0.9,martyn+0.9,jem+0.9,stephen+0.9,marcus-5.7	sasha152.8,aatif112.4,martyn87.0,jem76.4,alex70.8,megan68.0,adam63.6,stephen58.9,musa52.9,tim49.3,marcus42.9
+2026-07-30 10:59	stephen=9,jem=7,sasha=7,alex=6	-	alex	6	4	d1x1.5=1.5	jem+0.8,sasha+0.8,alex+0.2,stephen-1.8	sasha153.6,aatif112.4,martyn87.0,jem77.2,alex70.9,megan68.0,adam63.6,stephen57.1,musa52.9,tim49.3,marcus42.9
+2026-07-30 12:09	marcus=8,stephen=7,megan=7,musa=6	-	musa	6	4	d3x1.5=4.5	stephen+1.5,megan+1.5,marcus+0.2,musa-3.2	sasha153.6,aatif112.4,martyn87.0,jem77.2,alex70.9,megan69.5,adam63.6,stephen58.6,musa49.8,tim49.3,marcus43.0
+2026-07-30 13:49	jem=7,stephen=7,martyn=0	-	martyn	0	3	d1x1=1	martyn+6.0,jem-3.0,stephen-3.0	sasha153.6,aatif112.4,martyn93.0,jem74.2,alex70.9,megan69.5,adam63.6,stephen55.6,musa49.8,tim49.3,marcus43.0
+2026-07-30 14:29	sasha=7,aatif=7,stephen=7,megan=7,musa=0	-	musa	0	5	d6x2=12	sasha+1.2,stephen+1.2,aatif+1.2,megan+1.2,musa-5.0	sasha154.8,aatif113.6,martyn93.0,jem74.2,alex70.9,megan70.8,adam63.6,stephen56.8,tim49.3,musa44.8,marcus43.0
+2026-07-30 15:22	aatif=9,martyn=8,stephen=7,megan=7,musa=7,jem=0	-	jem	0	6	d4x2.5=10	stephen+1.2,musa+1.2,megan+1.2,martyn+0.0,aatif-1.2,jem-2.4	sasha154.8,aatif112.4,martyn93.0,megan72.0,jem71.8,alex70.9,adam63.6,stephen58.0,tim49.3,musa46.0,marcus43.0
+2026-07-31 10:17	aatif=7,martyn=7,marcus=0	-	marcus	0	3	d6x1=6	marcus+1.0,martyn-0.5,aatif-0.5	sasha154.8,aatif111.9,martyn92.5,megan72.0,jem71.8,alex70.9,adam63.6,stephen58.0,tim49.3,musa46.0,marcus44.0
+2026-07-31 11:50	(none - stephen alone)	-	stephen	-	1	-	-	-
+2026-07-31 12:12	martyn=8,stephen=7,jem=7,musa=7,sasha=7,aatif=0	-	aatif	0	6	d3x2.5=7.5	musa+0.3,sasha+0.3,jem+0.3,stephen+0.3,aatif-0.3,martyn-0.9	sasha155.1,aatif111.6,martyn91.6,jem72.1,megan72.0,alex70.9,adam63.6,stephen58.3,tim49.3,musa46.3,marcus44.0
+2026-07-31 13:05	martyn=8,stephen=7,aatif=1,marcus=1,musa=0	-	musa	0	5	d4x2=8	aatif+5.0,marcus+5.0,stephen-2.5,martyn-3.8,musa-3.8	sasha155.1,aatif116.6,martyn87.8,jem72.1,megan72.0,alex70.9,adam63.6,stephen55.8,tim49.3,marcus49.0,musa42.5
+2026-08-03 09:56	adam=8,martyn=7,aatif=1	-	aatif	1	3	d3x1=3	aatif+3.5,martyn-1.0,adam-2.5	sasha155.1,aatif120.1,martyn86.8,jem72.1,megan72.0,alex70.9,adam61.1,stephen55.8,tim49.3,marcus49.0,musa42.5
+2026-08-03 10:50	marcus=7,martyn=7,stephen=7,megan=6	-	megan	6	4	d1x1.5=1.5	stephen+0.2,marcus+0.2,martyn+0.2,megan-0.5	sasha155.1,aatif120.1,martyn87.0,jem72.1,megan71.5,alex70.9,adam61.1,stephen56.0,tim49.3,marcus49.2,musa42.5
+2026-08-03 13:06	musa=8,aatif=7,marcus=7,adam=7,sasha=2	-	sasha	2	5	d1x2=2	sasha+3.2,marcus-0.5,aatif-0.5,adam-0.5,musa-1.8	sasha158.4,aatif119.6,martyn87.0,jem72.1,megan71.5,alex70.9,adam60.6,stephen56.0,tim49.3,marcus48.7,musa40.8
+2026-08-03 13:37	stephen=7,jem=7	stephen=1+4+1=6,jem=6+6+1=13	stephen	7	2	d5x0.5=2.5	jem+2.5,stephen-2.5	sasha158.4,aatif119.6,martyn87.0,jem74.6,megan71.5,alex70.9,adam60.6,stephen53.5,tim49.3,marcus48.7,musa40.8
+2026-08-03 14:53	martyn=8,musa=7	-	musa	7	2	d2x0.5=1	(no transfers)	sasha158.4,aatif119.6,martyn87.0,jem74.6,megan71.5,alex70.9,adam60.6,stephen53.5,tim49.3,marcus48.7,musa40.8
+2026-08-03 14:55	jem=8,aatif=7,stephen=7,sasha=0	-	sasha	0	4	d1x1.5=1.5	sasha+5.8,aatif-1.5,stephen-1.5,jem-2.8	sasha164.2,aatif118.1,martyn87.0,jem71.8,megan71.5,alex70.9,adam60.6,stephen52.0,tim49.3,marcus48.7,musa40.8
+2026-08-03 16:12	musa=7,adam=7,stephen=7,martyn=7,marcus=0	-	marcus	0	5	d4x2=8	martyn+0.2,stephen+0.2,musa+0.2,adam+0.2,marcus-1.0	sasha164.2,aatif118.1,martyn87.3,jem71.8,megan71.5,alex70.9,adam60.8,stephen52.2,tim49.3,marcus47.7,musa41.0
+2026-08-03 17:02	stephen=7,jem=7,megan=6,aatif=1	-	aatif	1	4	d3x1.5=4.5	aatif+1.2,megan+0.5,stephen-0.8,jem-0.8	sasha164.2,aatif119.3,martyn87.3,megan72.0,jem71.0,alex70.9,adam60.8,stephen51.4,tim49.3,marcus47.7,musa41.0
+2026-08-04 10:48	martyn=8,aatif=7,sasha=7,megan=7,musa=7,stephen=6	-	stephen	6	6	d1x2.5=2.5	musa+0.5,sasha+0.5,aatif+0.5,megan+0.5,martyn-0.7,stephen-1.3	sasha164.7,aatif119.8,martyn86.6,megan72.5,jem71.0,alex70.9,adam60.8,stephen50.1,tim49.3,marcus47.7,musa41.5
+2026-08-04 13:50	aatif=7,sasha=7,tim=7,martyn=2,marcus=1	-	marcus	1	5	d4x2=8	martyn+5.5,sasha-0.8,aatif-0.8,tim-0.8,marcus-3.2	sasha164.0,aatif119.0,martyn92.1,megan72.5,jem71.0,alex70.9,adam60.8,stephen50.1,tim48.6,marcus44.4,musa41.5
+2026-08-04 15:04	stephen=7,musa=7,jem=4	-	jem	4	3	d5x1=5	stephen+1.0,musa+1.0,jem-2.0	sasha164.0,aatif119.0,martyn92.1,megan72.5,alex70.9,jem69.0,adam60.8,stephen51.1,tim48.6,marcus44.4,musa42.5
+2026-08-04 16:00	sasha=7,martyn=7,jem=7,stephen=6,megan=6,musa=3,aatif=1	-	aatif	1	7	d3x3=9	musa+4.2,megan+0.7,stephen+0.7,martyn-0.5,jem-0.5,sasha-0.5,aatif-4.0	sasha163.5,aatif115.0,martyn91.6,megan73.1,alex70.9,jem68.5,adam60.8,stephen51.8,tim48.6,musa46.7,marcus44.4
+2026-08-05 11:28	martyn=8,adam=8,megan=7,musa=5,aatif=3,jem=1,stephen=1	jem=4+2+6=12,stephen=5+2+6=13	jem	1	7	d5x3=15	stephen+6.8,aatif+4.5,musa+2.2,megan-0.2,martyn-1.3,adam-1.3,jem-10.7	sasha163.5,aatif119.5,martyn90.2,megan73.0,alex70.9,adam59.5,stephen58.6,jem57.8,musa48.9,tim48.6,marcus44.4
+2026-08-05 13:35	stephen=7,adam=7,aatif=6	-	aatif	6	3	d1x1=1	(no transfers)	sasha163.5,aatif119.5,martyn90.2,megan73.0,alex70.9,adam59.5,stephen58.6,jem57.8,musa48.9,tim48.6,marcus44.4
+2026-08-05 14:39	megan=7,musa=7,sasha=0	-	sasha	0	3	d4x1=4	sasha+3.0,megan-1.5,musa-1.5	sasha166.5,aatif119.5,martyn90.2,megan71.5,alex70.9,adam59.5,stephen58.6,jem57.8,tim48.6,musa47.4,marcus44.4
+2026-08-05 16:08	(none - musa alone)	-	musa	-	1	-	-	-
+2026-08-06 12:59	sasha=2,martyn=0	-	martyn	0	2	d6x0.5=3	sasha+1.0,martyn-1.0	sasha167.5,aatif119.5,martyn89.2,megan71.5,alex70.9,adam59.5,stephen58.6,jem57.8,tim48.6,musa47.4,marcus44.4
+2026-08-07 10:27	tim=7,martyn=5,jem=3	-	jem	3	3	d1x1=1	jem+2.0,martyn+0.5,tim-2.5	sasha167.5,aatif119.5,martyn89.7,megan71.5,alex70.9,jem59.8,adam59.5,stephen58.6,musa47.4,tim46.1,marcus44.4
+2026-08-07 14:01	musa=5,aatif=2,martyn=0	-	martyn	0	3	d2x1=2	aatif+1.5,martyn+1.5,musa-3.0	sasha167.5,aatif121.0,martyn91.2,megan71.5,alex70.9,jem59.8,adam59.5,stephen58.6,tim46.1,marcus44.4,musa44.4
+2026-08-07 14:54	martyn=5,aatif=5,jem=3,sasha=1	-	sasha	1	4	d2x1.5=3	jem+1.7,sasha+0.3,aatif-1.0,martyn-1.0	sasha167.8,aatif120.0,martyn90.2,megan71.5,alex70.9,jem61.5,adam59.5,stephen58.6,tim46.1,marcus44.4,musa44.4
+2026-08-07 16:08	(none - musa alone)	-	musa	-	1	-	-	-
+2026-08-10 11:35	adam=7,stephen=6	-	stephen	6	2	d5x0.5=2.5	adam+1.5,stephen-1.5	sasha167.8,aatif120.0,martyn90.2,megan71.5,alex70.9,jem61.5,adam61.0,stephen57.1,tim46.1,marcus44.4,musa44.4
+2026-08-10 11:36	sasha=0,alex=0	sasha=1+5+1=7,alex=2+2+1=5	alex	0	2	d1x0.5=0.5	sasha+0.5,alex-0.5	sasha168.3,aatif120.0,martyn90.2,megan71.5,alex70.4,jem61.5,adam61.0,stephen57.1,tim46.1,marcus44.4,musa44.4
+2026-08-10 13:02	adam=7,megan=6,stephen=6	megan=6+4+6=16,stephen=1+4+1=6	stephen	6	3	d6x1=6	megan+3.5,adam+2.0,stephen-5.5	sasha168.3,aatif120.0,martyn90.2,megan75.0,alex70.4,adam63.0,jem61.5,stephen51.6,tim46.1,marcus44.4,musa44.4
+2026-08-10 13:44	alex=7,jem=6,megan=6,aatif=3,marcus=2	-	marcus	2	5	d4x2=8	aatif+4.2,jem+0.5,megan+0.5,alex-0.8,marcus-4.5	sasha168.3,aatif124.3,martyn90.2,megan75.5,alex69.7,adam63.0,jem62.0,stephen51.6,tim46.1,musa44.4,marcus39.9
+2026-08-10 16:04	megan=6,sasha=6,alex=5,aatif=5,stephen=3	-	stephen	3	5	d5x2=10	aatif+2.5,alex+2.5,megan+1.2,sasha+1.2,stephen-7.5	sasha169.6,aatif126.8,martyn90.2,megan76.7,alex72.2,adam63.0,jem62.0,tim46.1,musa44.4,stephen44.1,marcus39.9
+2026-08-11 10:04	aatif=66,martyn=7,alex=6	-	alex	6	3	d6x1=6	martyn+32.0,alex+24.5,aatif-56.5	sasha169.6,martyn122.2,alex96.7,megan76.7,aatif70.3,adam63.0,jem62.0,tim46.1,musa44.4,stephen44.1,marcus39.9
+2026-08-11 11:50	alex=7,martyn=7,adam=7,sasha=6,marcus=6,jem=5,aatif=3	-	aatif	3	7	d5x3=15	jem+3.5,sasha+2.3,marcus+2.3,martyn+1.2,adam+1.2,alex+1.2,aatif-11.7	sasha171.9,martyn123.4,alex97.8,megan76.7,jem65.5,adam64.2,aatif58.6,tim46.1,musa44.4,stephen44.1,marcus42.3
+2026-08-11 14:01	martyn=7,stephen=7,jem=6,aatif=6	jem=4+5+3=12,aatif=3+1+4=8	aatif	6	4	d3x1.5=4.5	jem+2.2,martyn+0.8,stephen+0.8,aatif-3.8	sasha171.9,martyn124.2,alex97.8,megan76.7,jem67.6,adam64.2,aatif54.8,tim46.1,stephen44.9,musa44.4,marcus42.3
+2026-08-11 14:48	martyn=8,marcus=7,jem=7,tim=7,stephen=6,adam=6,alex=5,sasha=0	-	sasha	0	8	d5x3.5=17.5	alex+3.4,adam+2.2,stephen+2.2,tim+1.1,jem+1.1,marcus+1.1,martyn-0.1,sasha-10.9	sasha161.0,martyn124.2,alex101.2,megan76.7,jem68.7,adam66.4,aatif54.8,stephen47.1,tim47.1,musa44.4,marcus43.3
+2026-08-12 11:04	marcus=10,stephen=8,alex=8,martyn=7,jem=7	martyn=1+4+5=10,jem=3+5+1=9	jem	7	5	d6x2=12	martyn+4.2,stephen+3.0,alex+3.0,marcus+0.5,jem-10.8	sasha161.0,martyn128.4,alex104.2,megan76.7,adam66.4,jem58.0,aatif54.8,stephen50.1,tim47.1,musa44.4,marcus43.8
+2026-08-12 14:54	stephen=8,megan=7,alex=7,jem=7,martyn=7,adam=5,marcus=4,aatif=4	marcus=5+4+5=14,aatif=4+6+3=13	aatif	4	8	d3x3.5=10.5	marcus+3.9,adam+2.8,alex+0.5,megan+0.5,jem+0.5,martyn+0.5,stephen-0.6,aatif-8.1	sasha161.0,martyn128.9,alex104.7,megan77.2,adam69.2,jem58.5,stephen49.5,marcus47.8,tim47.1,aatif46.7,musa44.4
+2026-08-12 14:56	tim=7,martyn=2,sasha=0	-	sasha	0	3	d1x1=1	sasha+3.5,martyn+2.0,tim-5.5	sasha164.5,martyn130.9,alex104.7,megan77.2,adam69.2,jem58.5,stephen49.5,marcus47.8,aatif46.7,musa44.4,tim41.6
+2026-08-12 17:13	martyn=8,jem=7,alex=6	-	alex	6	3	d5x1=5	jem+2.5,martyn+1.0,alex-3.5	martyn166.9,sasha164.5,alex101.2,megan77.2,adam69.2,jem61.0,stephen49.5,marcus47.8,aatif46.7,tim41.6,musa9.4
+2026-08-13 09:54	alex=7,marcus=0	-	marcus	0	2	d1x0.5=0.5	marcus+6.5,alex-6.5	sasha164.5,martyn131.9,alex94.7,megan77.2,adam69.2,jem61.0,marcus54.3,stephen49.5,aatif46.7,musa44.4,tim41.6
+2026-08-13 12:33	martyn=7,megan=7,jem=7,aatif=5,musa=4	-	musa	4	5	d4x2=8	aatif+3.2,martyn+0.8,megan+0.8,jem+0.8,musa-5.5	sasha164.5,martyn132.7,alex94.7,megan78.0,adam69.2,jem61.7,marcus54.3,aatif50.0,stephen49.5,tim41.6,musa38.9
+2026-08-13 14:06	stephen=7,megan=6,musa=6,sasha=6,alex=1,martyn=0	-	martyn	0	6	d1x2.5=2.5	alex+4.5,martyn+2.7,musa-1.5,megan-1.5,sasha-1.5,stephen-2.7	sasha163.0,alex99.2,megan76.5,adam69.2,jem61.7,marcus54.3,aatif50.0,stephen46.8,tim41.6,musa37.4,martyn2.7
+2026-08-13 15:31	jem=6,alex=6,musa=5,marcus=5,stephen=2	-	stephen	2	5	d6x2=12	marcus+2.8,musa+2.8,alex+1.5,jem+1.5,stephen-8.5	sasha163.0,alex100.7,megan76.5,adam69.2,jem63.2,marcus57.0,aatif50.0,tim41.6,musa40.1,stephen38.3,martyn0.0
+2026-08-14 09:03	(none - alex alone)	-	alex	-	1	-	-	-
+2026-08-14 09:04	aatif=3,martyn=3,alex=1	-	alex	1	3	d2x1=2	(no transfers)	sasha163.0,martyn135.4,alex100.7,megan76.5,adam69.2,jem63.2,marcus57.0,aatif50.0,tim41.6,musa40.1,stephen38.3
+2026-08-14 12:53	adam=7,alex=6,megan=6,aatif=5,martyn=3	-	martyn	3	5	d4x2=8	aatif+2.5,alex+1.2,megan+1.2,adam+0.0,martyn-5.0	sasha163.0,martyn130.4,alex102.0,megan77.7,adam69.2,jem63.2,marcus57.0,aatif52.5,tim41.6,musa40.1,stephen38.3
+2026-08-14 14:44	martyn=7,sasha=6,jem=5,adam=4,alex=2	-	alex	2	5	d2x2=4	adam+2.0,jem+0.8,sasha-0.5,alex-0.5,martyn-1.8	sasha162.5,martyn128.6,alex101.5,megan77.7,adam71.2,jem64.0,marcus57.0,aatif52.5,tim41.6,musa40.1,stephen38.3
+2026-08-14 17:42	(none - sasha alone)	-	sasha	-	1	-	-	-
+2026-08-17 09:39	musa=7,martyn=7,jem=7,alex=7,megan=6	-	megan	6	5	d4x2=8	jem+1.8,musa+1.8,alex+1.8,martyn+1.8,megan-7.0	sasha162.5,martyn130.4,alex103.2,adam71.2,megan70.7,jem65.7,marcus57.0,aatif52.5,musa41.9,tim41.6,stephen38.3
+2026-08-17 13:50	martyn=8,jem=7,alex=7,sasha=6,marcus=4	-	marcus	4	5	d5x2=10	sasha+3.0,jem+1.8,alex+1.8,martyn+0.5,marcus-7.0	sasha165.5,martyn130.9,alex105.0,adam71.2,megan70.7,jem67.5,aatif52.5,marcus50.0,musa41.9,tim41.6,stephen38.3
+2026-08-17 14:34	jem=8,alex=7,musa=3,sasha=0	-	sasha	0	4	d6x1.5=9	musa+5.0,alex-0.3,jem-1.7,sasha-3.0	sasha162.5,martyn130.9,alex104.6,adam71.2,megan70.7,jem65.8,aatif52.5,marcus50.0,musa46.9,tim41.6,stephen38.3
+2026-08-17 15:32	marcus=7,jem=1	-	jem	1	2	d4x0.5=2	jem+4.0,marcus-4.0	sasha162.5,martyn130.9,alex104.6,adam71.2,megan70.7,jem69.8,aatif52.5,musa46.9,marcus46.0,tim41.6,stephen38.3
+2026-08-17 17:33	martyn=7,alex=7,jem=5	-	jem	5	3	d4x1=4	alex+1.0,martyn+1.0,jem-2.0	sasha162.5,martyn131.9,alex105.6,adam71.2,megan70.7,jem67.8,aatif52.5,musa46.9,marcus46.0,tim41.6,stephen38.3
+2026-08-18 09:53	stephen=7,adam=6,alex=2,marcus=2	alex=1+2+2=5,marcus=6+4+4=14	alex	2	4	d1x1.5=1.5	marcus+3.5,alex+1.5,adam-1.8,stephen-3.2	sasha162.5,martyn131.9,alex107.1,megan70.7,adam69.3,jem67.8,aatif52.5,marcus49.5,musa46.9,tim41.6,stephen35.1
+2026-08-18 10:55	alex=7,jem=7,stephen=6,sasha=6,aatif=5,musa=4	-	musa	4	6	d5x2.5=12.5	aatif+3.5,sasha+2.3,stephen+2.3,jem+1.1,alex+1.1,musa-10.3	sasha164.8,martyn131.9,alex108.2,megan70.7,adam69.3,jem68.9,aatif56.0,marcus49.5,tim41.6,stephen37.4,musa36.6
+2026-08-18 12:05	jem=7,tim=6,musa=6,aatif=6,adam=6	tim=4+5+5=14,musa=2+4+4=10,aatif=6+6+5=17,adam=3+3+2=8	adam	6	5	d1x2=2	tim+0.8,aatif+0.8,musa+0.8,jem-0.5,adam-1.8	sasha164.8,martyn131.9,alex108.2,megan70.7,jem68.4,adam67.6,aatif56.7,marcus49.5,tim42.4,stephen37.4,musa37.3
+2026-08-18 13:54	jem=7,aatif=6,stephen=4,musa=3	-	musa	3	4	d2x1.5=3	stephen+2.3,aatif-0.3,musa-0.3,jem-1.7	sasha164.8,martyn131.9,alex108.2,megan70.7,adam67.6,jem66.7,aatif56.4,marcus49.5,tim42.4,stephen39.8,musa37.0
+2026-08-18 15:24	alex=8,sasha=6,jem=6,adam=5,marcus=5,stephen=3	-	stephen	3	6	d1x2.5=2.5	marcus+1.1,adam+1.1,stephen+0.5,jem-0.1,sasha-0.1,alex-2.5	sasha164.7,martyn131.9,alex105.7,megan70.7,adam68.7,jem66.6,aatif56.4,marcus50.6,tim42.4,stephen40.3,musa37.0
+2026-08-19 09:48	marcus=6,martyn=0	-	martyn	0	2	d6x0.5=3	martyn+3.0,marcus-3.0	sasha164.7,martyn134.9,alex105.7,megan70.7,adam68.7,jem66.6,aatif56.4,marcus47.6,tim42.4,stephen40.3,musa37.0
+2026-08-19 10:41	musa=7,martyn=7,aatif=5	-	aatif	5	3	d5x1=5	musa+1.5,martyn+1.5,aatif-3.0	sasha164.7,martyn136.4,alex105.7,megan70.7,adam68.7,jem66.6,aatif53.4,marcus47.6,tim42.4,stephen40.3,musa38.5
+2026-08-19 11:29	jem=6,stephen=6	jem=2+5+6=13,stephen=3+6+5=14	jem	6	2	d2x0.5=1	stephen+1.0,jem-1.0	sasha164.7,martyn136.4,alex105.7,megan70.7,adam68.7,jem65.6,aatif53.4,marcus47.6,tim42.4,stephen41.3,musa38.5
+2026-08-19 11:40	martyn=7,musa=6,sasha=0	-	sasha	0	3	d2x1=2	sasha+4.5,musa-1.5,martyn-3.0	sasha169.2,martyn133.4,alex105.7,megan70.7,adam68.7,jem65.6,aatif53.4,marcus47.6,tim42.4,stephen41.3,musa37.0
+2026-08-19 14:10	martyn=7,marcus=7,jem=6,megan=6,tim=6,aatif=5,stephen=4,adam=4,musa=0	-	musa	0	9	d4x4=16	stephen+3.1,adam+3.1,aatif+2.0,megan+0.9,jem+0.9,tim+0.9,marcus-0.2,martyn-0.2,musa-10.4	sasha169.2,martyn133.1,alex105.7,adam71.8,megan71.6,jem66.5,aatif55.4,marcus47.4,stephen44.4,tim43.3,musa26.6
+2026-08-19 15:20	martyn=6,musa=5,jem=4,sasha=1	-	sasha	1	4	d4x1.5=6	jem+2.0,musa+0.7,martyn-0.7,sasha-2.0	sasha166.2,martyn132.4,alex105.7,adam71.8,megan71.6,jem67.5,aatif55.4,marcus47.4,stephen44.4,tim43.3,musa29.3
+2026-08-19 16:19	martyn=7,musa=6,stephen=6,jem=6	musa=6+4+4=14,stephen=5+2+1=8,jem=4+6+6=16	stephen	6	4	d6x1.5=9	musa+3.3,jem+3.3,martyn+2.0,stephen-8.7	sasha166.2,martyn134.4,alex105.7,adam71.8,megan71.6,jem69.8,aatif54.4,marcus47.4,tim43.3,stephen35.7,musa34.6
+2026-08-19 16:20	marcus=7,jem=1,sasha=0	-	sasha	0	3	d3x1=3	jem+4.0,sasha+1.0,marcus-5.0	sasha167.2,martyn134.4,alex105.7,jem73.8,adam71.8,megan71.6,aatif54.4,tim43.3,marcus42.4,stephen35.7,musa34.6
+2026-08-20 10:29	musa=7,martyn=7,marcus=6,aatif=5	-	aatif	5	4	d6x1.5=9	marcus+3.3,musa+2.0,martyn+2.0,aatif-7.3	sasha167.2,martyn136.4,alex105.7,jem72.8,adam71.8,megan71.6,aatif47.1,marcus45.7,tim43.3,musa37.6,stephen35.7
+2026-08-20 10:41	jem=1,alex=0	-	alex	0	2	d3x0.5=1.5	jem+0.5,alex-0.5	sasha167.2,martyn136.4,alex105.2,jem73.3,adam71.8,megan71.6,aatif47.1,marcus45.7,tim43.3,musa37.6,stephen35.7
+2026-08-20 11:53	alex=6,megan=6,stephen=6,jem=6,musa=6,sasha=6,marcus=1	-	marcus	1	7	d1x3=3	marcus+2.0,megan-0.3,sasha-0.3,alex-0.3,stephen-0.3,jem-0.3,musa-0.3	sasha166.8,martyn136.4,alex104.9,jem73.0,adam71.8,megan71.3,marcus47.7,aatif47.1,tim43.3,musa37.3,stephen35.4
+2026-08-20 12:52	stephen=7,martyn=7,jem=6,alex=6,musa=5,aatif=5	musa=3+6+4=13,aatif=3+4+5=12	aatif	5	6	d3x2.5=7.5	musa+2.7,alex+1.5,jem+1.5,stephen+0.3,martyn+0.3,aatif-6.3	sasha166.8,martyn136.7,alex106.4,jem74.5,adam71.8,megan71.3,marcus44.7,tim43.3,musa43.0,aatif40.8,stephen35.7
+2026-08-20 13:59	jem=6,megan=6,alex=6,stephen=3	-	stephen	3	4	d3x1.5=4.5	alex+0.5,megan+0.5,jem+0.5,stephen-1.5	sasha166.8,martyn136.7,alex106.9,jem75.0,adam71.8,megan71.8,marcus44.7,tim43.3,musa43.0,aatif40.8,stephen34.2
+2026-08-20 15:25	martyn=7,jem=7,marcus=6,megan=6,sasha=6,musa=6,alex=5	-	alex	5	7	d4x3=12	sasha+2.2,musa+2.2,megan+2.2,marcus+2.2,martyn+1.0,jem+1.0,alex-10.7	sasha169.0,martyn137.7,alex96.2,jem76.0,megan73.9,adam71.8,marcus46.9,musa45.1,tim43.3,aatif40.8,stephen34.2
+2026-08-20 16:35	musa=7,jem=6,marcus=1	-	marcus	1	3	d4x1=4	marcus+1.5,jem+0.0,musa-1.5	sasha169.0,martyn137.7,alex96.2,jem76.0,megan73.9,adam71.8,marcus48.4,musa43.6,tim43.3,aatif40.8,stephen34.2
+2026-08-20 16:54	jem=3,sasha=1	-	sasha	1	2	d6x0.5=3	retardio+1.0,sasha-1.0	sasha168.0,martan137.7,alex96.2,retardio77.0,megan73.9,adam71.8,beardo48.4,mumu43.6,tim43.3,aaa40.8,stephen34.2
+2026-08-21 09:42	aatif=6,marcus=5,martyn=1,alex=0	-	alex	0	4	d3x1.5=4.5	martan+4.2,alex-0.5,beardo-1.2,aaa-2.5	sasha168.0,martan141.9,alex95.7,retardio77.0,megan73.9,adam71.8,beardo47.2,mumu43.6,tim43.3,aaa38.3,stephen34.2
+2026-08-21 10:55	musa=5,marcus=4	-	marcus	4	2	d6x0.5=3	mumu+2.0,beardo-2.0	sasha168.0,martan141.9,alex95.7,retardio77.0,megan73.9,adam71.8,mumu45.6,beardo45.2,tim43.3,aaa38.3,stephen34.2
+2026-08-21 13:31	alex=7,martyn=7,aatif=5,sasha=4,marcus=3	-	marcus	3	5	d4x2=8	sasha+3.5,aaa+2.2,alex-0.2,martan-0.2,beardo-5.2	sasha171.5,martan141.7,alex95.5,retardio77.0,megan73.9,adam71.8,mumu45.6,tim43.3,aaa40.5,beardo40.0,stephen34.2
+2026-08-21 14:47	marcus=7,alex=6,musa=5	-	musa	5	3	d5x1=5	alex+2.5,beardo+1.0,mumu-3.5	sasha171.5,martan141.7,alex98.0,retardio77.0,megan73.9,adam71.8,aaa43.5,tim43.3,mumu42.1,beardo38.0,stephen34.2
+2026-08-21 16:03	sasha=6,musa=6	sasha=2+3+1=6,musa=4+1+4=9	sasha	6	2	d5x0.5=2.5	mumu+2.5,sasha-2.5	sasha169.0,martan141.7,alex98.0,retardio77.0,megan73.9,adam71.8,mumu44.6,aaa43.5,tim43.3,beardo38.0,stephen34.2
+2026-08-24 10:23	martyn=7,jem=7,musa=7,megan=6,alex=6	megan=5+1+6=12,alex=3+4+3=10	alex	6	5	d4x2=8	megan+2.8,mumu+1.5,martan+1.5,retardio+1.5,alex-7.2	sasha169.0,martan143.2,alex90.7,retardio78.5,megan76.7,adam71.8,mumu46.1,aaa43.5,tim43.3,beardo38.0,stephen34.2
+2026-08-24 11:39	musa=6,aatif=6,jem=6,marcus=6,sasha=6	musa=1+3+2=6,aatif=4+3+2=9,jem=2+3+3=8,marcus=5+4+1=10,sasha=3+1+4=8	musa	6	5	d6x2=12	aaa+3,beardo+3,sasha+3,retardio+3,mumu-12	sasha172.0,martan143.2,alex90.7,retardio81.5,megan76.7,adam71.8,aaa46.5,tim43.3,beardo41.0,stephen34.2,mumu34.1
