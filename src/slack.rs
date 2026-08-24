@@ -787,9 +787,10 @@ impl SlackInterface {
             .as_deref()
             .map(str::trim)
             .and_then(|s| s.parse::<f64>().ok())
-            .filter(|a| a.is_finite() && *a >= 1.0);
+            .filter(|a| a.is_finite() && *a >= donate::MIN_AMOUNT);
         let Some(amount) = amount else {
-            self.replace_ephemeral_blocks(rerender("⚠️ Enter an amount of at least 1 TEA."), &payload.response_url)
+            let notice = format!("⚠️ Enter an amount of at least {} TEA.", donate::MIN_AMOUNT);
+            self.replace_ephemeral_blocks(rerender(&notice), &payload.response_url)
                 .await;
             return StatusCode::OK.into_response();
         };

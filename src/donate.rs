@@ -13,6 +13,9 @@ pub const AMOUNT_BLOCK: &str = "donate_amount_block";
 pub const AMOUNT_ACTION: &str = "donate_amount";
 pub const SUBMIT_ACTION: &str = "donate_submit";
 
+/// Smallest donation the form accepts.
+pub const MIN_AMOUNT: f64 = 0.1;
+
 /// Recipient the dropdown pre-selects when the donor hasn't picked one yet.
 const DEFAULT_RECIPIENT_NAME: &str = "Musa";
 
