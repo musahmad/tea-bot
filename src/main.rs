@@ -51,6 +51,21 @@ impl Display for User {
     }
 }
 
+/// Render a TEA amount for a user-facing message. Keeps up to four decimals —
+/// enough for the smallest donation the bot accepts — and drops trailing zeros,
+/// so whole numbers stay whole. Rounding at four places also hides the float
+/// noise that comes back from the wei conversion.
+pub fn tea_amount(amount: f64) -> String {
+    let rendered = format!("{:.4}", amount);
+    let trimmed = rendered.trim_end_matches('0').trim_end_matches('.');
+    // A tiny negative amount rounds to a signed zero; show it as plain "0".
+    if trimmed == "-0" {
+        "0".to_string()
+    } else {
+        trimmed.to_string()
+    }
+}
+
 #[derive(Deserialize, Serialize, Clone, Debug)]
 pub struct FirestoreConfig {
     /// GCP project id that owns the Firestore database.
@@ -168,4 +183,26 @@ async fn main() {
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:6969").await.unwrap();
     axum::serve(listener, app).await.unwrap();
+}
+
+#[cfg(test)]
+mod tea_amount_tests {
+    use super::tea_amount;
+
+    #[test]
+    fn renders_amounts() {
+        for (input, expected) in [
+            (1.0, "1"),
+            (10.0, "10"),
+            (0.1, "0.1"),
+            (0.15, "0.15"),
+            (0.1 + 0.2, "0.3"),
+            (2.5, "2.5"),
+            (-3.0, "-3"),
+            (-0.00004, "0"),
+            (0.0, "0"),
+        ] {
+            assert_eq!(tea_amount(input), expected, "for {input}");
+        }
+    }
 }

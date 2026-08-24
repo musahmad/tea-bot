@@ -23,7 +23,7 @@ use crate::preferences::{
 };
 use crate::terms::{TermsRevision, TermsStore};
 use crate::tv::{TvEvent, TvUser};
-use crate::User;
+use crate::{tea_amount, User};
 
 #[allow(dead_code)]
 pub enum UserCommand {
@@ -428,7 +428,7 @@ impl SlackInterface {
                     let mut message = String::from("\n☕️ *Payments to be made:*\n\n");
                     for (user, amount) in &sorted_payments {
                         let emoji = if **amount > 0.0 { "🤑" } else { "☹️" };
-                        message += &format!("{}: {:.1} TEA {}\n\n", user, amount, emoji);
+                        message += &format!("{}: {} TEA {}\n\n", user, tea_amount(**amount), emoji);
                     }
                     self.send_message(&message).await;
                     let _ = self.tv_tx.send(TvEvent::PaymentsAnnounced {
@@ -457,8 +457,8 @@ impl SlackInterface {
                         };
 
                         leaderboard.push_str(&format!(
-                            "{} *{}* {:.1} TEA\n\n",
-                            medal, user, balance,
+                            "{} *{}* {} TEA\n\n",
+                            medal, user, tea_amount(*balance),
                         ));
                     }
                     self.send_message(&leaderboard).await;
@@ -810,7 +810,7 @@ impl SlackInterface {
         };
 
         self.replace_ephemeral(
-            &format!("⏳ Sending {:.1} TEA to {}…", amount, recipient),
+            &format!("⏳ Sending {} TEA to {}…", tea_amount(amount), recipient),
             &payload.response_url,
         )
         .await;

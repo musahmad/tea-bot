@@ -7,7 +7,7 @@ use crate::contract::ContractInterface;
 use crate::preferences::{london_now_minutes, PreferenceStore};
 use crate::rounds::{now_unix, RoundStore, RoundSummary};
 use crate::slack::{SlackAction, UserCommand};
-use crate::{FirestoreConfig, User};
+use crate::{tea_amount, FirestoreConfig, User};
 
 pub struct TeaRound {
     pub bids: HashMap<User, u8>,
@@ -177,7 +177,7 @@ impl Tea {
                     if let Some(bid) = tea_round.bids.get(&user) {
                         SlackAction::RejectBid(
                             format!(
-                                "☕️ You have already bid {:.1} TEA. That's locked in now! 🚨",
+                                "☕️ You have already bid {} TEA. That's locked in now! 🚨",
                                 bid
                             ),
                             response_url,
@@ -262,8 +262,9 @@ impl Tea {
         if balance < amount {
             SlackAction::RespondEphemeral(
                 format!(
-                    "☕️ You only have {:.1} TEA — can't donate {:.1}. 🚨",
-                    balance, amount
+                    "☕️ You only have {} TEA — can't donate {}. 🚨",
+                    tea_amount(balance),
+                    tea_amount(amount)
                 ),
                 response_url,
             )
@@ -281,13 +282,15 @@ impl Tea {
             Ok(outcome) => {
                 let settled = outcome.settled.first().copied().unwrap_or(amount);
                 SlackAction::RespondEphemeral(
-                    format!("✅ Donated {:.1} TEA to {}!", settled, to),
+                    format!("✅ Donated {} TEA to {}!", tea_amount(settled), to),
                     response_url,
                 )
                 .send(&self.message_tx);
                 SlackAction::SendMessage(format!(
-                    "💸 *{} donated {:.1} TEA to {}!* What a legend.",
-                    from, settled, to
+                    "💸 *{} donated {} TEA to {}!* What a legend.",
+                    from,
+                    tea_amount(settled),
+                    to
                 ))
                 .send(&self.message_tx);
             }
@@ -440,11 +443,11 @@ impl Tea {
                         {
                             if *settled + 1e-9 < *requested {
                                 capped.push(format!(
-                                    "• {} was short by {:.1} TEA (owed {:.1}, paid {:.1})",
+                                    "• {} was short by {} TEA (owed {}, paid {})",
                                     from,
-                                    *requested - *settled,
-                                    *requested,
-                                    *settled,
+                                    tea_amount(*requested - *settled),
+                                    tea_amount(*requested),
+                                    tea_amount(*settled),
                                 ));
                             }
                         }
