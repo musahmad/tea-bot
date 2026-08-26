@@ -237,16 +237,26 @@ impl Tea {
                 from,
                 to,
                 amount,
+                message,
                 response_url,
             } => {
-                self.handle_donation(from, to, amount, response_url).await;
+                self.handle_donation(from, to, amount, message, response_url)
+                    .await;
             }
         }
     }
 
     /// Settle a `/t donate` transfer. Refreshes balances, rejects an
-    /// over-balance gift privately, then moves the TEA on-chain and announces it.
-    async fn handle_donation(&mut self, from: User, to: User, amount: f64, response_url: Url) {
+    /// over-balance gift privately, then moves the TEA on-chain and announces it
+    /// along with the donor's `message`, when they wrote one.
+    async fn handle_donation(
+        &mut self,
+        from: User,
+        to: User,
+        amount: f64,
+        message: Option<String>,
+        response_url: Url,
+    ) {
         if let Err(e) = self.contract.refresh_balances().await {
             tracing::error!("Failed to refresh balances 🚨: {}", e);
             SlackAction::RespondEphemeral(
@@ -285,11 +295,15 @@ impl Tea {
                     response_url,
                 )
                 .send(&self.message_tx);
-                SlackAction::SendMessage(format!(
+                let mut announcement = format!(
                     "💸 *{} donated {:.1} TEA to {}!* What a legend.",
                     from, settled, to
-                ))
-                .send(&self.message_tx);
+                );
+                if let Some(message) = message {
+                    // Quote it so multi-line notes stay visually attached.
+                    announcement += &format!("\n> {}", message.replace('\n', "\n> "));
+                }
+                SlackAction::SendMessage(announcement).send(&self.message_tx);
             }
             Err(e) => {
                 tracing::error!("Donation transfer failed 🚨: {}", e);

@@ -29,13 +29,15 @@ use crate::User;
 pub enum UserCommand {
     Bid(User, u8, Url),
     CancelTeaRound,
-    /// Transfer `amount` TEA from `from` to `to`. The tea loop owns the contract,
-    /// so it does the balance check and settlement; `response_url` carries the
-    /// donor's ephemeral form for the result message.
+    /// Transfer `amount` TEA from `from` to `to`, with an optional `message`
+    /// from the donor. The tea loop owns the contract, so it does the balance
+    /// check and settlement; `response_url` carries the donor's ephemeral form
+    /// for the result message.
     Donate {
         from: User,
         to: User,
         amount: f64,
+        message: Option<String>,
         response_url: Url,
     },
 }
@@ -148,8 +150,8 @@ struct InteractivityPayload {
     #[serde(default)]
     actions: Vec<InteractivityAction>,
     /// Current values of every stateful element in the message. Slack sends this
-    /// on `block_actions`, so the "Donate" button carries the picked recipient
-    /// and typed amount even though they live in other blocks.
+    /// on `block_actions`, so the "Donate" button carries the picked recipient,
+    /// typed amount and message even though they live in other blocks.
     #[serde(default)]
     state: Option<InteractivityState>,
     response_url: Url,
@@ -593,7 +595,7 @@ impl SlackInterface {
                 StatusCode::OK,
                 Json(json!({
                     "response_type": "ephemeral",
-                    "blocks": donate::donate_blocks(&self.users, &payload.user_id, None, None, None),
+                    "blocks": donate::donate_blocks(&self.users, &payload.user_id, None, None, None, None),
                 })),
             )
                 .into_response();
@@ -762,9 +764,9 @@ impl SlackInterface {
     /// validation failure; on success replaces it with a "sending" line while
     /// the tea loop settles on-chain and posts the final result.
     async fn submit_donation(&self, donor: User, payload: &InteractivityPayload) -> Response {
-        let (recipient_id, amount_text) = match payload.state.as_ref() {
+        let (recipient_id, amount_text, message_text) = match payload.state.as_ref() {
             Some(state) => donate::parse_submission(&state.values),
-            None => (None, None),
+            None => (None, None, None),
         };
 
         let rerender = |notice: &str| {
@@ -773,6 +775,7 @@ impl SlackInterface {
                 &donor.id,
                 recipient_id.as_deref(),
                 amount_text.as_deref(),
+                message_text.as_deref(),
                 Some(notice),
             )
         };
@@ -808,6 +811,12 @@ impl SlackInterface {
             None => return StatusCode::OK.into_response(),
         };
 
+        let message = message_text
+            .as_deref()
+            .map(str::trim)
+            .filter(|m| !m.is_empty())
+            .map(|m| m.chars().take(donate::MAX_MESSAGE_LEN).collect::<String>());
+
         self.replace_ephemeral(
             &format!("⏳ Sending {:.1} TEA to {}…", amount, recipient),
             &payload.response_url,
@@ -819,6 +828,7 @@ impl SlackInterface {
                 from: donor,
                 to: recipient,
                 amount,
+                message,
                 response_url: payload.response_url.clone(),
             })
             .ok();
