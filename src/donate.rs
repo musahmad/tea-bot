@@ -1,7 +1,7 @@
 //! `/t donate`: an interactive form to transfer TEA from the invoking user to
 //! another tea-bot user. Slack renders the form as an ephemeral message; the
-//! "Donate" button submits the picked recipient and typed amount, both read
-//! back from the block-actions `state.values`.
+//! "Donate" button submits the picked recipient, typed amount and optional
+//! message, all read back from the block-actions `state.values`.
 
 use serde_json::{json, Value};
 
@@ -11,20 +11,27 @@ pub const RECIPIENT_BLOCK: &str = "donate_recipient_block";
 pub const RECIPIENT_ACTION: &str = "donate_recipient";
 pub const AMOUNT_BLOCK: &str = "donate_amount_block";
 pub const AMOUNT_ACTION: &str = "donate_amount";
+pub const MESSAGE_BLOCK: &str = "donate_message_block";
+pub const MESSAGE_ACTION: &str = "donate_message";
 pub const SUBMIT_ACTION: &str = "donate_submit";
 
 /// Recipient the dropdown pre-selects when the donor hasn't picked one yet.
 const DEFAULT_RECIPIENT_NAME: &str = "Musa";
 
+/// Slack enforces this on the input, so the announcement can't be flooded.
+pub const MAX_MESSAGE_LEN: usize = 140;
+
 /// The donation form: a recipient dropdown (all tea-bot users except the donor),
-/// a freeform amount input and a submit button. `selected_recipient`/`amount`
-/// pre-fill the controls when re-rendering after a validation error, so the
-/// user's choices survive. `notice` shows a validation line when present.
+/// a freeform amount input, an optional message and a submit button.
+/// `selected_recipient`/`amount`/`message` pre-fill the controls when
+/// re-rendering after a validation error, so the user's choices survive.
+/// `notice` shows a validation line when present.
 pub fn donate_blocks(
     users: &[User],
     donor_id: &str,
     selected_recipient: Option<&str>,
     amount: Option<&str>,
+    message: Option<&str>,
     notice: Option<&str>,
 ) -> Value {
     let options: Vec<Value> = users
@@ -60,6 +67,16 @@ pub fn donate_blocks(
         amount_input["initial_value"] = json!(amount);
     }
 
+    let mut message_input = json!({
+        "type": "plain_text_input",
+        "action_id": MESSAGE_ACTION,
+        "max_length": MAX_MESSAGE_LEN,
+        "placeholder": { "type": "plain_text", "text": "e.g. thanks for the brew!", "emoji": true },
+    });
+    if let Some(message) = message.filter(|m| !m.is_empty()) {
+        message_input["initial_value"] = json!(message);
+    }
+
     let mut blocks = vec![
         json!({
             "type": "section",
@@ -77,6 +94,13 @@ pub fn donate_blocks(
             "optional": true,
             "label": { "type": "plain_text", "text": "Amount (TEA)", "emoji": true },
             "element": amount_input,
+        }),
+        json!({
+            "type": "input",
+            "block_id": MESSAGE_BLOCK,
+            "optional": true,
+            "label": { "type": "plain_text", "text": "Message (optional)", "emoji": true },
+            "element": message_input,
         }),
         json!({
             "type": "actions",
@@ -108,10 +132,10 @@ fn user_option(user: &User) -> Value {
     })
 }
 
-/// Pull the picked recipient id and raw amount text out of a block-actions
-/// `state.values` object. Either is `None` when the user left that control
-/// untouched.
-pub fn parse_submission(values: &Value) -> (Option<String>, Option<String>) {
+/// Pull the picked recipient id, raw amount text and optional message out of a
+/// block-actions `state.values` object. Each is `None` when the user left that
+/// control untouched.
+pub fn parse_submission(values: &Value) -> (Option<String>, Option<String>, Option<String>) {
     let recipient = values
         .get(RECIPIENT_BLOCK)
         .and_then(|b| b.get(RECIPIENT_ACTION))
@@ -127,5 +151,12 @@ pub fn parse_submission(values: &Value) -> (Option<String>, Option<String>) {
         .and_then(|v| v.as_str())
         .map(str::to_string);
 
-    (recipient, amount)
+    let message = values
+        .get(MESSAGE_BLOCK)
+        .and_then(|b| b.get(MESSAGE_ACTION))
+        .and_then(|a| a.get("value"))
+        .and_then(|v| v.as_str())
+        .map(str::to_string);
+
+    (recipient, amount, message)
 }
