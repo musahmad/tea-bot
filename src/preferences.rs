@@ -26,10 +26,10 @@ const METADATA_TOKEN_URL: &str =
 pub const DEFAULT_TEA_OPTIONS: [&str; 6] = [
     "Normal",
     "Decaf",
-    "Decaf Oatmilk",
+    "Decaf Non-Dairy",
     "Normal Lemon",
     "Decaf Lemon",
-    "Normal Oatmilk",
+    "Normal Non-Dairy",
 ];
 
 /// Switchover used when a user hasn't picked one yet.
