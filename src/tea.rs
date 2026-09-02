@@ -228,11 +228,6 @@ impl Tea {
                     SlackAction::ConfirmBid(response_url).send(&self.message_tx);
                 }
             }
-            UserCommand::CancelTeaRound => {
-                tracing::info!("Cancelled tea round");
-                self.tea_round = None;
-                SlackAction::CancelTeaRound.send(&self.message_tx);
-            }
             UserCommand::Donate {
                 from,
                 to,

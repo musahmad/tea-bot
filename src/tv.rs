@@ -32,7 +32,6 @@ impl TvUser {
 #[serde(tag = "type")]
 pub enum TvEvent {
     TeaRoundStarted,
-    TeaRoundCancelled,
     BidRevealed { user: TvUser, bid: u8 },
     DiceRollAnnounced { rollers: Vec<TvUser>, tied_bid: u8 },
     DiceRolling { user: TvUser },

@@ -28,7 +28,6 @@ use crate::User;
 #[allow(dead_code)]
 pub enum UserCommand {
     Bid(User, u8, Url),
-    CancelTeaRound,
     /// Transfer `amount` TEA from `from` to `to`, with an optional `message`
     /// from the donor. The tea loop owns the contract, so it does the balance
     /// check and settlement; `response_url` carries the donor's ephemeral form
@@ -67,7 +66,6 @@ pub enum SlackAction {
     },
     AnnounceTeaMaker((User, u8, usize)),
     AnnouncePayments(HashMap<User, f64>),
-    CancelTeaRound,
     ShowTeaderboard(Vec<(User, f64)>),
     /// The teas to be made for a just-finished round, grouped by tea (largest
     /// group first). Participants with no saved preference are grouped as Normal.
@@ -440,11 +438,6 @@ impl SlackInterface {
                             .collect(),
                     });
                 }
-                SlackAction::CancelTeaRound => {
-                    self.cancel_active_timer();
-                    self.send_message("☕️ Tea round cancelled").await;
-                    let _ = self.tv_tx.send(TvEvent::TeaRoundCancelled);
-                }
                 SlackAction::ShowTeaderboard(balances) => {
                     let mut leaderboard = String::from("\n\n☕️ *Teaderboard*\n\n");
                     let mut sorted_balances: Vec<_> = balances.iter().collect();
@@ -550,15 +543,6 @@ impl SlackInterface {
                         StatusCode::OK,
                         Json(json!({ "text": "Skipped subtype event" })),
                     );
-                }
-
-                if let Some(text) = event.text {
-                    match text.trim().to_lowercase().as_str() {
-                        "c" => {
-                            self.command_tx.send(UserCommand::CancelTeaRound).ok();
-                        }
-                        _ => (),
-                    };
                 }
 
                 (StatusCode::OK, Json(json!({ "text": "Command received" })))
