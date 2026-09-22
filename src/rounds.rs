@@ -177,6 +177,95 @@ impl RoundStore {
             Err(e) => tracing::error!("RoundStore: write error: {}", e),
         }
     }
+
+    /// Slack ids of everyone in a completed round that ended after `since_unix`,
+    /// mapped to when their latest such round ended. Lonely rounds are skipped.
+    ///
+    /// Fails open: disabled persistence or any Firestore error gives an empty
+    /// map, so an outage never blocks bidding.
+    pub async fn recent_participants(&self, since_unix: u64) -> HashMap<String, u64> {
+        let mut participants = HashMap::new();
+        let Some(firestore) = self.firestore.as_ref() else {
+            return participants;
+        };
+        let Some(token) = self.access_token().await else {
+            tracing::error!("RoundStore: no access token; cooldowns not checked");
+            return participants;
+        };
+
+        let url = format!(
+            "https://firestore.googleapis.com/v1/projects/{}/databases/{}/documents:runQuery",
+            firestore.project, firestore.database
+        );
+        // Status is filtered here rather than in the query:
+        // a range filter plus an equality filter needs a composite index.
+        let query = json!({
+            "structuredQuery": {
+                "from": [{ "collectionId": ROUNDS_COLLECTION }],
+                "where": {
+                    "fieldFilter": {
+                        "field": { "fieldPath": "ended_at_unix" },
+                        "op": "GREATER_THAN",
+                        "value": iv(since_unix as i64),
+                    }
+                }
+            }
+        });
+
+        let results: Value = match self
+            .client
+            .post(url)
+            .bearer_auth(token)
+            .json(&query)
+            .send()
+            .await
+        {
+            Ok(r) if r.status().is_success() => match r.json().await {
+                Ok(v) => v,
+                Err(e) => {
+                    tracing::error!("RoundStore: bad cooldown-query body: {}", e);
+                    return participants;
+                }
+            },
+            Ok(r) => {
+                let status = r.status();
+                let body = r.text().await.unwrap_or_default();
+                tracing::error!("RoundStore: cooldown query failed ({}): {}", status, body);
+                return participants;
+            }
+            Err(e) => {
+                tracing::error!("RoundStore: cooldown query error: {}", e);
+                return participants;
+            }
+        };
+
+        let docs = results
+            .as_array()
+            .into_iter()
+            .flatten()
+            .filter_map(|e| e.get("document")?.get("fields"));
+        for fields in docs {
+            if fields["status"]["stringValue"].as_str() != Some("completed") {
+                continue;
+            }
+            let Some(ended_at) = fields["ended_at_unix"]["integerValue"]
+                .as_str()
+                .and_then(|v| v.parse::<u64>().ok())
+            else {
+                continue;
+            };
+            let ids = fields["player_ids"]["arrayValue"]["values"]
+                .as_array()
+                .into_iter()
+                .flatten()
+                .filter_map(|v| v["stringValue"].as_str());
+            for id in ids {
+                let latest = participants.entry(id.to_string()).or_insert(ended_at);
+                *latest = (*latest).max(ended_at);
+            }
+        }
+        participants
+    }
 }
 
 // --- Firestore typed-value helpers -----------------------------------------
@@ -328,6 +417,7 @@ fn build_document(s: &RoundSummary<'_>) -> Value {
             "ended_at_unix": iv(s.ended_at_unix as i64),
             "status": sv(s.status),
             "starter": sv(s.starter.name.clone()),
+            "player_ids": av(s.bids.keys().map(|u| sv(u.id.clone())).collect()),
             "bids": av(bids),
             "teas": av(teas),
             "lowest_bid": iv(s.lowest_bid as i64),

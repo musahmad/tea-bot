@@ -91,6 +91,13 @@ pub struct AppConfig {
     /// Omit (or leave `project` empty) to disable terms enforcement, e.g. locally.
     #[serde(default)]
     firestore: Option<FirestoreConfig>,
+    /// Seconds a player sits out after a completed round. 0 disables it.
+    #[serde(default = "default_cooldown_secs")]
+    cooldown_secs: u64,
+}
+
+fn default_cooldown_secs() -> u64 {
+    15 * 60
 }
 
 #[tokio::main]
@@ -147,7 +154,14 @@ async fn main() {
     });
 
     tokio::spawn({
-        let mut tea = Tea::new(message_tx, command_rx, contract, config.firestore, prefs);
+        let mut tea = Tea::new(
+            message_tx,
+            command_rx,
+            contract,
+            config.firestore,
+            prefs,
+            config.cooldown_secs,
+        );
         async move {
             tea.run().await;
         }
