@@ -17,6 +17,9 @@ pub struct TeaRound {
     pub started_at_unix: u64,
     /// The user who opened the round by placing the first bid.
     pub starter: User,
+    /// Slack id → end of their latest completed round, fetched once at round start.
+    /// Only one round runs at a time, so it cannot go stale mid-round.
+    pub cooldowns: HashMap<String, u64>,
 }
 
 pub struct Tea {
@@ -26,6 +29,9 @@ pub struct Tea {
     pub contract: ContractInterface,
     pub rounds: RoundStore,
     pub prefs: Arc<PreferenceStore>,
+    /// Seconds a player MUST wait after a completed round before bidding again.
+    /// 0 disables the cooldown.
+    pub cooldown_secs: u64,
 }
 
 impl Tea {
@@ -35,6 +41,7 @@ impl Tea {
         contract: ContractInterface,
         firestore: Option<FirestoreConfig>,
         prefs: Arc<PreferenceStore>,
+        cooldown_secs: u64,
     ) -> Self {
         Self {
             message_tx,
@@ -43,7 +50,33 @@ impl Tea {
             contract,
             rounds: RoundStore::new(firestore),
             prefs,
+            cooldown_secs,
         }
+    }
+
+    /// Reject the bid if `user` is still cooling down from a recent round.
+    fn reject_if_cooling_down(
+        &self,
+        user: &User,
+        cooldowns: &HashMap<String, u64>,
+        response_url: &Url,
+    ) -> bool {
+        let Some(&ended_at) = cooldowns.get(&user.id) else {
+            return false;
+        };
+        let Some(remaining) = cooldown_remaining(ended_at, now_unix(), self.cooldown_secs) else {
+            return false;
+        };
+        SlackAction::RejectBid(
+            format!(
+                "☕️ You're on cooldown — you can join another round in {}m {:02}s 🚨",
+                remaining / 60,
+                remaining % 60
+            ),
+            response_url.clone(),
+        )
+        .send(&self.message_tx);
+        true
     }
 
     /// Group a round's participants by the tea each one wants *right now*
@@ -163,6 +196,11 @@ impl Tea {
     async fn handle_command(&mut self, command: UserCommand) {
         match command {
             UserCommand::Bid(user, bid, response_url) => {
+                if let Some(tea_round) = self.tea_round.as_ref() {
+                    if self.reject_if_cooling_down(&user, &tea_round.cooldowns, &response_url) {
+                        return;
+                    }
+                }
                 if let Some(tea_round) = self.tea_round.as_mut() {
                     if let Some(balance) = self.contract.get_balance(user.id.clone()) {
                         if balance < bid.into() {
@@ -190,6 +228,16 @@ impl Tea {
 
                     SlackAction::ConfirmBid(response_url).send(&self.message_tx);
                 } else {
+                    let cooldowns = if self.cooldown_secs == 0 {
+                        HashMap::new()
+                    } else {
+                        self.rounds
+                            .recent_participants(now_unix().saturating_sub(self.cooldown_secs))
+                            .await
+                    };
+                    if self.reject_if_cooling_down(&user, &cooldowns, &response_url) {
+                        return;
+                    }
                     if let Err(e) = self.contract.refresh_balances().await {
                         tracing::error!("Failed to refresh balances 🚨: {}", e);
 
@@ -216,6 +264,7 @@ impl Tea {
                         start_time: Instant::now(),
                         started_at_unix: now_unix(),
                         starter: user.clone(),
+                        cooldowns,
                     });
 
                     SlackAction::StartTeaRound.send(&self.message_tx);
@@ -406,7 +455,9 @@ impl Tea {
 
             SlackAction::AnnounceTeaMaker((tea_maker.clone(), *lowest_bid, bids.len()))
                 .send(&self.message_tx);
-            let orders = self.tea_orders(&bids.keys().cloned().collect::<Vec<_>>()).await;
+            let orders = self
+                .tea_orders(&bids.keys().cloned().collect::<Vec<_>>())
+                .await;
             SlackAction::AnnouncePenalty {
                 dice,
                 players: bids.len(),
@@ -521,5 +572,38 @@ impl Tea {
                 })
                 .await;
         }
+    }
+}
+
+/// Seconds left on a cooldown that started at `ended_at`, or `None` once it has passed.
+fn cooldown_remaining(ended_at: u64, now: u64, window: u64) -> Option<u64> {
+    let remaining = ended_at
+        .saturating_add(window)
+        .saturating_sub(now)
+        .min(window);
+    (remaining > 0).then_some(remaining)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::cooldown_remaining;
+
+    #[test]
+    fn cooldown_counts_down_from_round_end() {
+        assert_eq!(cooldown_remaining(1_000, 1_000, 900), Some(900));
+        assert_eq!(cooldown_remaining(1_000, 1_899, 900), Some(1));
+        assert_eq!(cooldown_remaining(1_000, 1_900, 900), None);
+        assert_eq!(cooldown_remaining(1_000, 5_000, 900), None);
+    }
+
+    #[test]
+    fn cooldown_clamps_future_round_end_to_window() {
+        // Clock skew: the round "ended" after now. Still at most one window away.
+        assert_eq!(cooldown_remaining(2_000, 1_000, 900), Some(900));
+    }
+
+    #[test]
+    fn zero_window_disables_cooldown() {
+        assert_eq!(cooldown_remaining(1_000, 1_000, 0), None);
     }
 }
