@@ -537,10 +537,15 @@ impl Tea {
 
             SlackAction::ShowTeaOrders(orders.clone()).send(&self.message_tx);
 
+            // The cache still holds the balances from the last bid, before transfers.
+            let previous = self.contract.balances().clone();
             let balances_after = match self.contract.refresh_balances().await {
                 Ok(new_balances) => {
-                    SlackAction::ShowTeaderboard(new_balances.clone().into_iter().collect())
-                        .send(&self.message_tx);
+                    SlackAction::ShowTeaderboard {
+                        balances: new_balances.clone(),
+                        previous,
+                    }
+                    .send(&self.message_tx);
                     Some(new_balances)
                 }
                 Err(e) => {
