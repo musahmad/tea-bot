@@ -41,7 +41,8 @@ pub enum TvEvent {
     PenaltyRolling,
     PenaltyRevealed { value: u8 },
     PaymentsAnnounced { payments: Vec<(TvUser, f64)> },
-    Teaderboard { entries: Vec<(TvUser, f64)> },
+    /// Entries are (user, balance, rank change); a positive change means the user moved up.
+    Teaderboard { entries: Vec<(TvUser, f64, i32)> },
 }
 
 pub async fn events_handler(

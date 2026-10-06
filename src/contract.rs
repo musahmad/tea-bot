@@ -83,6 +83,11 @@ impl ContractInterface {
         Ok(self.balances.clone())
     }
 
+    /// Balances as of the last refresh.
+    pub fn balances(&self) -> &HashMap<User, f64> {
+        &self.balances
+    }
+
     pub fn get_balance(&self, id: String) -> Option<f64> {
         let balance = *self.balances.get(
             &self

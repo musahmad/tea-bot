@@ -66,10 +66,26 @@ pub enum SlackAction {
     },
     AnnounceTeaMaker((User, u8, usize)),
     AnnouncePayments(HashMap<User, f64>),
-    ShowTeaderboard(Vec<(User, f64)>),
+    /// Post-round balances, plus the pre-round balances used to show rank changes.
+    ShowTeaderboard {
+        balances: HashMap<User, f64>,
+        previous: HashMap<User, f64>,
+    },
     /// The teas to be made for a just-finished round, grouped by tea (largest
     /// group first). Participants with no saved preference are grouped as Normal.
     ShowTeaOrders(Vec<(String, Vec<User>)>),
+}
+
+/// Sorts balances highest first.
+/// Ties break on name so equal balances keep a stable order between rounds.
+fn rank_balances(balances: &HashMap<User, f64>) -> Vec<(&User, &f64)> {
+    let mut sorted: Vec<_> = balances.iter().collect();
+    sorted.sort_by(|a, b| {
+        b.1.partial_cmp(a.1)
+            .unwrap()
+            .then_with(|| a.0.name.cmp(&b.0.name))
+    });
+    sorted
 }
 
 impl SlackAction {
@@ -438,10 +454,19 @@ impl SlackInterface {
                             .collect(),
                     });
                 }
-                SlackAction::ShowTeaderboard(balances) => {
+                SlackAction::ShowTeaderboard { balances, previous } => {
                     let mut leaderboard = String::from("\n\n☕️ *Teaderboard*\n\n");
-                    let mut sorted_balances: Vec<_> = balances.iter().collect();
-                    sorted_balances.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
+                    let sorted_balances = rank_balances(&balances);
+                    let previous_ranks: HashMap<&User, usize> = rank_balances(&previous)
+                        .into_iter()
+                        .enumerate()
+                        .map(|(i, (user, _))| (user, i))
+                        .collect();
+                    let rank_change = |i: usize, user: &User| -> i32 {
+                        previous_ranks
+                            .get(user)
+                            .map_or(0, |&prev| prev as i32 - i as i32)
+                    };
 
                     for (i, (user, balance)) in sorted_balances.iter().enumerate() {
                         let medal = match i {
@@ -450,17 +475,23 @@ impl SlackInterface {
                             2 => "🥉",
                             _ => "  ",
                         };
+                        let change = match rank_change(i, user) {
+                            0 => String::new(),
+                            n if n > 0 => format!(" :up-arrow:{}", n),
+                            n => format!(" :down-arrow:{}", -n),
+                        };
 
                         leaderboard.push_str(&format!(
-                            "{} *{}* {:.1} TEA\n\n",
-                            medal, user, balance,
+                            "{} *{}* {:.1} TEA{}\n\n",
+                            medal, user, balance, change,
                         ));
                     }
                     self.send_message(&leaderboard).await;
                     let _ = self.tv_tx.send(TvEvent::Teaderboard {
                         entries: sorted_balances
                             .iter()
-                            .map(|(u, b)| (TvUser::from_user(u), *b))
+                            .enumerate()
+                            .map(|(i, (u, b))| (TvUser::from_user(u), **b, rank_change(i, u)))
                             .collect(),
                     });
                 }

@@ -230,6 +230,8 @@
         }
         .payment-positive { color: #4caf50; }
         .payment-negative { color: #f44336; }
+        .rank-up { color: #4caf50; }
+        .rank-down { color: #f44336; }
 
         /* User display */
         .user-display {
@@ -469,16 +471,25 @@
         }
 
         // --- Teaderboard ---
+        function rankChange(change) {
+            if (!change) return '';
+            return change > 0
+                ? ' <span class="rank-up">\u25B2' + change + '</span>'
+                : ' <span class="rank-down">\u25BC' + -change + '</span>';
+        }
+
         function updateBoard(entries) {
             const el = document.getElementById('board');
             if (!entries || !entries.length) { el.innerHTML = ''; return; }
             const medals = ['\u{1F947}', '\u{1F948}', '\u{1F949}'];
             el.innerHTML = '<h2>Teaderboard</h2>'
-                + entries.map(([user, bal], i) =>
+                + entries.map(([user, bal, change], i) =>
                     '<div class="board-entry">'
                     + (medals[i] || '\u00A0\u00A0') + ' '
                     + renderUser(user, true)
-                    + ' \u2014 ' + bal.toFixed(1) + ' TEA</div>'
+                    + ' \u2014 ' + bal.toFixed(1) + ' TEA'
+                    + rankChange(change)
+                    + '</div>'
                 ).join('');
         }
 
