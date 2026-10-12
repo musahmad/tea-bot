@@ -364,9 +364,10 @@ impl Tea {
         if let Some(tea_round) = self.tea_round.take() {
             let bids = tea_round.bids.clone();
             if bids.len() == 1 {
+                let (user, bid) = bids.iter().next().unwrap();
                 SlackAction::SendMessage(format!(
-                    "☕️ No one joined your tea round, {}! Go and treat yourself to a lonely tea.",
-                    bids.keys().next().unwrap()
+                    "☕️ No one joined your tea round, {}! You bid {} TEA. Go and treat yourself to a lonely tea.",
+                    user, bid
                 ))
                 .send(&self.message_tx);
                 let orders = self.tea_orders(&bids.keys().cloned().collect::<Vec<_>>()).await;
