@@ -479,6 +479,12 @@ impl Tea {
             // Fix an order so `settled` lines up with each transfer in the record.
             let transfer_list: Vec<((User, User), f64)> = transfers.into_iter().collect();
 
+            // Transfers are capped at these balances; a donation since bidding changes them.
+            // On failure the bid-time balances still cap the transfers.
+            if let Err(e) = self.contract.refresh_balances().await {
+                tracing::error!("Failed to refresh balances before settling 🚨: {}", e);
+            }
+
             let (settled, tx_hash): (Vec<f64>, Option<String>) = if !transfer_list.is_empty() {
                 let payment_args = transfer_list
                     .iter()
@@ -492,33 +498,51 @@ impl Tea {
                     .collect();
                 match self.contract.transfer(payment_args).await {
                     Ok(outcome) => {
-                        // A transfer settles for less than requested when the payer's
-                        // on-chain balance couldn't cover it — e.g. a loser penalty that
-                        // exceeded their balance. Surface that instead of a clean "success".
-                        let mut capped: Vec<String> = Vec::new();
-                        for (((from, _to), requested), settled) in
+                        // A payer who couldn't cover their losses paid each winner the
+                        // same fraction of what they were owed. Say so per payer.
+                        let mut shortfalls: Vec<(&User, f64, f64, Vec<String>)> = Vec::new();
+                        for (((from, to), requested), settled) in
                             transfer_list.iter().zip(outcome.settled.iter())
                         {
-                            if *settled + 1e-9 < *requested {
-                                capped.push(format!(
-                                    "• {} was short by {:.1} TEA (owed {:.1}, paid {:.1})",
-                                    from,
-                                    *requested - *settled,
-                                    *requested,
-                                    *settled,
-                                ));
-                            }
+                            let i = match shortfalls.iter().position(|(p, ..)| *p == from) {
+                                Some(i) => i,
+                                None => {
+                                    shortfalls.push((from, 0.0, 0.0, Vec::new()));
+                                    shortfalls.len() - 1
+                                }
+                            };
+                            let (_, owed, paid, lines) = &mut shortfalls[i];
+                            *owed += requested;
+                            *paid += settled;
+                            lines.push(format!(
+                                "    • {} gets {:.1} of {:.1} TEA",
+                                to, settled, requested
+                            ));
                         }
+                        shortfalls.retain(|(_, owed, paid, _)| *paid + 1e-9 < *owed);
 
-                        if capped.is_empty() {
+                        if shortfalls.is_empty() {
                             SlackAction::SendMessage(
                                 "☕️ *All transfers successful ✅*".to_string(),
                             )
                             .send(&self.message_tx);
                         } else {
+                            let details: Vec<String> = shortfalls
+                                .iter()
+                                .map(|(payer, owed, paid, lines)| {
+                                    format!(
+                                        "• {} owed {:.1} TEA but only had {:.1}, so winners get {:.0}% of their winnings:\n{}",
+                                        payer,
+                                        owed,
+                                        paid,
+                                        paid / owed * 100.0,
+                                        lines.join("\n")
+                                    )
+                                })
+                                .collect();
                             SlackAction::SendMessage(format!(
-                                "☕️ *Transfers settled, but some were capped due to low balance 🚨*\n{}",
-                                capped.join("\n")
+                                "☕️ *Transfers settled, but not everyone could pay in full 🚨*\n{}",
+                                details.join("\n")
                             ))
                             .send(&self.message_tx);
                         }
@@ -538,7 +562,7 @@ impl Tea {
 
             SlackAction::ShowTeaOrders(orders.clone()).send(&self.message_tx);
 
-            // The cache still holds the balances from the last bid, before transfers.
+            // The cache still holds the balances from before the transfers.
             let previous = self.contract.balances().clone();
             let balances_after = match self.contract.refresh_balances().await {
                 Ok(new_balances) => {
