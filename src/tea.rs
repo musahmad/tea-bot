@@ -1,5 +1,5 @@
-use std::{collections::HashMap, sync::Arc, time::Instant};
 use reqwest::Url;
+use std::{collections::HashMap, sync::Arc, time::Instant};
 use tokio::sync::mpsc;
 use tokio::time::{sleep, Duration};
 
@@ -202,16 +202,6 @@ impl Tea {
                     }
                 }
                 if let Some(tea_round) = self.tea_round.as_mut() {
-                    if let Some(balance) = self.contract.get_balance(user.id.clone()) {
-                        if balance < bid.into() {
-                            SlackAction::RejectBid(
-                                format!("☕️ Insufficient balance. You have {} TEA 🚨", balance),
-                                response_url,
-                            )
-                            .send(&self.message_tx);
-                            return;
-                        }
-                    }
                     if let Some(bid) = tea_round.bids.get(&user) {
                         SlackAction::RejectBid(
                             format!(
@@ -238,27 +228,6 @@ impl Tea {
                     if self.reject_if_cooling_down(&user, &cooldowns, &response_url) {
                         return;
                     }
-                    if let Err(e) = self.contract.refresh_balances().await {
-                        tracing::error!("Failed to refresh balances 🚨: {}", e);
-
-                        SlackAction::RejectBid(
-                            "☕️ Failed to refresh balances 🚨".to_string(),
-                            response_url,
-                        )
-                        .send(&self.message_tx);
-                        return;
-                    }
-                    if let Some(balance) = self.contract.get_balance(user.id.clone()) {
-                        if balance < bid.into() {
-                            SlackAction::RejectBid(
-                                format!("☕️ Insufficient balance. You have {} TEA 🚨", balance),
-                                response_url,
-                            )
-                            .send(&self.message_tx);
-                            return;
-                        }
-                    }
-
                     self.tea_round = Some(TeaRound {
                         bids: HashMap::from([(user.clone(), bid)]),
                         start_time: Instant::now(),
@@ -276,6 +245,20 @@ impl Tea {
                     .send(&self.message_tx);
                     SlackAction::ConfirmBid(response_url).send(&self.message_tx);
                 }
+            }
+            UserCommand::ShowBoard(response_url) => {
+                if let Err(e) = self.contract.refresh_balances().await {
+                    tracing::error!("Failed to refresh balances 🚨: {}", e);
+                    SlackAction::RespondEphemeral(
+                        "☕️ Couldn't reach the bank to refresh balances — try again in a moment. 🚨"
+                            .to_string(),
+                        response_url,
+                    )
+                    .send(&self.message_tx);
+                    return;
+                }
+                SlackAction::RespondTeaderboard(self.contract.balances().clone(), response_url)
+                    .send(&self.message_tx);
             }
             UserCommand::Donate {
                 from,
@@ -370,7 +353,9 @@ impl Tea {
                     user, bid
                 ))
                 .send(&self.message_tx);
-                let orders = self.tea_orders(&bids.keys().cloned().collect::<Vec<_>>()).await;
+                let orders = self
+                    .tea_orders(&bids.keys().cloned().collect::<Vec<_>>())
+                    .await;
                 SlackAction::ShowTeaOrders(orders.clone()).send(&self.message_tx);
                 self.rounds
                     .record(RoundSummary::lonely(
@@ -402,7 +387,7 @@ impl Tea {
             // empty when there was a single lowest bidder.
             let mut rolloff_history: Vec<Vec<(User, Vec<u8>)>> = Vec::new();
 
-            let tea_maker = if lowest_bidders.len() > 1 {
+            let lowest_bidder = if lowest_bidders.len() > 1 {
                 let mut rollers: Vec<User> = lowest_bidders.iter().map(|u| (*u).clone()).collect();
                 SlackAction::AnnounceDiceRoll(rollers.clone(), *lowest_bid).send(&self.message_tx);
 
@@ -451,10 +436,30 @@ impl Tea {
             let dice = rand::random::<u8>() % 6 + 1;
             let penalty = dice as f64 * 0.5 * (bids.len() - 1) as f64;
 
-            let payments = self.calculate_payments(&bids, &tea_maker, penalty);
+            let payments = self.calculate_payments(&bids, &lowest_bidder, penalty);
+
+            // Debt and transfer caps both use these balances; a donation since bidding changes them.
+            // On failure the bid-time balances stand in.
+            if let Err(e) = self.contract.refresh_balances().await {
+                tracing::error!("Failed to refresh balances before settling 🚨: {}", e);
+            }
+
+            // A payer who cannot cover their payment would otherwise lose only their balance.
+            // The deepest debtor makes the tea; the lowest bidder still pays the penalty.
+            let tea_maker = match debtors(&payments, self.contract.balances()).first() {
+                Some((debtor, debt)) if *debtor != lowest_bidder => {
+                    SlackAction::SendMessage(format!(
+                        "\n\n🚨 *{} bid beyond their means and is {:.1} TEA in debt. Debtors make the tea, whatever they bid!*\n",
+                        debtor, debt
+                    ))
+                    .send(&self.message_tx);
+                    debtor.clone()
+                }
+                _ => lowest_bidder,
+            };
             let transfers: HashMap<(User, User), f64> = self.calculate_transfers(&payments);
 
-            SlackAction::AnnounceTeaMaker((tea_maker.clone(), *lowest_bid, bids.len()))
+            SlackAction::AnnounceTeaMaker((tea_maker.clone(), bids[&tea_maker], bids.len()))
                 .send(&self.message_tx);
             let orders = self
                 .tea_orders(&bids.keys().cloned().collect::<Vec<_>>())
@@ -478,12 +483,6 @@ impl Tea {
 
             // Fix an order so `settled` lines up with each transfer in the record.
             let transfer_list: Vec<((User, User), f64)> = transfers.into_iter().collect();
-
-            // Transfers are capped at these balances; a donation since bidding changes them.
-            // On failure the bid-time balances still cap the transfers.
-            if let Err(e) = self.contract.refresh_balances().await {
-                tracing::error!("Failed to refresh balances before settling 🚨: {}", e);
-            }
 
             let (settled, tx_hash): (Vec<f64>, Option<String>) = if !transfer_list.is_empty() {
                 let payment_args = transfer_list
@@ -605,6 +604,20 @@ impl Tea {
     }
 }
 
+/// Payers whose payment exceeds their balance, deepest debt first.
+/// A payer with no known balance is never in debt.
+fn debtors(payments: &HashMap<User, f64>, balances: &HashMap<User, f64>) -> Vec<(User, f64)> {
+    let mut debtors: Vec<(User, f64)> = payments
+        .iter()
+        .filter_map(|(user, &amount)| {
+            let debt = -amount - balances.get(user)?;
+            (debt > 1e-9).then(|| (user.clone(), debt))
+        })
+        .collect();
+    debtors.sort_by(|a, b| b.1.total_cmp(&a.1).then_with(|| a.0.name.cmp(&b.0.name)));
+    debtors
+}
+
 /// Seconds left on a cooldown that started at `ended_at`, or `None` once it has passed.
 fn cooldown_remaining(ended_at: u64, now: u64, window: u64) -> Option<u64> {
     let remaining = ended_at
@@ -616,7 +629,41 @@ fn cooldown_remaining(ended_at: u64, now: u64, window: u64) -> Option<u64> {
 
 #[cfg(test)]
 mod tests {
-    use super::cooldown_remaining;
+    use std::collections::HashMap;
+
+    use super::{cooldown_remaining, debtors};
+    use crate::User;
+
+    fn user(name: &str) -> User {
+        User {
+            id: name.to_string(),
+            name: name.to_string(),
+            address: String::new(),
+            emoji: None,
+            image_url: None,
+        }
+    }
+
+    #[test]
+    fn deepest_debtor_first() {
+        let (a, b, c) = (user("a"), user("b"), user("c"));
+        let payments = HashMap::from([(a.clone(), -70.0), (b.clone(), -10.0), (c.clone(), 80.0)]);
+        let balances = HashMap::from([(a.clone(), 20.0), (b.clone(), 0.0), (c.clone(), 0.0)]);
+        let found = debtors(&payments, &balances);
+        assert_eq!(found.len(), 2);
+        assert_eq!(found[0].0, a);
+        assert!((found[0].1 - 50.0).abs() < 1e-9);
+        assert_eq!(found[1].0, b);
+        assert!((found[1].1 - 10.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn covered_or_unknown_payers_are_not_debtors() {
+        let (a, b) = (user("a"), user("b"));
+        let payments = HashMap::from([(a.clone(), -20.0), (b.clone(), 20.0)]);
+        assert!(debtors(&payments, &HashMap::from([(a.clone(), 20.0)])).is_empty());
+        assert!(debtors(&payments, &HashMap::new()).is_empty());
+    }
 
     #[test]
     fn cooldown_counts_down_from_round_end() {

@@ -3,7 +3,10 @@ use std::{
     sync::{Arc, Mutex},
     time::Duration,
 };
-use tokio::{sync::{broadcast, mpsc}, task::AbortHandle};
+use tokio::{
+    sync::{broadcast, mpsc},
+    task::AbortHandle,
+};
 
 use axum::{
     extract::State,
@@ -39,6 +42,8 @@ pub enum UserCommand {
         message: Option<String>,
         response_url: Url,
     },
+    /// Show the requester the current Teaderboard, privately.
+    ShowBoard(Url),
 }
 
 #[derive(Debug)]
@@ -71,9 +76,42 @@ pub enum SlackAction {
         balances: HashMap<User, f64>,
         previous: HashMap<User, f64>,
     },
+    /// The Teaderboard as an ephemeral reply to `/t board`.
+    RespondTeaderboard(HashMap<User, f64>, Url),
     /// The teas to be made for a just-finished round, grouped by tea (largest
     /// group first). Participants with no saved preference are grouped as Normal.
     ShowTeaOrders(Vec<(String, Vec<User>)>),
+}
+
+/// Ranked balances with medals, and rank arrows against `previous`.
+fn teaderboard_text(balances: &HashMap<User, f64>, previous: &HashMap<User, f64>) -> String {
+    let previous_ranks: HashMap<&User, usize> = rank_balances(previous)
+        .into_iter()
+        .enumerate()
+        .map(|(i, (user, _))| (user, i))
+        .collect();
+    let mut leaderboard = String::from("\n\n☕️ *Teaderboard*\n\n");
+    for (i, (user, balance)) in rank_balances(balances).iter().enumerate() {
+        let medal = match i {
+            0 => "🥇",
+            1 => "🥈",
+            2 => "🥉",
+            _ => "  ",
+        };
+        let change = match previous_ranks
+            .get(user)
+            .map_or(0, |&prev| prev as i32 - i as i32)
+        {
+            0 => String::new(),
+            n if n > 0 => format!(" :up-arrow:{}", n),
+            n => format!(" :down-arrow:{}", -n),
+        };
+        leaderboard.push_str(&format!(
+            "{} *{}* {:.1} TEA{}\n\n",
+            medal, user, balance, change,
+        ));
+    }
+    leaderboard
 }
 
 /// Sorts balances highest first.
@@ -263,17 +301,14 @@ impl SlackInterface {
                         let join_handle = tokio::spawn(async move {
                             let mut elapsed = 0u32;
                             while elapsed < duration_secs {
-                                tokio::time::sleep(Duration::from_secs(
-                                    TIMER_INTERVAL_SECS as u64,
-                                ))
-                                .await;
-                                elapsed =
-                                    (elapsed + TIMER_INTERVAL_SECS).min(duration_secs);
+                                tokio::time::sleep(Duration::from_secs(TIMER_INTERVAL_SECS as u64))
+                                    .await;
+                                elapsed = (elapsed + TIMER_INTERVAL_SECS).min(duration_secs);
                                 let remaining = duration_secs - elapsed;
                                 let msg = if remaining == 0 {
-                                    completion_message.clone().unwrap_or_else(|| {
-                                        render_timer(&title, 0, duration_secs)
-                                    })
+                                    completion_message
+                                        .clone()
+                                        .unwrap_or_else(|| render_timer(&title, 0, duration_secs))
                                 } else {
                                     render_timer(&title, remaining, duration_secs)
                                 };
@@ -312,15 +347,11 @@ impl SlackInterface {
                         for (index, (user, bid)) in sorted_bids.iter().enumerate() {
                             tokio::time::sleep(Duration::from_secs(2)).await;
                             if index < sorted_bids.len() - 1 {
-                                message = message.replace(
-                                    "...",
-                                    format!("{} {} TEA\n...", user, bid).as_str(),
-                                )
+                                message = message
+                                    .replace("...", format!("{} {} TEA\n...", user, bid).as_str())
                             } else {
-                                message = message.replace(
-                                    "...",
-                                    format!("{} {} TEA\n", user, bid).as_str(),
-                                );
+                                message = message
+                                    .replace("...", format!("{} {} TEA\n", user, bid).as_str());
                             }
                             self.update_message(&message, &response).await;
                             let _ = self.tv_tx.send(TvEvent::BidRevealed {
@@ -454,8 +485,14 @@ impl SlackInterface {
                             .collect(),
                     });
                 }
+                SlackAction::RespondTeaderboard(balances, response_url) => {
+                    let leaderboard = teaderboard_text(&balances, &balances);
+                    self.respond_to_slash_command(&leaderboard, &response_url)
+                        .await;
+                }
                 SlackAction::ShowTeaderboard { balances, previous } => {
-                    let mut leaderboard = String::from("\n\n☕️ *Teaderboard*\n\n");
+                    let leaderboard = teaderboard_text(&balances, &previous);
+                    self.send_message(&leaderboard).await;
                     let sorted_balances = rank_balances(&balances);
                     let previous_ranks: HashMap<&User, usize> = rank_balances(&previous)
                         .into_iter()
@@ -468,25 +505,6 @@ impl SlackInterface {
                             .map_or(0, |&prev| prev as i32 - i as i32)
                     };
 
-                    for (i, (user, balance)) in sorted_balances.iter().enumerate() {
-                        let medal = match i {
-                            0 => "🥇",
-                            1 => "🥈",
-                            2 => "🥉",
-                            _ => "  ",
-                        };
-                        let change = match rank_change(i, user) {
-                            0 => String::new(),
-                            n if n > 0 => format!(" :up-arrow:{}", n),
-                            n => format!(" :down-arrow:{}", -n),
-                        };
-
-                        leaderboard.push_str(&format!(
-                            "{} *{}* {:.1} TEA{}\n\n",
-                            medal, user, balance, change,
-                        ));
-                    }
-                    self.send_message(&leaderboard).await;
                     let _ = self.tv_tx.send(TvEvent::Teaderboard {
                         entries: sorted_balances
                             .iter()
@@ -605,6 +623,13 @@ impl SlackInterface {
             return preferences_response(&pref, &options, false);
         }
 
+        if payload.text.trim().eq_ignore_ascii_case("board") {
+            self.command_tx
+                .send(UserCommand::ShowBoard(payload.response_url))
+                .ok();
+            return StatusCode::OK.into_response();
+        }
+
         if payload.text.trim().eq_ignore_ascii_case("donate") {
             return (
                 StatusCode::OK,
@@ -618,7 +643,11 @@ impl SlackInterface {
 
         if let Ok(bid) = payload.text.trim().parse::<u8>() {
             if let Some(rev) = self.terms.current_revision().await {
-                if !self.terms.has_accepted(&payload.user_id, &rev.version).await {
+                if !self
+                    .terms
+                    .has_accepted(&payload.user_id, &rev.version)
+                    .await
+                {
                     return terms_prompt_response(&rev, bid);
                 }
             }
@@ -631,7 +660,7 @@ impl SlackInterface {
                 StatusCode::OK,
                 Json(SlashCommandResponse {
                     response_type: ResponseType::Ephemeral,
-                    text: "Invalid bid. Enter a non-negative integer to bid, or `/t prefs` to set your tea.".to_string(),
+                    text: "Invalid bid. Enter a non-negative integer to bid, `/t prefs` to set your tea, or `/t board` for the Teaderboard.".to_string(),
                 }),
             )
                 .into_response()
@@ -703,7 +732,11 @@ impl SlackInterface {
             }
         }
 
-        if !self.terms.record_acceptance(&payload.user.id, version).await {
+        if !self
+            .terms
+            .record_acceptance(&payload.user.id, version)
+            .await
+        {
             self.replace_ephemeral(
                 "☕️ Couldn't record your acceptance — please try again.",
                 &payload.response_url,
@@ -796,8 +829,11 @@ impl SlackInterface {
         };
 
         let Some(recipient_id) = recipient_id.clone() else {
-            self.replace_ephemeral_blocks(rerender("⚠️ Pick someone to donate to."), &payload.response_url)
-                .await;
+            self.replace_ephemeral_blocks(
+                rerender("⚠️ Pick someone to donate to."),
+                &payload.response_url,
+            )
+            .await;
             return StatusCode::OK.into_response();
         };
 
@@ -807,8 +843,11 @@ impl SlackInterface {
             .and_then(|s| s.parse::<f64>().ok())
             .filter(|a| a.is_finite() && *a >= 1.0);
         let Some(amount) = amount else {
-            self.replace_ephemeral_blocks(rerender("⚠️ Enter an amount of at least 1 TEA."), &payload.response_url)
-                .await;
+            self.replace_ephemeral_blocks(
+                rerender("⚠️ Enter an amount of at least 1 TEA."),
+                &payload.response_url,
+            )
+            .await;
             return StatusCode::OK.into_response();
         };
 
@@ -980,7 +1019,12 @@ fn preferences_blocks(pref: &TeaPreference, options: &[String], saved: bool) -> 
 
 /// A section with a `static_select` accessory listing the tea options, with
 /// `selected` pre-chosen when it's still a valid option.
-fn tea_select_block(label: &str, action_id: &str, options: &[String], selected: Option<&str>) -> Value {
+fn tea_select_block(
+    label: &str,
+    action_id: &str,
+    options: &[String],
+    selected: Option<&str>,
+) -> Value {
     let option_objects: Vec<Value> = options
         .iter()
         .map(|o| json!({ "text": { "type": "plain_text", "text": o, "emoji": true }, "value": o }))
@@ -995,8 +1039,7 @@ fn tea_select_block(label: &str, action_id: &str, options: &[String], selected: 
 
     if let Some(sel) = selected {
         if options.iter().any(|o| o == sel) {
-            select["initial_option"] =
-                json!({ "text": { "type": "plain_text", "text": sel, "emoji": true }, "value": sel });
+            select["initial_option"] = json!({ "text": { "type": "plain_text", "text": sel, "emoji": true }, "value": sel });
         }
     }
 
@@ -1020,8 +1063,7 @@ fn progress_bar(remaining_secs: u32, duration_secs: u32) -> String {
     let filled = if duration_secs == 0 {
         0
     } else {
-        ((remaining_secs as f64 / duration_secs as f64) * TIMER_BAR_SEGMENTS as f64).ceil()
-            as usize
+        ((remaining_secs as f64 / duration_secs as f64) * TIMER_BAR_SEGMENTS as f64).ceil() as usize
     };
     let filled = filled.min(TIMER_BAR_SEGMENTS);
     let empty = TIMER_BAR_SEGMENTS - filled;
