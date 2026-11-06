@@ -148,7 +148,7 @@ impl Tea {
         distribution
     }
 
-    fn calculate_transfers(&self, payments: &HashMap<User, f64>) -> HashMap<(User, User), f64> {
+    fn calculate_transfers(payments: &HashMap<User, f64>) -> HashMap<(User, User), f64> {
         let mut sorted_payments: Vec<(User, f64)> = payments
             .iter()
             .map(|(user, amount)| (user.clone(), *amount))
@@ -446,7 +446,8 @@ impl Tea {
 
             // A payer who cannot cover their payment would otherwise lose only their balance.
             // The deepest debtor makes the tea; the lowest bidder still pays the penalty.
-            let tea_maker = match debtors(&payments, self.contract.balances()).first() {
+            let debts = debtors(&payments, self.contract.balances());
+            let tea_maker = match debts.first() {
                 Some((debtor, debt)) if *debtor != lowest_bidder => {
                     SlackAction::SendMessage(format!(
                         "\n\n🚨 *{} bid beyond their means and is {:.1} TEA in debt. Debtors make the tea, whatever they bid!*\n",
@@ -457,7 +458,9 @@ impl Tea {
                 }
                 _ => lowest_bidder,
             };
-            let transfers: HashMap<(User, User), f64> = self.calculate_transfers(&payments);
+            let affordable = affordable_payments(&payments, &debts);
+            let shortfall = shortfall_notice(&payments, &affordable, &debts);
+            let transfers: HashMap<(User, User), f64> = Self::calculate_transfers(&affordable);
 
             SlackAction::AnnounceTeaMaker((tea_maker.clone(), bids[&tea_maker], bids.len()))
                 .send(&self.message_tx);
@@ -497,54 +500,11 @@ impl Tea {
                     .collect();
                 match self.contract.transfer(payment_args).await {
                     Ok(outcome) => {
-                        // A payer who couldn't cover their losses paid each winner the
-                        // same fraction of what they were owed. Say so per payer.
-                        let mut shortfalls: Vec<(&User, f64, f64, Vec<String>)> = Vec::new();
-                        for (((from, to), requested), settled) in
-                            transfer_list.iter().zip(outcome.settled.iter())
-                        {
-                            let i = match shortfalls.iter().position(|(p, ..)| *p == from) {
-                                Some(i) => i,
-                                None => {
-                                    shortfalls.push((from, 0.0, 0.0, Vec::new()));
-                                    shortfalls.len() - 1
-                                }
-                            };
-                            let (_, owed, paid, lines) = &mut shortfalls[i];
-                            *owed += requested;
-                            *paid += settled;
-                            lines.push(format!(
-                                "    • {} gets {:.1} of {:.1} TEA",
-                                to, settled, requested
-                            ));
-                        }
-                        shortfalls.retain(|(_, owed, paid, _)| *paid + 1e-9 < *owed);
-
-                        if shortfalls.is_empty() {
-                            SlackAction::SendMessage(
-                                "☕️ *All transfers successful ✅*".to_string(),
-                            )
-                            .send(&self.message_tx);
-                        } else {
-                            let details: Vec<String> = shortfalls
-                                .iter()
-                                .map(|(payer, owed, paid, lines)| {
-                                    format!(
-                                        "• {} owed {:.1} TEA but only had {:.1}, so winners get {:.0}% of their winnings:\n{}",
-                                        payer,
-                                        owed,
-                                        paid,
-                                        paid / owed * 100.0,
-                                        lines.join("\n")
-                                    )
-                                })
-                                .collect();
-                            SlackAction::SendMessage(format!(
-                                "☕️ *Transfers settled, but not everyone could pay in full 🚨*\n{}",
-                                details.join("\n")
-                            ))
-                            .send(&self.message_tx);
-                        }
+                        SlackAction::SendMessage(
+                            shortfall
+                                .unwrap_or_else(|| "☕️ *All transfers successful ✅*".to_string()),
+                        )
+                        .send(&self.message_tx);
                         (outcome.settled, Some(outcome.tx_hash))
                     }
                     Err(e) => {
@@ -554,8 +514,10 @@ impl Tea {
                     }
                 }
             } else {
-                SlackAction::SendMessage("☕️ *No transfers to be made ✅*".to_string())
-                    .send(&self.message_tx);
+                SlackAction::SendMessage(
+                    shortfall.unwrap_or_else(|| "☕️ *No transfers to be made ✅*".to_string()),
+                )
+                .send(&self.message_tx);
                 (Vec::new(), None)
             };
 
@@ -618,6 +580,78 @@ fn debtors(payments: &HashMap<User, f64>, balances: &HashMap<User, f64>) -> Vec<
     debtors
 }
 
+/// Payments scaled to what can actually be paid. Debtors pay their whole balance
+/// and every winner takes the same fraction of their winnings, so a shortfall
+/// falls on all winners rather than only those paired with the short payer.
+fn affordable_payments(payments: &HashMap<User, f64>, debts: &[(User, f64)]) -> HashMap<User, f64> {
+    if debts.is_empty() {
+        return payments.clone();
+    }
+
+    let mut affordable = payments.clone();
+    for (debtor, debt) in debts {
+        *affordable.get_mut(debtor).unwrap() += debt;
+    }
+    let collected = affordable
+        .values()
+        .filter(|&&a| a < 0.0)
+        .fold(0.0, |total, a| total - a);
+    let winnings: f64 = payments.values().filter(|&&a| a > 0.0).sum();
+    for amount in affordable.values_mut().filter(|a| **a > 0.0) {
+        *amount *= collected / winnings;
+    }
+    affordable
+}
+
+/// The Slack notice for a round where some payers couldn't pay in full.
+fn shortfall_notice(
+    payments: &HashMap<User, f64>,
+    affordable: &HashMap<User, f64>,
+    debts: &[(User, f64)],
+) -> Option<String> {
+    if debts.is_empty() {
+        return None;
+    }
+
+    let mut winners: Vec<(&User, f64)> = payments
+        .iter()
+        .filter(|(_, &amount)| amount > 0.0)
+        .map(|(user, &amount)| (user, amount))
+        .collect();
+    winners.sort_by(|a, b| b.1.total_cmp(&a.1).then_with(|| a.0.name.cmp(&b.0.name)));
+
+    let short_payers: Vec<String> = debts
+        .iter()
+        .map(|(payer, debt)| {
+            let owed = -payments[payer];
+            format!(
+                "{} owed {:.1} TEA but only had {:.1}",
+                payer,
+                owed,
+                owed - debt
+            )
+        })
+        .collect();
+    let winner_lines: Vec<String> = winners
+        .iter()
+        .map(|(winner, amount)| {
+            format!(
+                "{} gets {:.1} of {:.1} TEA",
+                winner, affordable[*winner], amount
+            )
+        })
+        .collect();
+    let won: f64 = winners.iter().map(|(_, amount)| amount).sum();
+    let paid: f64 = winners.iter().map(|(winner, _)| affordable[*winner]).sum();
+
+    Some(format!(
+        "☕️ *Not everyone could pay in full 🚨*\n{}\nAll winners get {:.0}% of their winnings:\n{}",
+        short_payers.join("\n"),
+        paid / won * 100.0,
+        winner_lines.join("\n")
+    ))
+}
+
 /// Seconds left on a cooldown that started at `ended_at`, or `None` once it has passed.
 fn cooldown_remaining(ended_at: u64, now: u64, window: u64) -> Option<u64> {
     let remaining = ended_at
@@ -631,7 +665,7 @@ fn cooldown_remaining(ended_at: u64, now: u64, window: u64) -> Option<u64> {
 mod tests {
     use std::collections::HashMap;
 
-    use super::{cooldown_remaining, debtors};
+    use super::{affordable_payments, cooldown_remaining, debtors, shortfall_notice, Tea};
     use crate::User;
 
     fn user(name: &str) -> User {
@@ -663,6 +697,68 @@ mod tests {
         let payments = HashMap::from([(a.clone(), -20.0), (b.clone(), 20.0)]);
         assert!(debtors(&payments, &HashMap::from([(a.clone(), 20.0)])).is_empty());
         assert!(debtors(&payments, &HashMap::new()).is_empty());
+    }
+
+    #[test]
+    fn shortfall_falls_on_all_winners() {
+        let (rich, broke, a, b) = (user("rich"), user("broke"), user("a"), user("b"));
+        let payments = HashMap::from([
+            (rich.clone(), -10.0),
+            (broke.clone(), -10.0),
+            (a.clone(), 15.0),
+            (b.clone(), 5.0),
+        ]);
+        let balances = HashMap::from([(rich.clone(), 50.0), (broke.clone(), 2.0)]);
+        let debts = debtors(&payments, &balances);
+        let affordable = affordable_payments(&payments, &debts);
+
+        assert!((affordable[&rich] + 10.0).abs() < 1e-9);
+        assert!((affordable[&broke] + 2.0).abs() < 1e-9);
+        assert!((affordable[&a] - 9.0).abs() < 1e-9);
+        assert!((affordable[&b] - 3.0).abs() < 1e-9);
+
+        // However the payers get paired, each winner receives their full share.
+        let transfers = Tea::calculate_transfers(&affordable);
+        for (winner, expected) in [(&a, 9.0), (&b, 3.0)] {
+            let received: f64 = transfers
+                .iter()
+                .filter(|((_, to), _)| to == winner)
+                .map(|(_, amount)| amount)
+                .sum();
+            assert!((received - expected).abs() < 1e-9);
+        }
+        for (payer, expected) in [(&rich, 10.0), (&broke, 2.0)] {
+            let sent: f64 = transfers
+                .iter()
+                .filter(|((from, _), _)| from == payer)
+                .map(|(_, amount)| amount)
+                .sum();
+            assert!((sent - expected).abs() < 1e-9);
+        }
+    }
+
+    #[test]
+    fn covered_round_is_unchanged() {
+        let (a, b) = (user("a"), user("b"));
+        let payments = HashMap::from([(a.clone(), -20.0), (b.clone(), 20.0)]);
+        let debts = debtors(&payments, &HashMap::from([(a.clone(), 20.0)]));
+        let affordable = affordable_payments(&payments, &debts);
+        assert_eq!(affordable, payments);
+        assert_eq!(shortfall_notice(&payments, &affordable, &debts), None);
+    }
+
+    #[test]
+    fn broke_payers_leave_nothing_to_transfer_but_still_notify() {
+        let (a, b, c) = (user("a"), user("b"), user("c"));
+        let payments = HashMap::from([(a.clone(), -6.0), (b.clone(), -4.0), (c.clone(), 10.0)]);
+        let balances = HashMap::from([(a.clone(), 0.0), (b.clone(), 0.0)]);
+        let debts = debtors(&payments, &balances);
+        let affordable = affordable_payments(&payments, &debts);
+
+        assert!(affordable.values().all(|&amount| amount == 0.0));
+        assert!(Tea::calculate_transfers(&affordable).is_empty());
+        let notice = shortfall_notice(&payments, &affordable, &debts).unwrap();
+        assert!(notice.contains("All winners get 0%"), "{notice}");
     }
 
     #[test]
